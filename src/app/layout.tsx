@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Nav from '../components/nav';
-
+import { Providers } from "../GlobalRedux/provider"
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -31,7 +31,9 @@ export default function RootLayout({
       >
           <Nav/>
          <main className = "relative">
+          <Providers>
          {children}
+         </Providers>
          </main>
      
       </body>
