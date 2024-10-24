@@ -6,12 +6,23 @@ import { Input } from "@/components/ui/input"
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLogin,closeLogin } from '../../GlobalRedux/Features/loginModalSlice';
+import { useRouter } from 'next/navigation'
 export default function login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch();
+  const router = useRouter();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("hi");
+
+     if (router) {
+      router.push('/pages/homepage'); // Ensure router is not null before using it
+    }
+    else{
+      console.log("bs")
+    }
+   
     // Handle form submission logic here
   }
   const handleCloselogin = (e: React.FormEvent) =>{

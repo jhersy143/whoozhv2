@@ -33,7 +33,7 @@ const nav = () => {
 
         {/* Desktop menu */}
         <div className="hidden md:flex space-x-16 justify-center flex-grow">
-          <NavLink href="/" icon={<Home className="w-6 h-6 mr-2 basis-1/4" />} text="Home" />
+          <NavLink href="/pages/homepage" icon={<Home className="w-6 h-6 mr-2 basis-1/4" />} text="Home" />
           <NavLink href="/pages/login" icon={<User className="w-6 h-6 mr-2 basis-1/4" />} text="Profile" />
           <NavLink href="/bookmarks" icon={<Bookmark className="w-6 h-6 mr-2 basis-1/4" />} text="Bookmarks" />
           <NavLink href="/notifications" icon={<Bell className="w-6 h-6 mr-2 basis-1/4"  />} text="Notifications" />
@@ -41,7 +41,7 @@ const nav = () => {
 
         {/* Mobile menu */}
         <div 
-          className={`md:hidden absolute top-16 left-0 right-0 bg-gray-900 transition-all duration-300 ease-in-out ${
+          className={`z-40 md:hidden absolute top-16 left-0 right-0 bg-gray-900 transition-all duration-300 ease-in-out ${
             isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
         >
