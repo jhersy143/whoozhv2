@@ -10,7 +10,7 @@ const nav = () => {
     setIsMenuOpen(!isMenuOpen);
   }
   return (
-    <nav className="bg-gray-900 text-white p-4">
+    <nav className="bg-gray-900 text-white p-6 border-b border-gray-300 ">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/landingpage" className="flex items-center">
           <Image

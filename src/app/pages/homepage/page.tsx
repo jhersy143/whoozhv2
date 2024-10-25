@@ -3,22 +3,28 @@ import { useState } from "react"
 import { Home, User, Bookmark, Bell, MessageSquare, RotateCcw, Plus, Menu, X } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-
+import { showModal,changemodalname } from "@/GlobalRedux/Features/showModalSlice";
+import Createdebate from "@/components/modals/createdebate"
+import { useDispatch } from "react-redux"
 export default function Homepage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+  const dispatch = useDispatch();
+  const handleShowCreate = (modalname:string)=>{
+    dispatch(showModal({modalname:modalname}));
+    
+  }
   return (
     <div className="flex bg-gray-900 text-white ">
    
-      <div className="container mx-auto mt-6 px-4 md:px-0 md:h-full  lg:h-screen">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:p-3">
-          <div className="md:col-span-2 space-y-6">
+      <div className="container mx-auto mt-20 px-4 md:px-0 md:h-full  lg:h-screen">
+        <div className="grid lg:grid-cols-7 md:grid-cols-3 gap-6 md:p-3">
+          <div className="md:col-span-2 space-y-6 lg:col-span-3 lg:col-start-2 lg:col-end-5">
             <div className="flex items-center space-x-4 ">
               <Avatar className="w-12 h-12 ">
                 <AvatarImage src="/placeholder.svg" alt="User" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
-              <Button className="flex-grow bg-blue-600 hover:bg-blue-700">Create New</Button>
+              <Button className="flex-grow bg-blue-600 hover:bg-blue-700" onClick={()=>handleShowCreate("createdebate")}>Create New</Button>
             </div>
 
             <DebateCard
@@ -34,7 +40,7 @@ export default function Homepage() {
             />
           </div>
 
-          <div className="bg-gray-800 p-4 rounded-lg">
+          <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
             <h2 className="text-xl font-bold mb-4">Trends</h2>
             <div className="space-y-4">
               <TrendingDebate
@@ -121,6 +127,7 @@ function TrendingDebate({ user, time, question }: { user: string; time: string; 
           100
         </span>
       </div>
+      <Createdebate />
     </div>
   )
 }

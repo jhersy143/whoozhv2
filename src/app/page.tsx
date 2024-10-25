@@ -4,23 +4,18 @@ import  Login  from "@/components/modals/login"
 import  Register  from "@/components/modals/register"
 import type { RootState } from '../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { showLogin,closeLogin } from '../GlobalRedux/Features/loginModalSlice';
+import { showModal, closeModal, changemodalname } from '../GlobalRedux/Features/showModalSlice';
 import { showRegister,closeRegister } from '../GlobalRedux/Features/registerModalSlice';
 export default function Landingpage() {
  
   const dispatch = useDispatch();
-  const handleShowlogin = ()=>{
-    
-    dispatch(closeRegister());
-    dispatch(showLogin());
+  const handleShowModal = (modalname:string)=>{
+    dispatch(showModal({modalname:modalname}));
+   // dispatch(changemodalname({modalname:modalname}))
    
   }
-  const handleShowregister = ()=>{
-
-    dispatch(closeLogin());
-    dispatch(showRegister());
-
-  }
+  
+  
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -63,14 +58,14 @@ export default function Landingpage() {
               Sign In With Google
             </Button>
 
-            <Button type="button" className="w-full bg-emerald-600 text-white hover:bg-emerald-700" onClick={handleShowregister}>
+            <Button type="button" className="w-full bg-emerald-600 text-white hover:bg-emerald-700" onClick={()=>handleShowModal("register")}>
               Create Account
             </Button>
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-400">
             Already have an account?{" "}
-            <button className="font-semibold leading-6 text-emerald-400 hover:text-emerald-300" onClick={handleShowlogin}>
+            <button className="font-semibold leading-6 text-emerald-400 hover:text-emerald-300" onClick={()=>handleShowModal("login")}>
               Sign In
             </button>
           </p>

@@ -1,12 +1,12 @@
 
 
 import {configureStore } from "@reduxjs/toolkit";
-import loginModalSlice from "./Features/loginModalSlice"
-import registerModalSlice from "./Features/registerModalSlice"
+import modalSlice from "./Features/showModalSlice"
+
 export const store = configureStore({
   reducer:{
-    loginModal:loginModalSlice,
-    registerModal:registerModalSlice
+    modalSlice:modalSlice,
+
   }
 })
 

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { showLogin,closeLogin } from '../../GlobalRedux/Features/loginModalSlice';
+import { closeModal } from '../../GlobalRedux/Features/showModalSlice';
 import { useRouter } from 'next/navigation'
 export default function login() {
   const [email, setEmail] = useState('')
@@ -27,26 +27,30 @@ export default function login() {
   }
   const handleCloselogin = (e: React.FormEvent) =>{
     e.preventDefault()
-    dispatch(closeLogin());
+    dispatch(closeModal());
   }
-  const showLogin = useSelector((state: RootState) => state.loginModal.showLogin);
+  const showmodal = useSelector((state: RootState) => state.modalSlice.showmodal);
+  const modalname = useSelector((state:RootState) =>state.modalSlice.modalname)
+
+   // handle closing the modal when clicking around it 
   const handleOutsideClick = (e: MouseEvent) => {
     const target = e.target as Element;
     if (!target.closest('#modal')) {
-      dispatch(closeLogin());
+      dispatch(closeModal());
     }
   };
 
   useEffect(() => {
+    console.log(modalname)
     document.addEventListener('click', handleOutsideClick);
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, [showLogin]);
+  }, [showmodal]);
 
   return (
   
-    <div className={`${showLogin?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50  items-center justify-center p-4 `} >
+    <div className={`${showmodal&&modalname==="login"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50  items-center justify-center p-4 `} >
       <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative " id ="modal">
         <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200" aria-label="Close" onClick={handleCloselogin}>
           <X size={24} />

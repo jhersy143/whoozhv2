@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { showRegister,closeRegister } from '../../GlobalRedux/Features/registerModalSlice';
+import { showModal,closeModal } from '@/GlobalRedux/Features/showModalSlice';
 export default function Component() {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -18,27 +18,32 @@ export default function Component() {
   }
   const handleCloseregister= (e: React.FormEvent) =>{
     e.preventDefault()
-    dispatch(closeRegister());
+    dispatch(closeModal());
   }
-  const showRegister = useSelector((state: RootState) => state.registerModal.showRegister);
-  const handleOutsideClick = (e: MouseEvent) => {
-    const target = e.target as Element;
-    if (!target.closest('#modal')) {
-      dispatch(closeRegister());
-    }
-  };
+  //redux states
+  const modalname = useSelector((state: RootState) => state.modalSlice.modalname);
+  const showModal =useSelector((state: RootState)=>state.modalSlice.showmodal)
+
+ 
+    // handle closing the modal when clicking around it 
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (!target.closest('#modal')) {
+        dispatch(closeModal());
+      }
+    };
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, [showRegister]);
+  }, [showModal]);
 
   return (
-    <div className={`${showRegister?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4`}>
-      <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative">
-        <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200" id = "modal" onClick={handleCloseregister}>
+    <div className={`${showModal&&modalname==="register"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4`}>
+      <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative" id = "modal">
+        <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"  onClick={handleCloseregister}>
           <X size={24} />
         </button>
         <h2 className="text-2xl font-bold mb-6 text-white">Sign Up</h2>
