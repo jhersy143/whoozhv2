@@ -9,9 +9,13 @@ import { useDispatch } from "react-redux"
 export default function Homepage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch();
+  const [active,Setactive] = useState("yourdebate")
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
     
+  }
+  const handleClick = (button:string)=>{
+    Setactive(button);
   }
   return (
     <div className="flex bg-gray-900 text-white ">
@@ -19,6 +23,10 @@ export default function Homepage() {
       <div className="container mx-auto mt-20 px-4 md:px-0 md:h-full  lg:h-screen">
         <div className="grid lg:grid-cols-7 md:grid-cols-3 gap-6 md:p-3">
           <div className="md:col-span-2 space-y-6 lg:col-span-3 lg:col-start-2 lg:col-end-5">
+          <div className="flex items-center space-x-4 ">
+                <Button className={`${active==="yourdebate"?"border-blue-600 text-blue-600":"border-white-60"}  flex-grow bg-gray-900 hover:bg-blue-700 border-b-4 rounded-none text-lg font-semibold`} onClick={()=>handleClick("yourdebate")}>Your Debate</Button>
+                <Button className={`${active==="joined"?"border-blue-600 text-blue-600":"border-white-60"}  flex-grow bg-gray-900 hover:bg-blue-700 border-b-4 rounded-none text-lg font-semibold`} onClick={()=>handleClick("joined")}>Joined</Button>
+            </div>
             <div className="flex items-center space-x-4 ">
               <Avatar className="w-12 h-12 ">
                 <AvatarImage src="/placeholder.svg" alt="User" />
