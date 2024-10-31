@@ -17,7 +17,7 @@ export default function Component() {
     address: '123 Main St, City, Country',
     contact: '+1 234 567 8900',
     work: 'Software Developer',
-    avatar: '/placeholder.svg?height=128&width=128'
+    avatar: '/images/userprofile.png'
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
 

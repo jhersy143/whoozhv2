@@ -1,17 +1,36 @@
 'use client'
-import { useState } from "react"
+import React, { useState } from "react"
 import { Home, User, Bookmark, Bell, MessageSquare, RotateCcw, Plus, Menu, X, CirclePlus, CircleMinus } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { showModal,changemodalname } from "@/GlobalRedux/Features/showModalSlice";
 import Createdebate from "@/components/modals/createdebate"
 import { useDispatch } from "react-redux"
+import { useRouter } from "next/navigation"
+import { Callback } from "next-redux-wrapper"
+type CallBack<T= void, R = void> = (arg:T)=>R;
+
 export default function Homepage() {
+  const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch();
+
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
     
+  }
+  const handleJoin = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("hi");
+
+     if (router) {
+      router.push('/pages/debateroom'); // Ensure router is not null before using it
+    }
+    else{
+      console.log("error")
+    }
+   
+    // Handle form submission logic here
   }
   return (
     <div className="flex bg-gray-900 text-white ">
@@ -31,12 +50,14 @@ export default function Homepage() {
               user="Jhersy Fernandez"
               time="1 min"
               question="Should cell phones be allowed in schools?"
+          
             />
 
             <DebateCard
               user="Jhersy Fernandez"
               time="1 min"
               question="Should genetically modified organisms (GMOs) be banned from agriculture?"
+            
             />
           </div>
 
@@ -66,7 +87,21 @@ export default function Homepage() {
   )
 }
 
-function DebateCard({ user, time, question }: { user: string; time: string; question: string }) {
+function DebateCard({ user, time, question }: { user: string; time: string; question: string}) {
+  const router = useRouter()
+  const handleJoin = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("hi");
+
+     if (router) {
+      router.push('/pages/debateroom'); // Ensure router is not null before using it
+    }
+    else{
+      console.log("error")
+    }
+   
+    // Handle form submission logic here
+  }
   return (
     <div className="bg-gray-800 p-4 rounded-lg z-0">
       <div className="flex items-center space-x-2 mb-2">
@@ -93,13 +128,14 @@ function DebateCard({ user, time, question }: { user: string; time: string; ques
             100
           </span>
         </div>
-        <Button variant="secondary">Join</Button>
+        <Button variant="secondary" onClick={handleJoin}>Join</Button>
       </div>
     </div>
   )
 }
 
-function TrendingDebate({ user, time, question }: { user: string; time: string; question: string }) {
+function TrendingDebate({ user, time, question }: { user: string; time: string; question: string}) {
+
   return (
     <div className="border-b border-gray-700 pb-4 last:border-b-0 last:pb-0">
       <div className="flex items-center space-x-2 mb-2">
