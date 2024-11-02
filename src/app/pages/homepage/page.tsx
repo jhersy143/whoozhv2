@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from "react"
-import { Home, User, Bookmark, Bell, MessageSquare, RotateCcw, Plus, Menu, X, CirclePlus, CircleMinus } from "lucide-react"
+import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { showModal,changemodalname } from "@/GlobalRedux/Features/showModalSlice";
