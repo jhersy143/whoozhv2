@@ -1,10 +1,16 @@
+'use client'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { MessageCircle, CirclePlus, CircleMinus, ThumbsUp, ThumbsDown,Play} from "lucide-react"
-
+import { useState } from "react"
+import { styles } from '@/app/pages/style'
 export default function Component() {
+  const [isGreenActive,setisGreenActive] = useState(true);
+  const changeActiveComments = ()=>{
+    setisGreenActive(!isGreenActive);
+  }
   return (
     <div className="bg-gray-900 min-h-screen text-white">
       <div className="grid md:grid-cols-[250px_1fr]">
@@ -80,21 +86,21 @@ export default function Component() {
           </div>
 
           {/* Yes/No Section */}
-          <div className="grid grid-cols-6  gap-px min-[320px]:grid-cols-4">
-            <div className="bg-gray-900 p-4 flex items-center gap-3 md:col-span-3 lg:col-span-2 min-[320px]:col-span-2">
-              <CirclePlus className="h-6 w-6 "/>
-              <span className="text-green-400 text-xl font-bold ">YES</span>
+          <div className="grid lg:grid-cols-6  gap-px min-[320px]:grid-cols-4 md:grid-cols-4">
+            <div className={`${isGreenActive?styles.greenCommentActive:""}  p-4 flex items-center gap-3 md:col-span-2 lg:col-span-2 min-[320px]:col-span-2 text-[#416F5F] lg:border-none`} onClick={isGreenActive?()=>{}:changeActiveComments}>
+              <CirclePlus className="h-6 w-6  "/>
+              <span className="ttext-xl font-bold ">YES</span>
             </div>
-            <div className="bg-gray-900 p-4 flex items-center gap-3 md:col-span-3 lg:col-span-2 min-[320px]:col-span-2 ">
-              <CircleMinus className="h-6 w-6" />
+            <div className={`${!isGreenActive?styles.redCommentActive:""}  p-4 flex items-center gap-3 md:col-span-2 lg:col-span-2 min-[320px]:col-span-2 text-[#6F4141] lg:border-none`} onClick={!isGreenActive?()=>{}:changeActiveComments}>
+              <CircleMinus className="h-6 w-6 text-red-400" />
               <span className="text-red-400 text-xl font-bold ">NO</span>
             </div>
           </div>
 
           {/* Comments Section */}
-          <div className="grid grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4">
+          <div className="grid grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
             {/* Green Comments */}
-            <div className="space-y-4 md:col-span-3 lg:col-span-2 min-[320px]:col-span-4">
+            <div className = {`${isGreenActive?"":"hidden"} space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
               <Card className="bg-[#416F5F] ">
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2">
@@ -157,7 +163,7 @@ export default function Component() {
             </div>
 
             {/* Red Comments */}
-            <div className="space-y-4 md:col-span-3 lg:col-span-2 min-[320px]:hidden md:block">
+            <div className = {`${isGreenActive?"hidden":""} space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
               <Card className="bg-[#6F4141]">
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2">
