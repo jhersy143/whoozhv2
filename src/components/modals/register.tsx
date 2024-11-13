@@ -11,15 +11,64 @@ export default function Component() {
   const [lastName, setLastName] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
   const dispatch = useDispatch();
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission logic here
-  }
+
   const handleCloseregister= (e: React.FormEvent) =>{
     e.preventDefault()
     dispatch(closeModal());
   }
+  const validateEmail = (email: string) => {
+    // Simple regex for email validation
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateEmail(email)) {
+      setError('');
+      // Proceed with form submission (e.g., send to API)
+      console.log('Email is valid:', email);
+    } else {
+      setError('Please enter a valid email address.');
+    }
+    const res = await fetch('http://localhost:4000/api/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: `
+                mutation {
+                    createUser(
+                        email: "${email}", 
+                        firstname: "${firstName}", 
+                        lastname: "${lastName}", 
+                    
+                    ) {
+                        id
+                        email
+                        firstname
+                        lastname
+                    }
+                }
+            `,
+        }),
+    });
+ 
+    const result = await res.json();
+    if (result.errors) {
+        setMessage('Error creating user');
+    } else {
+        setMessage('User created successfully!');
+        // Optionally reset the form
+        setEmail('');
+        setFirstName('');
+        setLastName('');
+   
+    }
+};
   //redux states
   const modalname = useSelector((state: RootState) => state.modalSlice.modalname);
   const showModal =useSelector((state: RootState)=>state.modalSlice.showmodal)
@@ -55,6 +104,7 @@ export default function Component() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
           />
+          {error && <p style={{ color: 'red' }}>{error}</p>}
           <Input
             type="text"
             placeholder="First Name"
