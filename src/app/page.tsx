@@ -6,6 +6,7 @@ import type { RootState } from '../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { showModal, closeModal, changemodalname } from '../GlobalRedux/Features/showModalSlice';
 import { showRegister,closeRegister } from '../GlobalRedux/Features/registerModalSlice';
+
 export default function Landingpage() {
  
   const dispatch = useDispatch();

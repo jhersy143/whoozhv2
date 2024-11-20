@@ -4,16 +4,37 @@ import { gql } from 'apollo-server-micro';
 const typeDefs = gql`
   type User {
     id: ID!
-    name: String!
+    firstname: String!
+    lastname:String!
     email: String!
+    location: String
+    work: String
+    contact: Int
+    createdAt: String
+    updatedAt: String
+  }
+  
+  type Account{
+    id: ID!
+    userID: ID!
+    provider: String!
+    providerAccountID: String!
+    password: String
+    image: String
+    createdAt: String
+    updatedAt: String
   }
 
   type Query {
-    users: [User !]!
+    getUsers: [User !]!
+    getUserByID:(id:ID!) :User
+    getAccountByID:(id:ID!) :[Accoount !]!
+
   }
 
   type Mutation {
-    addUser (name: String!, email: String!): User!
+    addUser (firstname: String!,lastname:String, email: String!): User!
+    addAccount (userID: ID!, provider: String!, providerAccountID: String!, password: String, image: String): Account
   }
 `;
 

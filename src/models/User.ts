@@ -1,10 +1,26 @@
-import mongoose from 'mongoose';
+import { Schema, models, model} from "mongoose";
+import {unique } from "next/dist/build/utils";
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-});
+export interface IUser{
+    email:string;
+    firstname:string;
+    lastname:string;
+    location?:string;
+    work?:string;
+    contact?:Number;
+    
+}
 
-const User = mongoose.models.User || mongoose.model('User ', userSchema);
+const UserSchema = new Schema<IUser>({
+    email:{type:String, required:true, unique:true},
+    firstname:{type:String, required:true},
+    lastname:{type:String, required:true},
+    location:{type:String},
+    work:{type:String},
+    contact:{type:Number}
+    }
+,{timestamps:true});
 
-export default User;
+const User = models?.user || model<IUser>("User", UserSchema);
+
+export default  User;
