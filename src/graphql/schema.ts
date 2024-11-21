@@ -16,9 +16,9 @@ const typeDefs = gql`
   
   type Account{
     id: ID!
-    userID: ID!
-    provider: String!
-    providerAccountID: String!
+    userID: String!
+    provider: String
+    providerAccountID: String
     password: String
     image: String
     createdAt: String
@@ -26,15 +26,15 @@ const typeDefs = gql`
   }
 
   type Query {
-    getUsers: [User !]!
-    getUserByID:(id:ID!) :User
-    getAccountByID:(id:ID!) :[Accoount !]!
+    getUsers: [User!]!
+    getUserByID(id:ID!) :User
+    getAccountByID(id:ID!) :[Account!]!
 
   }
 
   type Mutation {
     addUser (firstname: String!,lastname:String, email: String!): User!
-    addAccount (userID: ID!, provider: String!, providerAccountID: String!, password: String, image: String): Account
+    addAccount (userID: String!, provider: String, providerAccountID: String, password: String, image: String): Account
   }
 `;
 

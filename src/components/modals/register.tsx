@@ -14,8 +14,11 @@ export default function Component() {
   const [lastName, setLastName] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [provider,setProvider] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [providerAccountID,setproviderAccountID] = useState('')
+  const [image,setImage] = useState('')
   const dispatch = useDispatch();
 
   const handleCloseregister= (e: React.FormEvent) =>{
@@ -28,62 +31,7 @@ export default function Component() {
     return regex.test(email);
   };
   
-const CREATE_USER = gql`
-mutation CreateUser($email: String!, $firstname: String!, $lastname: String!, $location: String, $work: String, $contact: Int) {
-  createUser(email: $email, firstname: $firstname, lastname: $lastname, location: $location, work: $work, contact: $contact) {
-    id
-    email
-    firstname
-    lastname
-  }
-}
-`;
- const CREATE_ACCOUNT = gql`
-mutation CreateAccount($userID: ID!, $provider: String!, $providerAccountID: String!, $password: String, $image: String) {
-  createAccount(userID: $userID, provider: $provider, providerAccountID: $providerAccountID, password: $password, image: $image) {
-    id
-    userID
-    provider
-    providerAccountID
-    image
-  }
-}
-`;
-  const [createUser] = useMutation(CREATE_USER);
-const [createAccount] = useMutation(CREATE_ACCOUNT);
 
- const handleCreateUserAndAccount = async () => {
-  try {
-    // Step 1: Create User
-    const userResponse = await createUser({
-      variables: {
-        email: "test@example.com",
-        firstname: "John",
-        lastname: "Doe",
-        location: "New York",
-        work: "Software Developer",
-        contact: 1234567890,
-      },
-    });
-
-    const userId = userResponse.data.createUser.id;
-
-    // Step 2: Create Account
-    const accountResponse = await createAccount({
-      variables: {
-        userID: userId,
-        provider: "google",
-        providerAccountID: "google_account_id",
-        password: "securepassword",
-        image: "http://example.com/image.jpg",
-      },
-    });
-
-    console.log('Account created:', accountResponse.data.createAccount);
-  } catch (error) {
-    console.error('Error creating user or account:', error);
-  }
-};
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   if (validateEmail(email)) {
@@ -93,7 +41,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   } else {
     setError('Please enter a valid email address.');
   }
-  const res = await fetch('http://localhost:3000/api/graphql', {
+  const addUser = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -116,8 +64,36 @@ const handleSubmit = async (e: React.FormEvent) => {
           `,
       }),
   });
+  const result = await addUser.json();
+  const userId = result.data.addUser.id;
+  console.log(result.data.addUser.id);
+  const addAccount = await fetch('http://localhost:3000/api/graphql', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        query: `
+            mutation {
+                    addAccount(
+                    userID: "${userId}", 
+                    provider: "${provider}", 
+                    providerAccountID: "${providerAccountID}", 
+                    password: "${password}", 
+                    image: "${image}",
+                ) {
+                    id
+                    userID
+                    provider
+                    providerAccountID
+                    image
+                }
+              }
+            
+        `,
+    }),
+});
 
-  const result = await res.json();
   if (result.errors) {
       setMessage('Error creating user');
   } else {
@@ -156,7 +132,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <X size={24} />
         </button>
         <h2 className="text-2xl font-bold mb-6 text-white">Sign Up</h2>
-        <form onSubmit={handleCreateUserAndAccount} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="email"
             placeholder="Enter email"

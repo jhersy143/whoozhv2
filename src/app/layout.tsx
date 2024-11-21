@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -32,9 +33,11 @@ export default function RootLayout({
       >
           <Nav/>
          <main >
+ 
           <Providers>
          {children}
          </Providers>
+   
          </main>
      
       </body>
