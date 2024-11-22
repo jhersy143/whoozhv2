@@ -20,7 +20,7 @@ export default function Component() {
   const [providerAccountID,setproviderAccountID] = useState('')
   const [image,setImage] = useState('')
   const dispatch = useDispatch();
-
+  let userId = ""
   const handleCloseregister= (e: React.FormEvent) =>{
     e.preventDefault()
     dispatch(closeModal());
@@ -65,8 +65,20 @@ const handleSubmit = async (e: React.FormEvent) => {
       }),
   });
   const result = await addUser.json();
-  const userId = result.data.addUser.id;
-  console.log(result.data.addUser.id);
+
+  if (result.errors) {
+    setMessage('Error creating user');
+
+} else {
+    setMessage('User created successfully!');
+    userId = result.data.addUser.id;
+    // Optionally reset the form
+    setEmail('');
+    setFirstName('');
+    setLastName('');
+
+}
+
   const addAccount = await fetch('http://localhost:3000/api/graphql', {
     method: 'POST',
     headers: {
@@ -94,16 +106,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     }),
 });
 
-  if (result.errors) {
-      setMessage('Error creating user');
-  } else {
-      setMessage('User created successfully!');
-      // Optionally reset the form
-      setEmail('');
-      setFirstName('');
-      setLastName('');
- 
-  }
+  
+  console.log(message)
 };
   //redux states
   const modalname = useSelector((state: RootState) => state.modalSlice.modalname);

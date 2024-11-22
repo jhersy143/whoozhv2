@@ -25,10 +25,64 @@ const typeDefs = gql`
     updatedAt: String
   }
 
+   type Post{
+    id: ID!
+    userID: String!
+    content: String
+    pros: String
+    cons: String
+    createdAt: String
+    updatedAt: String
+  }
+    
+ type Comment{
+    id: ID!
+    userID: String!
+    comment: String
+    postID: String
+    type: String
+    createdAt: String
+    updatedAt: String
+  }
+
+ type Reply{
+    id: ID!
+    userID: String!
+    reply: String
+    commentID: String
+    createdAt: String
+    updatedAt: String
+  }
+
+ type Like{
+    id: ID!
+    userID: String!
+    commentID: String
+    createdAt: String
+    updatedAt: String
+  }
+
+ type Joined{
+    id: ID!
+    userID: String!
+    postID: String
+    createdAt: String
+    updatedAt: String
+  }
+
+type Choice{
+    id: ID!
+    userID: String!
+    postID: String
+    choice: String
+    createdAt: String
+    updatedAt: String
+  }
+
   type Query {
     getUsers: [User!]!
     getUserByID(id:ID!) :User
-    getAccountByID(id:ID!) :[Account!]!
+    getAccountByID(id:ID!) :Account
 
   }
 

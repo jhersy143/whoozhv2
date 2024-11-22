@@ -1,12 +1,38 @@
 // src/graphql/resolvers.ts
 import User from '@/models/User'; 
 import Account from '@/models/Account';
-
+import { UserInputError,ApolloError  } from 'apollo-server-core';
 
 const resolvers = {
   Query: {
     getUsers: async () => {
       return await User.find(); 
+    },
+    getUserByID: async (_: any, { id }: { id: string }) => {
+      try {
+        const user = await User.findById(id); // Assuming you're using Mongoose
+        if (!user) {
+          throw new UserInputError('User  not found', {
+            invalidArgs: { id },
+          });
+        }
+        return user;
+      } catch (error) {
+        throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+      }
+    },
+    getAccountByID: async (_: any, { id }: { id: string }) => {
+      try {
+        const account = await User.findById(id); // Assuming you're using Mongoose
+        if (!account) {
+          throw new UserInputError('User  not found', {
+            invalidArgs: { id },
+          });
+        }
+        return account;
+      } catch (error) {
+        throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+      }
     },
   },
   Mutation: {
@@ -21,6 +47,12 @@ const resolvers = {
         lastname:string; 
         email: string 
       }) => {
+      const existingUser  = await User.findOne({ email });
+        if (existingUser ) {
+          throw new UserInputError('Email already exists', {
+            invalidArgs: { email },
+          });
+      }
       const newUser  = new User({ firstname,lastname, email });
       await newUser .save();
       return newUser ;
