@@ -1,12 +1,16 @@
 // src/graphql/resolvers.ts
 import User from '@/models/User'; 
 import Account from '@/models/Account';
+import Post from '@/models/Post';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
 
 const resolvers = {
   Query: {
     getUsers: async () => {
       return await User.find(); 
+    },
+    getPost: async () => {
+      return await Post.find(); 
     },
     getUserByID: async (_: any, { id }: { id: string }) => {
       try {
