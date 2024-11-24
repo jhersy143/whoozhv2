@@ -82,8 +82,14 @@ type Choice{
   type Query {
     getUsers: [User!]!
     getUserByID(id:ID!) :User
-    getAccountByID(id:ID!) :Account
-
+    getAccountByID(id:ID!): Account
+    getPost: [Post!]!
+    getCommentByPostID: [Comment!]!
+    getReplyByCommentID: [Reply!]
+    getPostByUserID(id:ID!): [Post!]!
+    getLikeByCommentID(id:ID!):Like
+    getJoinedByUserID(id:ID!):Joined
+    getUserChoice(id:ID!,postID:ID!):Choice
   }
 
   type Mutation {

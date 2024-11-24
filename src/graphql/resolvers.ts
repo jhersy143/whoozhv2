@@ -2,6 +2,11 @@
 import User from '@/models/User'; 
 import Account from '@/models/Account';
 import Post from '@/models/Post';
+import Comment from '@/models/Comment';
+import Joined from '@/models/Joined';
+import Like from '@/models/Like';
+import Reply from '@/models/Reply';
+import Choice from '@/models/Choice';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
 
 const resolvers = {
@@ -9,9 +14,8 @@ const resolvers = {
     getUsers: async () => {
       return await User.find(); 
     },
-    getPost: async () => {
-      return await Post.find(); 
-    },
+ 
+
     getUserByID: async (_: any, { id }: { id: string }) => {
       try {
         const user = await User.findById(id); // Assuming you're using Mongoose
@@ -38,6 +42,74 @@ const resolvers = {
         throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
       }
     },
+  },
+  getPost: async () => {
+    return await Post.find(); 
+  },
+  getCommentByPostID: async (_: any, { id }: { id: string }) => {
+    try {
+      const user = await Comment.findById(id); // Assuming you're using Mongoose
+      if (!user) {
+        throw new UserInputError('User  not found', {
+          invalidArgs: { id },
+        });
+      }
+      return user;
+    } catch (error) {
+      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+    }
+  },
+  getReplyByCommentID: async (_: any, { id }: { id: string }) => {
+    try {
+      const user = Reply.findById(id); // Assuming you're using Mongoose
+      if (!user) {
+        throw new UserInputError('User  not found', {
+          invalidArgs: { id },
+        });
+      }
+      return user;
+    } catch (error) {
+      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+    }
+  },
+  getLikeByCommentID: async (_: any, { id }: { id: string }) => {
+    try {
+      const user = await Like.findById(id); // Assuming you're using Mongoose
+      if (!user) {
+        throw new UserInputError('User  not found', {
+          invalidArgs: { id },
+        });
+      }
+      return user;
+    } catch (error) {
+      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+    }
+  },
+  getJoinedByUserID: async (_: any, { id }: { id: string }) => {
+    try {
+      const user = await Joined.findById(id); // Assuming you're using Mongoose
+      if (!user) {
+        throw new UserInputError('User  not found', {
+          invalidArgs: { id },
+        });
+      }
+      return user;
+    } catch (error) {
+      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+    }
+  },
+  getUserChoice: async (_: any, { id, PostID }: { id: string, PostID: string }) => {
+    try {
+      const user = await Joined.findById(id); // Assuming you're using Mongoose
+      if (!user) {
+        throw new UserInputError('User  not found', {
+          invalidArgs: { id },
+        });
+      }
+      return user;
+    } catch (error) {
+      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+    }
   },
   Mutation: {
     addUser: async (_: any, 
