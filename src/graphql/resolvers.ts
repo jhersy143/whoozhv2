@@ -15,7 +15,17 @@ const resolvers = {
       return await User.find(); 
     },
  
+    login: async (_:any, { email }:{email:string}) => {
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        throw new UserInputError('User  not found', { invalidArgs: { email } });
+      }
 
+    
+      // Implement your token generation logic
+      return  user ;
+    },
     getUserByID: async (_: any, { id }: { id: string }) => {
       try {
         const user = await User.findById(id); // Assuming you're using Mongoose
@@ -29,6 +39,7 @@ const resolvers = {
         throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
       }
     },
+
     getAccountByID: async (_: any, { id }: { id: string }) => {
       try {
         const account = await User.findById(id); // Assuming you're using Mongoose
@@ -42,7 +53,8 @@ const resolvers = {
         throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
       }
     },
-  },
+ 
+
   getPost: async () => {
     return await Post.find(); 
   },
@@ -111,6 +123,7 @@ const resolvers = {
       throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
     }
   },
+},
   Mutation: {
     addUser: async (_: any, 
       { 
@@ -150,7 +163,8 @@ const resolvers = {
       const newAccount = new Account({userID,provider, providerAccountID, password, image});
       await newAccount.save();
       return newAccount;
-    }
+    },
+  
   },
 };
 

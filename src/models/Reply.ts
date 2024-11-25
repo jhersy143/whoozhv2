@@ -16,6 +16,6 @@ const ReplySchema = new Schema<IReply>({
     }
 ,{timestamps:true});
 
-const Reply = models?.Reply || model<IReply>("Comment", ReplySchema);
+const Reply = models?.Reply || model<IReply>("Reply", ReplySchema);
 
 export default  Reply;

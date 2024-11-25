@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -11,6 +11,7 @@ import { PencilIcon, MapPinIcon, PhoneIcon, BriefcaseIcon, MailIcon, UploadIcon,
 export default function Component() {
   const [isEditing, setIsEditing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const userID = "6740825f5268c3be2cfbb8f5";
   const [profile, setProfile] = useState({
     name: 'Aaaaaa Aaaa',
     email: 'Jhersy@gmail.com',
@@ -20,7 +21,37 @@ export default function Component() {
     avatar: '/images/userprofile.png'
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    const fetchUser  = async () => {
+      const response = await fetch('http://localhost:4000/graphql', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              getUserByID(id: "${userID}") {
+                id
+                name
+                email
+                address
+                contact
+                work
+              }
+            }
+          `,
+        }),
+      });
 
+      const result = await response.json();
+      if (result.data) {
+        setProfile(result.data.getUserByID);
+      }
+    };
+
+    fetchUser ();
+  }, [userID]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setProfile(prev => ({ ...prev, [name]: value }))

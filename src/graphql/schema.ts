@@ -90,11 +90,13 @@ type Choice{
     getLikeByCommentID(id:ID!):Like
     getJoinedByUserID(id:ID!):Joined
     getUserChoice(id:ID!,postID:ID!):Choice
+    login(email: String!) :User
   }
 
   type Mutation {
     addUser (firstname: String!,lastname:String, email: String!): User!
     addAccount (userID: String!, provider: String, providerAccountID: String, password: String, image: String): Account
+ 
   }
 `;
 

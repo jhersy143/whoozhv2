@@ -7,11 +7,14 @@ import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeModal } from '../../GlobalRedux/Features/showModalSlice';
 import { useRouter } from 'next/navigation'
+
 export default function login() {
+  const [error, setError] = useState('');
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch();
   const router = useRouter();
+  const userID = "6740825f5268c3be2cfbb8f5";
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("hi");
@@ -25,6 +28,49 @@ export default function login() {
    
     // Handle form submission logic here
   }
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(''); // Reset error message
+
+    // Perform login
+    const response = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query {
+            login(email: "${email}") {
+              id
+              firstname
+              email
+              
+            }
+          }
+        `,
+      }),
+    });
+
+    const result = await response.json();
+    console.log(result)
+    if (result.errors) {
+      // Handle errors (e.g., invalid credentials)
+      setError('Invalid email or password');
+    } else {
+      // Assuming the response contains user data and a token
+      const { id, name, token } = result.data.login;
+
+      // Store user information (e.g., in local storage or Redux store)
+      localStorage.setItem('userId', id);
+      localStorage.setItem('userName', name);
+      localStorage.setItem('token', token);
+
+      // Redirect to homepage
+      router.push('/pages/homepage');
+      dispatch(closeModal());
+    }
+  };
   const handleCloselogin = (e: React.FormEvent) =>{
     e.preventDefault()
     dispatch(closeModal());
@@ -56,7 +102,7 @@ export default function login() {
           <X size={24} />
         </button>
         <h2 className="text-2xl font-bold mb-6 text-white">Sign In</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="email" className="sr-only">Email</label>
             <Input
