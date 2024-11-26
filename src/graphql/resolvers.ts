@@ -15,14 +15,18 @@ const resolvers = {
       return await User.find(); 
     },
  
-    login: async (_:any, { email }:{email:string}) => {
+    login: async (_:any, { email, password }:{email:string, password:string}) => {
       const user = await User.findOne({ email });
   
       if (!user) {
-        throw new UserInputError('User  not found', { invalidArgs: { email } });
+        throw new UserInputError('Wrong username or Password', { invalidArgs: { email } });
       }
-
-    
+      const userID = user.id;
+      const account = await Account.findOne({userID})
+      console.log(account)
+      if(password!=account.password){
+        throw new UserInputError(password, { invalidArgs: { password } });
+      }
       // Implement your token generation logic
       return  user ;
     },
@@ -40,12 +44,12 @@ const resolvers = {
       }
     },
 
-    getAccountByID: async (_: any, { id }: { id: string }) => {
+    getAccountByID: async (_: any, { userID }: { userID: string }) => {
       try {
-        const account = await User.findById(id); // Assuming you're using Mongoose
+        const account = await User.findOne({userID}); // Assuming you're using Mongoose
         if (!account) {
           throw new UserInputError('User  not found', {
-            invalidArgs: { id },
+            invalidArgs: { userID },
           });
         }
         return account;

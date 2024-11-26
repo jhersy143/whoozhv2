@@ -90,7 +90,7 @@ type Choice{
     getLikeByCommentID(id:ID!):Like
     getJoinedByUserID(id:ID!):Joined
     getUserChoice(id:ID!,postID:ID!):Choice
-    login(email: String!) :User
+    login(email: String!,password: String!) :User
   }
 
   type Mutation {

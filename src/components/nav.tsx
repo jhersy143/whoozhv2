@@ -83,7 +83,7 @@ const nav = () => {
                     </div>
                     )}
           </div>
-            <NavLink href="/login" icon={<LogOut  className="w-6 h-6 mr-2 basis-1/5"  />} text="Logout" />
+            <NavLink href="/" icon={<LogOut  className="w-6 h-6 mr-2 basis-1/5"  />} text="Logout" />
         </div>
 
         {/* Mobile menu */}
@@ -110,7 +110,7 @@ const nav = () => {
               </div>
                
             </div>
-            <NavLink href="/login" mobileJustify icon={<LogOut  className="w-6 h-6  "  />} text="Logout" />
+            <NavLink href="/" mobileJustify icon={<LogOut  className="w-6 h-6  "  />} text="Logout" />
             
           </div>
           {isNotifOpen && (

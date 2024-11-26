@@ -41,7 +41,7 @@ export default function login() {
       body: JSON.stringify({
         query: `
           query {
-            login(email: "${email}") {
+            login(email: "${email}",password: "${password}") {
               id
               firstname
               email

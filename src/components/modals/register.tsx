@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { showModal,closeModal } from '@/GlobalRedux/Features/showModalSlice';
-
+import bcrypt from 'bcryptjs';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
 export default function Component() {
@@ -65,6 +65,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       }),
   });
   const result = await addUser.json();
+ // Hash the password
+ const salt = bcrypt.genSaltSync(10);
+ const hashedPassword = bcrypt.hashSync(password, salt);
 
   if (result.errors) {
     setMessage('Error creating user');
@@ -91,7 +94,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     userID: "${userId}", 
                     provider: "${provider}", 
                     providerAccountID: "${providerAccountID}", 
-                    password: "${password}", 
+                    password: "${hashedPassword}", 
                     image: "${image}",
                 ) {
                     id
