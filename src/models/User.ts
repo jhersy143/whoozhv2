@@ -7,7 +7,8 @@ export interface IUser{
     lastname:string;
     location?:string;
     work?:string;
-    contact?:Number;
+    contact?:String;
+    avatar?:string
     
 }
 
@@ -17,7 +18,8 @@ const UserSchema = new Schema<IUser>({
     lastname:{type:String, required:true},
     location:{type:String},
     work:{type:String},
-    contact:{type:Number}
+    contact:{type:String},
+    avatar:{type:String}
     }
 ,{timestamps:true});
 

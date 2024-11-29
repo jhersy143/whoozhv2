@@ -7,6 +7,7 @@ import Joined from '@/models/Joined';
 import Like from '@/models/Like';
 import Reply from '@/models/Reply';
 import Choice from '@/models/Choice';
+import bcrypt from 'bcryptjs';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
 
 const resolvers = {
@@ -24,7 +25,8 @@ const resolvers = {
       const userID = user.id;
       const account = await Account.findOne({userID})
       console.log(account)
-      if(password!=account.password){
+      const isMatch = await bcrypt.compare(password, account.password);
+      if(!isMatch){
         throw new UserInputError(password, { invalidArgs: { password } });
       }
       // Implement your token generation logic
@@ -133,12 +135,20 @@ const resolvers = {
       { 
         firstname,
         lastname, 
-        email 
+        email,
+        location,
+        work,
+        contact,
+        avatar 
       }: 
       { 
         firstname: string; 
         lastname:string; 
-        email: string 
+        email: string ;
+        location: string;
+        work: string;
+        contact: string;
+        avatar: string;
       }) => {
       const existingUser  = await User.findOne({ email });
         if (existingUser ) {
@@ -146,8 +156,8 @@ const resolvers = {
             invalidArgs: { email },
           });
       }
-      const newUser  = new User({ firstname,lastname, email });
-      await newUser .save();
+      const newUser  = new User({ firstname,lastname, email,  location, work, contact, avatar});
+      await newUser.save();
       return newUser ;
     },
     addAccount: async(_:any, 

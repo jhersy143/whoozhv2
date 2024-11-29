@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect,useLayoutEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -11,7 +11,7 @@ import { PencilIcon, MapPinIcon, PhoneIcon, BriefcaseIcon, MailIcon, UploadIcon,
 export default function Component() {
   const [isEditing, setIsEditing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
-  const userID = "6740825f5268c3be2cfbb8f5";
+  const [userID, setUserID] = useState<string | null>(null);
   const [profile, setProfile] = useState({
     name: 'Aaaaaa Aaaa',
     email: 'Jhersy@gmail.com',
@@ -22,35 +22,43 @@ export default function Component() {
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
+    setUserID(localStorage.getItem('userID'));
+  },[])
+  useLayoutEffect(() => {
     const fetchUser  = async () => {
-      const response = await fetch('http://localhost:4000/graphql', {
-        method: 'GET',
+      const response = await fetch('http://localhost:3000/api/graphql', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type':'application/json',
         },
         body: JSON.stringify({
           query: `
             query {
               getUserByID(id: "${userID}") {
                 id
-                name
+                firstname
                 email
-                address
+                location
                 contact
                 work
+                avatar
               }
             }
           `,
         }),
       });
-
+     
       const result = await response.json();
+      console.log(result)
       if (result.data) {
-        setProfile(result.data.getUserByID);
+        setProfile(result.data);
       }
     };
 
-    fetchUser ();
+     
+    fetchUser()
+   
+  
   }, [userID]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target

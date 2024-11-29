@@ -9,7 +9,8 @@ const typeDefs = gql`
     email: String!
     location: String
     work: String
-    contact: Int
+    contact: String
+    avatar:String
     createdAt: String
     updatedAt: String
   }
@@ -94,7 +95,7 @@ type Choice{
   }
 
   type Mutation {
-    addUser (firstname: String!,lastname:String, email: String!): User!
+    addUser (firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
     addAccount (userID: String!, provider: String, providerAccountID: String, password: String, image: String): Account
  
   }

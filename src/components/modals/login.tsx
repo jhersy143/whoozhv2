@@ -14,7 +14,7 @@ export default function login() {
   const [password, setPassword] = useState('')
   const dispatch = useDispatch();
   const router = useRouter();
-  const userID = "6740825f5268c3be2cfbb8f5";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("hi");
@@ -62,7 +62,7 @@ export default function login() {
       const { id, name, token } = result.data.login;
 
       // Store user information (e.g., in local storage or Redux store)
-      localStorage.setItem('userId', id);
+      localStorage.setItem('userID', id);
       localStorage.setItem('userName', name);
       localStorage.setItem('token', token);
 

@@ -8,6 +8,7 @@ import { showModal,closeModal } from '@/GlobalRedux/Features/showModalSlice';
 import bcrypt from 'bcryptjs';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
+
 export default function Component() {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -52,13 +53,21 @@ const handleSubmit = async (e: React.FormEvent) => {
                   addUser(
                       email: "${email}", 
                       firstname: "${firstName}", 
-                      lastname: "${lastName}", 
+                      lastname: "${lastName}",
+                      location:"",
+                      work:"",
+                      contact:"",
+                      avatar:"" 
                   
                   ) {
                       id
                       email
                       firstname
                       lastname
+                      location
+                      work
+                      contact
+                      avatar
                   }
               }
           `,
