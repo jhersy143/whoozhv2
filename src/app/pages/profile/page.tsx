@@ -13,19 +13,20 @@ export default function Component() {
   const [isUploading, setIsUploading] = useState(false)
   const [userID, setUserID] = useState<string | null>(null);
   const [profile, setProfile] = useState({
-    name: 'Aaaaaa Aaaa',
-    email: 'Jhersy@gmail.com',
-    address: '123 Main St, City, Country',
-    contact: '+1 234 567 8900',
-    work: 'Software Developer',
+    firstname: '',
+    email: '',
+    location: '',
+    contact: 0,
+    work: '',
     avatar: '/images/userprofile.png'
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   },[])
-  useLayoutEffect(() => {
+  useEffect(() => {
     const fetchUser  = async () => {
+      if (!userID) return; // Exit if userID is not set
       const response = await fetch('http://localhost:3000/api/graphql', {
         method: 'POST',
         headers: {
@@ -49,10 +50,11 @@ export default function Component() {
       });
      
       const result = await response.json();
-      console.log(result)
+      console.log(result.data.getUserByID)
       if (result.data) {
-        setProfile(result.data);
+        setProfile(result.data.getUserByID);
       }
+      console.log(profile)
     };
 
      
@@ -123,7 +125,7 @@ export default function Component() {
         <div className="pt-20 pb-8 px-8">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{profile.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{profile.firstname}</h1>
               <p className="text-lg text-blue-600">{profile.email}</p>
             </div>
             <Button onClick={() => setIsEditing(true)} className="gap-2">
@@ -134,7 +136,7 @@ export default function Component() {
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-center text-gray-600">
               <MapPinIcon className="h-5 w-5 mr-2" />
-              <span>{profile.address}</span>
+              <span>{profile.location}</span>
             </div>
             <div className="flex items-center text-gray-600">
               <PhoneIcon className="h-5 w-5 mr-2" />
@@ -162,7 +164,7 @@ export default function Component() {
               <Input
                 id="name"
                 name="name"
-                value={profile.name}
+                value={profile.firstname}
                 onChange={handleChange}
               />
             </div>
@@ -181,7 +183,7 @@ export default function Component() {
               <Textarea
                 id="address"
                 name="address"
-                value={profile.address}
+                value={profile.location}
                 onChange={handleChange}
               />
             </div>
