@@ -11,14 +11,18 @@ export default function createdebate() {
   const [pros, setPros] = useState('')
   const [cons, setCons] = useState('')
   const dispatch = useDispatch()
-  
+  const [userID, setUserID] = useState<string | null>(null);
   const modalname = useSelector((state: RootState)=>state.modalSlice.modalname)
   const showModal = useSelector((state: RootState)=>state.modalSlice.showmodal)
+  useEffect(()=>{
+  
+    setUserID(localStorage.getItem('userID'))
+  },[])
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     // Handle form submission logic here
-    console.log({ content, pros, cons })
-    const addPost = await fetch('http://localhost:3000/api/graphql', {
+    console.log(localStorage.getItem('userID'))
+    const response = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -26,12 +30,14 @@ export default function createdebate() {
       body: JSON.stringify({
           query: `
               mutation {
-                  addUser(
+                  addPost(
+                      userID:"${userID}",
                       content: "${content}", 
                       pros: "${pros}", 
                       cons: "${cons}",
                     
                   ) {
+                    userID
                      content
                      pros
                      cons
@@ -40,6 +46,8 @@ export default function createdebate() {
           `,
       }),
   });
+  const result = await response.json();
+  console.log(result)
   }
   const handleCloseCreate = (e: React.FormEvent) =>{
     e.preventDefault()

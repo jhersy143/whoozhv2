@@ -10,7 +10,7 @@ export interface IPost{
 }
 
 const PostSchema = new Schema<IPost>({
-    userID:{type:String, required:true},
+    userID:{type:String, required:true ,ref: 'User'},
     content:{type:String, required:true},
     pros:{type:String, required:true},
     cons:{type:String, required:true},

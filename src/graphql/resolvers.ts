@@ -62,7 +62,17 @@ const resolvers = {
  
 
   getPost: async () => {
-    return await Post.find(); 
+    const posts = await Post.find().populate('userID'); // Populate user information
+  return posts.map(post => ({
+    id: post._id, // Ensure you are returning the correct id
+    userID: post.userID,
+    content: post.content,
+    pros: post.pros,
+    cons: post.cons,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+    user: post.userID // Add the user field to the post
+  }));
   },
   getCommentByPostID: async (_: any, { id }: { id: string }) => {
     try {

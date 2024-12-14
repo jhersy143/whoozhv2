@@ -29,6 +29,7 @@ const typeDefs = gql`
    type Post{
     id: ID!
     userID: String!
+    user:User
     content: String!
     pros: String!
     cons: String!
@@ -98,7 +99,7 @@ type Choice{
     addUser (firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
     addAccount (userID: String!, provider: String, providerAccountID: String, password: String, image: String): Account
     addPost(userID:String!, content:String!, pros:String!, cons:String!): Post 
-    addcoment(userID:String!,postID:String!, comment:String!, type:String!): Comment
+    addComment(userID:String!,postID:String!, comment:String!, type:String!): Comment
   }
 `;
 
