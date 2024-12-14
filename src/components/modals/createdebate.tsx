@@ -14,10 +14,32 @@ export default function createdebate() {
   
   const modalname = useSelector((state: RootState)=>state.modalSlice.modalname)
   const showModal = useSelector((state: RootState)=>state.modalSlice.showmodal)
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     // Handle form submission logic here
     console.log({ content, pros, cons })
+    const addPost = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          query: `
+              mutation {
+                  addUser(
+                      content: "${content}", 
+                      pros: "${pros}", 
+                      cons: "${cons}",
+                    
+                  ) {
+                     content
+                     pros
+                     cons
+                  }
+              }
+          `,
+      }),
+  });
   }
   const handleCloseCreate = (e: React.FormEvent) =>{
     e.preventDefault()

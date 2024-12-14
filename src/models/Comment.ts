@@ -5,6 +5,7 @@ export interface IComment{
     userID:string;
     postID:string;
     comment:string;
+    type:String;
     
 }
 
@@ -12,6 +13,7 @@ const CommentSchema = new Schema<IComment>({
     userID:{type:String, required:true},
     postID:{type:String, required:true},
     comment:{type:String, required:true},
+    type:{tyep:String, required:true},
 
     }
 ,{timestamps:true});

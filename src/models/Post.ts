@@ -13,7 +13,7 @@ const PostSchema = new Schema<IPost>({
     userID:{type:String, required:true},
     content:{type:String, required:true},
     pros:{type:String, required:true},
-    cons:{type:String},
+    cons:{type:String, required:true},
 
     }
 ,{timestamps:true});

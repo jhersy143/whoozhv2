@@ -178,6 +178,40 @@ const resolvers = {
       await newAccount.save();
       return newAccount;
     },
+    addPost: async(_:any, 
+      {
+        userID,
+        content, 
+        pros, 
+        cons, 
+      }:
+        {
+          userID: String, 
+          content: String, 
+          pros: String, 
+          cons: String, 
+         })=>{
+      const newPost = new Post({userID,content, pros, cons});
+      await newPost.save();
+      return newPost;
+    },
+    addComment: async(_:any, 
+      {
+        userID,
+        postID, 
+        comment, 
+        type, 
+      }:
+        {
+          userID: String, 
+          postID: String, 
+          comment: String, 
+          type: String, 
+         })=>{
+      const newComment = new Post({userID,postID, comment, type});
+      await newComment.save();
+      return newComment;
+    },
   
   },
 };

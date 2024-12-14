@@ -29,9 +29,9 @@ const typeDefs = gql`
    type Post{
     id: ID!
     userID: String!
-    content: String
-    pros: String
-    cons: String
+    content: String!
+    pros: String!
+    cons: String!
     createdAt: String
     updatedAt: String
   }
@@ -39,9 +39,9 @@ const typeDefs = gql`
  type Comment{
     id: ID!
     userID: String!
-    comment: String
-    postID: String
-    type: String
+    comment: String!
+    postID: String!
+    type: String!
     createdAt: String
     updatedAt: String
   }
@@ -49,8 +49,8 @@ const typeDefs = gql`
  type Reply{
     id: ID!
     userID: String!
-    reply: String
-    commentID: String
+    reply: String!
+    commentID: String!
     createdAt: String
     updatedAt: String
   }
@@ -58,7 +58,7 @@ const typeDefs = gql`
  type Like{
     id: ID!
     userID: String!
-    commentID: String
+    commentID: String!
     createdAt: String
     updatedAt: String
   }
@@ -66,7 +66,7 @@ const typeDefs = gql`
  type Joined{
     id: ID!
     userID: String!
-    postID: String
+    postID: String!
     createdAt: String
     updatedAt: String
   }
@@ -97,7 +97,8 @@ type Choice{
   type Mutation {
     addUser (firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
     addAccount (userID: String!, provider: String, providerAccountID: String, password: String, image: String): Account
- 
+    addPost(userID:String!, content:String!, pros:String!, cons:String!): Post 
+    addcoment(userID:String!,postID:String!, comment:String!, type:String!): Comment
   }
 `;
 
