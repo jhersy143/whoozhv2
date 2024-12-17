@@ -4,7 +4,17 @@ import React, { useState, useEffect } from "react"
 import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-export default function DebateCard({ user, time, question }: { user: string; time: string; question: string}) {
+import commentCount from "./commentCount"
+import {countComment} from "@/hooks/useFetchData"
+export default function DebateCard({ user, time, question,postID }: { user: string; time: string; question: string, postID: string}) {
+  const [commentCount, setCommentCount] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      const count = await countComment(postID);
+      setCommentCount(count);
+    }
+      
+    }, []);
     function timeAgo(dateString: string): string {
         const now = new Date();
         const postDate = new Date(Number(dateString));

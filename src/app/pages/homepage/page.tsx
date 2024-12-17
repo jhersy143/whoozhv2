@@ -9,6 +9,8 @@ import Createdebate from "@/components/modals/createdebate"
 import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
 import { Callback } from "next-redux-wrapper"
+import TrendingDebate from "@/components/ui/trendingdebate"
+import { fetchUser,countchoice } from "@/hooks/useFetchData"
 type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {
@@ -17,51 +19,22 @@ export default function Homepage() {
   const dispatch = useDispatch();
   const [userID, setUserID] = useState<string|null>(null);
   const[posts, setPost] = useState<any[]>([]);
+  const[count,setCount] = useState<number|null>(null);
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   },[])
   useEffect(() => {
-    const fetchUser  = async () => {
-      if (!userID) return; // Exit if userID is not set
-      const response = await fetch('http://localhost:3000/api/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type':'application/json',
-        },
-        body: JSON.stringify({
-          query: `
-         query {
-                getPost{
-                  id
-                  content
-                  pros
-                  cons
-                  createdAt
-                  user {
-                    id
-                    firstname
-                    lastname
-                    email
-                    avatar
-                  }
-                }
-              }
-          `,
-        }),
-      });
-     
-      const result = await response.json();
-      console.log(result)
-      if (result.data) {
-        setPost(result.data.getPost);
-      }
-      console.log(userID)
-    };
+    const fetchData = async () => {
+      const userPosts = await fetchUser();
+      setPost(userPosts);
 
-     
-    fetchUser()
+      
+    }
+
    
-  
+
+    
+   
   }, [userID]);
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
@@ -94,6 +67,7 @@ export default function Homepage() {
             </div>
 
             {posts.map(post => (
+        
               <DebateCard
                 key={post.id}
                 user={`${post.user.firstname} ${post.user.lastname}`}
@@ -111,55 +85,15 @@ export default function Homepage() {
                 time="1 hour"
                 question="Should cell phones be allowed in schools?"
               />
-              <TrendingDebate
-                user="Jhersy Fernandez"
-                time="1 hour"
-                question="Should genetically modified organisms (GMOs) be banned from agriculture?"
-              />
-              <TrendingDebate
-                user="Jhersy Fernandez"
-                time="1 day"
-                question="Kelangan Ba Financialy stable ka bago makipagrelasyon?"
-              />
+             
+             
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-
-function TrendingDebate({ user, time, question }: { user: string; time: string; question: string}) {
-
-  return (
-    <div className="border-b border-gray-700 pb-4 last:border-b-0 last:pb-0">
-      <div className="flex items-center space-x-2 mb-2">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src="/placeholder.svg" alt={user} />
-          <AvatarFallback>{user[0]}</AvatarFallback>
-        </Avatar>
-        <div className="flex lg:flex-row md:flex-col lg:space-x-4 lg:text-sm md:text-sm">
-          <span className="font-semibold md:text-xs lg:text-base">{user}</span>
-          <span className="text-gray-400 lg:text-sm md:text-xs">{time}</span>
-        </div>
-      </div>
-      <p className="mb-2 lg:text-sm md:text-sm">{question}</p>
-      <div className="flex space-x-4 lg:text-sm md:text-sm">
-        <span className="flex items-center ">
-          <MessageSquare className="w-4 h-4 mr-1" />
-          100
-        </span>
-        <span className="flex items-center">
-          <CirclePlus className="w-4 h-4 mr-1" />
-          100
-        </span>
-        <span className="flex items-center">
-          <CircleMinus className="w-4 h-4 mr-1" />
-          100
-        </span>
       </div>
       <Createdebate />
     </div>
   )
 }
+
+

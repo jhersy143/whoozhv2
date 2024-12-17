@@ -9,7 +9,12 @@ import Reply from '@/models/Reply';
 import Choice from '@/models/Choice';
 import bcrypt from 'bcryptjs';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
-
+// Define the ChoiceFilter interface
+interface ChoiceFilter {
+  userID?: string;
+  postID?: string;
+  choice?: string;
+}
 const resolvers = {
   Query: {
     getUsers: async () => {
@@ -73,6 +78,27 @@ const resolvers = {
     updatedAt: post.updatedAt,
     user: post.userID // Add the user field to the post
   }));
+  },
+  countPros: async (_:any, { choice,postID }:{choice: string, postID: string}) => {
+    const filter:ChoiceFilter = {};
+    if (choice) filter.choice = choice;
+    if (postID) filter.postID = postID;
+    const count = await Choice.countDocuments(filter);
+    return count;
+  },
+  countCons: async (_:any, { choice }:{choice: string}) => {
+    const filter:ChoiceFilter = {};
+    if (choice) filter.choice = choice;
+
+    const count = await Choice.countDocuments(filter);
+    return count;
+  },
+  countComment: async (_:any, { postID }:{postID: string}) => {
+    const filter:ChoiceFilter = {};
+    if (postID) filter.postID = postID;
+
+    const count = await Comment.countDocuments(filter);
+    return count;
   },
   getCommentByPostID: async (_: any, { id }: { id: string }) => {
     try {
