@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
 import { Callback } from "next-redux-wrapper"
 import TrendingDebate from "@/components/ui/trendingdebate"
-import { fetchUser,countchoice } from "@/hooks/useFetchData"
+import { fetchUser } from "@/hooks/useFetchData"
 type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {
@@ -32,7 +32,7 @@ export default function Homepage() {
     }
 
    
-
+    fetchData()
     
    
   }, [userID]);
@@ -73,6 +73,7 @@ export default function Homepage() {
                 user={`${post.user.firstname} ${post.user.lastname}`}
                 time={post.createdAt} // Format the date
                 question={post.content}
+                postID={post.id}
               />
             ))}
           </div>

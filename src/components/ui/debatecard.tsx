@@ -4,16 +4,23 @@ import React, { useState, useEffect } from "react"
 import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import commentCount from "./commentCount"
-import {countComment} from "@/hooks/useFetchData"
+import {countComment,countChoice} from "@/hooks/useFetchData"
 export default function DebateCard({ user, time, question,postID }: { user: string; time: string; question: string, postID: string}) {
   const [commentCount, setCommentCount] = useState(0);
+  const [countPros, setcountPros] = useState(0);
+  const [countCons, setcountCons] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
-      const count = await countComment(postID);
-      setCommentCount(count);
+      const commentCount = await countComment(postID);
+      setCommentCount(commentCount);
+
+      const prosCount = await countChoice(postID,"pros");
+      setcountPros(prosCount);
+
+      const consCount = await countChoice(postID,"cons");
+      setcountCons(consCount);
     }
-      
+    fetchData()
     }, []);
     function timeAgo(dateString: string): string {
         const now = new Date();
@@ -72,15 +79,15 @@ export default function DebateCard({ user, time, question,postID }: { user: stri
               <div className="flex space-x-4 mb-2 sm:mb-0">
                 <span className="flex items-center">
                   <MessageSquare className="w-5 h-5 mr-1" />
-                  100
+                  {commentCount}
                 </span>
                 <span className="flex items-center">
                   <CirclePlus className="w-5 h-5 mr-1" />
-                  100
+                  {countPros}
                 </span>
                 <span className="flex items-center">
                   <CircleMinus className="w-5 h-5 mr-1" />
-                  100
+                  {countCons}
                 </span>
               </div>
               <Button variant="secondary" onClick={handleJoin}>Join</Button>

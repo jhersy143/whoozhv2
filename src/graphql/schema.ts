@@ -93,8 +93,7 @@ type Choice{
     getJoinedByUserID(id:ID!):Joined
     getUserChoice(id:ID!,postID:ID!):Choice
     login(email: String!,password: String!) :User
-    countPros(choice:String,postID:String):Int
-    countCons(choice:String):Int
+    countChoice(choice:String,postID:String):Int
     countComment(postID:String):Int
   }
 

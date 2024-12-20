@@ -33,7 +33,7 @@ const fetchUser  = async () => {
      return result.data.getPost;
     }
   };
-  const countchoice  = async (postID:string,choice:string) => {
+  const countChoice  = async (postID:string,choice:string) => {
 
     const response = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
@@ -43,16 +43,16 @@ const fetchUser  = async () => {
       body: JSON.stringify({
         query: `
        query {
-               countPros(postID: "${postID}",choice:"${choice}")
+               countChoice(postID: "${postID}",choice:"${choice}")
             }
         `,
       }),
     });
    
     const result = await response.json();
-    console.log(result.data.countChoices)
+    console.log(result)
     if (result.data) {
-        return result.data.countChoices
+        return result.data.countChoice
     }
  
   };
@@ -73,10 +73,10 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result.data.countComment)
+    console.log(result)
     if (result.data) {
         return result.data.countComment
     }
  
   };
-  export {countchoice, fetchUser, countComment}
+  export {countChoice, fetchUser, countComment}
