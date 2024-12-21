@@ -8,6 +8,7 @@ import Like from '@/models/Like';
 import Reply from '@/models/Reply';
 import Choice from '@/models/Choice';
 import bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongodb';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
 // Define the ChoiceFilter interface
 interface ChoiceFilter {
@@ -85,7 +86,42 @@ const resolvers = {
     const count = await Choice.countDocuments(filter);
     return count;
   },
+  getTopPosts: async () => {
+    try {
+      const topPosts = await Choice.aggregate([
+        { $group: { _id: "$postID", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 3 },
+        {
+          $lookup: {
+            from: "posts",
+            localField: "_id",
+            foreignField: "_id", 
+            as: "postDetails"
+          }
+        },
+        {
+          $unwind: "$postDetails"
+        },
+        {
+          $project: {
+            postID: "$postDetails._id",
+            count: "$count",
+            content: "$postDetails.content",
+            pros: "$postDetails.pros",
+            cons: "$postDetails.cons",
+            createdAt: "$postDetails.createdAt",
+          }
+        }
+      ]);
   
+      console.log("Top:", topPosts); // Log the final result
+      return topPosts;
+    } catch (error) {
+      console.error("Error in getTopPosts:", error);
+      return [];
+    }
+  },
   countComment: async (_:any, { postID }:{postID: string}) => {
     const filter:ChoiceFilter = {};
     if (postID) filter.postID = postID;
@@ -198,14 +234,15 @@ const resolvers = {
         image
       }:
         {
-          userID: String, 
-          provider?: String, 
-          providerAccountID?: String, 
-          password?: String, 
-          image?: String})=>{
-      const newAccount = new Account({userID,provider, providerAccountID, password, image});
-      await newAccount.save();
-      return newAccount;
+          userID: string,
+          provider?: string, 
+          providerAccountID?: string, 
+          password?: string, 
+          image?: string})=>{
+          const userObjectId = new ObjectId(userID);
+          const newAccount = new Account({userObjectId,provider, providerAccountID, password, image});
+          await newAccount.save();
+          return newAccount;
     },
     addPost: async(_:any, 
       {
@@ -215,10 +252,10 @@ const resolvers = {
         cons, 
       }:
         {
-          userID: String, 
-          content: String, 
-          pros: String, 
-          cons: String, 
+          userID: string, 
+          content: string, 
+          pros: string, 
+          cons: string, 
          })=>{
       const newPost = new Post({userID,content, pros, cons});
       await newPost.save();
@@ -232,10 +269,10 @@ const resolvers = {
         type, 
       }:
         {
-          userID: String, 
-          postID: String, 
-          comment: String, 
-          type: String, 
+          userID: string, 
+          postID: string, 
+          comment: string, 
+          type: string, 
          })=>{
       const newComment = new Post({userID,postID, comment, type});
       await newComment.save();

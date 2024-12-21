@@ -79,4 +79,33 @@ const fetchUser  = async () => {
     }
  
   };
-  export {countChoice, fetchUser, countComment}
+  const TopPosts  = async () => {
+
+    const response = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+       query {
+               getTopPosts {
+                    postID
+                    count
+                    content
+                    pros
+                    cons
+                  }
+            }
+        `,
+      }),
+    });
+   
+    const result = await response.json();
+    console.log(result)
+    if (result.data) {
+        return result.data.getTopPosts
+    }
+ 
+  };
+  export {countChoice, fetchUser, countComment, TopPosts}

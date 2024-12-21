@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
 import { Callback } from "next-redux-wrapper"
 import TrendingDebate from "@/components/ui/trendingdebate"
-import { fetchUser } from "@/hooks/useFetchData"
+import { fetchUser, TopPosts } from "@/hooks/useFetchData"
 type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {
@@ -19,6 +19,7 @@ export default function Homepage() {
   const dispatch = useDispatch();
   const [userID, setUserID] = useState<string|null>(null);
   const[posts, setPost] = useState<any[]>([]);
+  const[topPosts,setTopPosts] = useState<any[]>([]);
   const[count,setCount] = useState<number|null>(null);
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
@@ -28,13 +29,15 @@ export default function Homepage() {
       const userPosts = await fetchUser();
       setPost(userPosts);
 
-      
     }
-
-   
-    fetchData()
+    const getTopPosts = async () => {
+      const top = await TopPosts();
+      setTopPosts(top);
+      console.log(top);
+    }
     
-   
+    fetchData()
+    getTopPosts()
   }, [userID]);
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
@@ -81,11 +84,17 @@ export default function Homepage() {
           <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
             <h2 className="text-xl font-bold mb-4">Trends</h2>
             <div className="space-y-4">
-              <TrendingDebate
-                user="Jhersy Fernandez"
-                time="1 hour"
-                question="Should cell phones be allowed in schools?"
-              />
+              {
+                topPosts.map(post => (
+                  <TrendingDebate
+                  key={post.id}
+                  user=""
+                  time={post.createdAt} 
+                  question={post.content}
+                />
+                ))
+              }
+             
              
              
             </div>

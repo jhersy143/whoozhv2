@@ -2,7 +2,7 @@ import { Schema, models, model, Types} from "mongoose";
 
 
 export interface IAccount{
-    userID:string;
+    userID:Types.ObjectId;
     provider:string;
     providerAccountID:string;
     password?:string;
@@ -11,7 +11,7 @@ export interface IAccount{
 }
 
 const AccountSchema = new Schema<IAccount>({
-    userID:{type:String},
+    userID:{ type: Schema.Types.ObjectId, required: true, ref: 'User ' },
     provider:{type:String},
     providerAccountID:{type:String},
     password:{type:String, required:true},

@@ -17,7 +17,7 @@ const typeDefs = gql`
   
   type Account{
     id: ID!
-    userID: String!
+    userID: ID!
     provider: String
     providerAccountID: String
     password: String
@@ -80,7 +80,14 @@ type Choice{
     createdAt: String
     updatedAt: String
   }
-
+ type TopChoice {
+    postID: String!
+    count: Int!
+    content: String!  
+    pros: String!      
+    cons: String!    
+    createdAt: String
+  }
   type Query {
     getUsers: [User!]!
     getUserByID(id:ID!) :User
@@ -95,11 +102,12 @@ type Choice{
     login(email: String!,password: String!) :User
     countChoice(choice:String,postID:String):Int
     countComment(postID:String):Int
+    getTopPosts: [TopChoice!]!
   }
 
   type Mutation {
     addUser (firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
-    addAccount (userID: String!, provider: String, providerAccountID: String, password: String, image: String): Account
+    addAccount (userID: ID!, provider: String, providerAccountID: String, password: String, image: String): Account
     addPost(userID:String!, content:String!, pros:String!, cons:String!): Post 
     addComment(userID:String!,postID:String!, comment:String!, type:String!): Comment
   }
