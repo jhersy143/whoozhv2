@@ -88,9 +88,12 @@ const handleSubmit = async (e: React.FormEvent) => {
     setEmail('');
     setFirstName('');
     setLastName('');
-
+    console.log(userId)
 }
-
+if (!userId) {
+  console.error("userID is required");
+  return; // Exit if userID is not provided
+}
   const addAccount = await fetch('http://localhost:3000/api/graphql', {
     method: 'POST',
     headers: {
@@ -118,8 +121,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     }),
 });
 
-  
-  console.log(message)
+  const resultaccount = await addAccount.json();
+  console.log(resultaccount)
 };
   //redux states
   const modalname = useSelector((state: RootState) => state.modalSlice.modalname);

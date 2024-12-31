@@ -223,6 +223,7 @@ const resolvers = {
       }
       const newUser  = new User({ firstname,lastname, email,  location, work, contact, avatar});
       await newUser.save();
+
       return newUser ;
     },
     addAccount: async(_:any, 
@@ -239,10 +240,31 @@ const resolvers = {
           providerAccountID?: string, 
           password?: string, 
           image?: string})=>{
-          const userObjectId = new ObjectId(userID);
-          const newAccount = new Account({userObjectId,provider, providerAccountID, password, image});
-          await newAccount.save();
-          return newAccount;
+            
+     
+            try {
+            // Validate userID format
+              if (!userID || typeof userID !== 'string' || userID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userID)) {
+                throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
+            }
+             const userObjectId = new ObjectId(userID);
+              const newAccount = new Account(
+                {
+                  userID: userObjectId,
+                  provider, 
+                  providerAccountID, 
+                  password, 
+                  image
+                }
+              );
+              await newAccount.save();
+      
+              return newAccount;
+            } catch (error) {
+              throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+            
+            }
+       
     },
     addPost: async(_:any, 
       {
