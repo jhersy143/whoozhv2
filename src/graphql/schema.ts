@@ -87,12 +87,14 @@ type Choice{
     pros: String!      
     cons: String!    
     createdAt: String
+    user: User! 
   }
   type Query {
     getUsers: [User!]!
     getUserByID(id:ID!) :User
     getAccountByID(id:ID!): Account
     getPost: [Post!]!
+    getPostByID(id:ID!): Post
     getCommentByPostID: [Comment!]!
     getReplyByCommentID: [Reply!]
     getPostByUserID(id:ID!): [Post!]!
@@ -110,6 +112,7 @@ type Choice{
     addAccount (userID: ID!, provider: String, providerAccountID: String, password: String, image: String): Account
     addPost(userID:String!, content:String!, pros:String!, cons:String!): Post 
     addComment(userID:String!,postID:String!, comment:String!, type:String!): Comment
+    addChoice(userID:String!,postID:String!, choice:String!): Choice
   }
 `;
 

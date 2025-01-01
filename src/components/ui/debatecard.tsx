@@ -5,10 +5,14 @@ import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {countComment,countChoice} from "@/hooks/useFetchData"
-export default function DebateCard({ user, time, question,postID }: { user: string; time: string; question: string, postID: string}) {
+import { useDispatch } from "react-redux"
+import { showModal } from "@/GlobalRedux/Features/showModalSlice";
+import  Choices  from "@/components/modals/choices";
+export default function DebateCard({ user, time, question, postID, pros, cons }: { user: string; time: string; question: string, postID: string, pros: string, cons: string}) {
   const [commentCount, setCommentCount] = useState(0);
   const [countPros, setcountPros] = useState(0);
   const [countCons, setcountCons] = useState(0);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       const commentCount = await countComment(postID);
@@ -22,6 +26,11 @@ export default function DebateCard({ user, time, question,postID }: { user: stri
     }
     fetchData()
     }, []);
+      const handleShowCreate = (modalname:string)=>{
+        dispatch(showModal({modalname:modalname}));
+        
+      }
+    
     function timeAgo(dateString: string): string {
         const now = new Date();
         const postDate = new Date(Number(dateString));
@@ -90,8 +99,14 @@ export default function DebateCard({ user, time, question,postID }: { user: stri
                   {countCons}
                 </span>
               </div>
-              <Button variant="secondary" onClick={handleJoin}>Join</Button>
+              <Button variant="secondary" onClick={()=>handleShowCreate("joindebate")}>Join</Button>
             </div>
+            <Choices 
+            postID={postID}
+            question={question}
+            pros={pros}
+            cons={cons}
+            />
           </div>
         )
       }

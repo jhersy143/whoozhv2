@@ -28,7 +28,7 @@ export default function Homepage() {
     const fetchData = async () => {
       const userPosts = await fetchUser();
       setPost(userPosts);
-
+    
     }
     const getTopPosts = async () => {
       const top = await TopPosts();
@@ -77,6 +77,8 @@ export default function Homepage() {
                 time={post.createdAt} // Format the date
                 question={post.content}
                 postID={post.id}
+                pros={post.pros}
+                cons={post.cons}
               />
             ))}
           </div>
@@ -88,9 +90,11 @@ export default function Homepage() {
                 topPosts.map(post => (
                   <TrendingDebate
                   key={post.id}
-                  user=""
+                  postID={post.postID}
+                  user={`${post.user.firstname} ${post.user.lastname}`}
                   time={post.createdAt} 
                   question={post.content}
+                
                 />
                 ))
               }

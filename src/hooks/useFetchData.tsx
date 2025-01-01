@@ -28,7 +28,7 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result)
+  
     if (result.data) {
      return result.data.getPost;
     }
@@ -50,7 +50,7 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result)
+ 
     if (result.data) {
         return result.data.countChoice
     }
@@ -73,7 +73,30 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result)
+   
+    if (result.data) {
+        return result.data.countComment
+    }
+ 
+  };
+  const getPostByID  = async (postID:string) => {
+
+    const response = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+       query {
+               getPostByID(postID: "${postID}")
+            }
+        `,
+      }),
+    });
+   
+    const result = await response.json();
+   
     if (result.data) {
         return result.data.countComment
     }
@@ -95,6 +118,12 @@ const fetchUser  = async () => {
                     content
                     pros
                     cons
+                    createdAt
+                    user{
+                      firstname
+                      lastname
+                    }
+                   
                   }
             }
         `,
@@ -108,4 +137,4 @@ const fetchUser  = async () => {
     }
  
   };
-  export {countChoice, fetchUser, countComment, TopPosts}
+  export {countChoice, fetchUser, countComment, TopPosts, getPostByID}

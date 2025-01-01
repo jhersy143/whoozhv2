@@ -1,16 +1,16 @@
-import { Schema, models, model} from "mongoose";
+import { Schema, models, model, Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
 export interface IReply{
-    userID:string;
-    commentID:string;
+    userID:Types.ObjectId;
+    commentID:Types.ObjectId;
     reply:string;
     
 }
 
 const ReplySchema = new Schema<IReply>({
-    userID:{type:String, required:true},
-    commentID:{type:String, required:true},
+    userID:{type:Schema.Types.ObjectId, required:true},
+    commentID:{type:Schema.Types.ObjectId, required:true},
     reply:{type:String, required:true},
 
     }

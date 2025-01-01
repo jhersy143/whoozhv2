@@ -1,8 +1,8 @@
-import { Schema, models, model} from "mongoose";
+import { Schema, models, model,Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
 export interface IPost{
-    userID:string;
+    userID:Types.ObjectId;
     content:string;
     pros:string;
     cons?:string;
@@ -10,7 +10,7 @@ export interface IPost{
 }
 
 const PostSchema = new Schema<IPost>({
-    userID:{type:String, required:true ,ref: 'User'},
+    userID:{type:Schema.Types.ObjectId, required:true ,ref: 'User'},
     content:{type:String, required:true},
     pros:{type:String, required:true},
     cons:{type:String, required:true},

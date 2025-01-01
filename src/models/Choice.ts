@@ -1,16 +1,16 @@
-import { Schema, models, model} from "mongoose";
+import { Schema, models, model, Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
 export interface IChoice{
-    userID:string;
-    postID:string;
+    userID:Types.ObjectId;
+    postID:Types.ObjectId;
     choice:string;
  
 }
 
 const ChoiceSchema = new Schema<IChoice>({
-    userID:{type:String, required:true},
-    postID:{type:String, required:true},
+    userID:{type:Schema.Types.ObjectId, required:true},
+    postID:{type:Schema.Types.ObjectId, required:true},
     choice:{type:String, required:true},
  
 

@@ -1,17 +1,17 @@
-import { Schema, models, model} from "mongoose";
+import { Schema, models, model, Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
 export interface IComment{
-    userID:string;
-    postID:string;
+    userID:Types.ObjectId;
+    postID:Types.ObjectId;
     comment:string;
     type:String;
     
 }
 
 const CommentSchema = new Schema<IComment>({
-    userID:{type:String, required:true},
-    postID:{type:String, required:true},
+    userID:{ type:Schema.Types.ObjectId, required:true},
+    postID:{ type:Schema.Types.ObjectId, required:true},
     comment:{type:String, required:true},
     type:{type:String, required:true},
 

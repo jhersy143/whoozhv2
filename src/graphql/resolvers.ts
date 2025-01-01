@@ -29,7 +29,7 @@ const resolvers = {
       }
       const userID = user.id;
       const account = await Account.findOne({userID})
-      console.log(account)
+     // console.log(account)
       const isMatch = await bcrypt.compare(password, account.password);
       if(!isMatch){
         throw new UserInputError(password, { invalidArgs: { password } });
@@ -64,10 +64,24 @@ const resolvers = {
         throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
       }
     },
- 
+    getPostByID: async (_:any,  {postID}:{ postID: string }) => {
+      try {
+        const post = await Post.findOne({postID}); // Assuming you're using Mongoose
+        if (!Post) {
+          throw new UserInputError('User  not found', {
+            invalidArgs: { Post },
+          });
+        }
+        console.log(post)
+        return post;
+      } catch (error) {
+        throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+      }
+    },
 
   getPost: async () => {
     const posts = await Post.find().populate('userID'); // Populate user information
+    //console.log("post"+posts)
   return posts.map(post => ({
     id: post._id, // Ensure you are returning the correct id
     userID: post.userID,
@@ -77,6 +91,7 @@ const resolvers = {
     createdAt: post.createdAt,
     updatedAt: post.updatedAt,
     user: post.userID // Add the user field to the post
+    
   }));
   },
   countChoice: async (_:any, { choice,postID }:{choice: string, postID: string}) => {
@@ -104,6 +119,20 @@ const resolvers = {
           $unwind: "$postDetails"
         },
         {
+          $lookup: {
+            from: "users", // Assuming the users collection is named "users"
+            localField: "postDetails.userID", // The field in postDetails that references the user
+            foreignField: "_id", // The field in users collection
+            as: "userDetails"
+          }
+        },
+        {
+          $unwind: {
+            path: "$userDetails",
+            preserveNullAndEmptyArrays: true // Optional: if you want to keep posts without user details
+          }
+        },
+        {
           $project: {
             postID: "$postDetails._id",
             count: "$count",
@@ -111,11 +140,16 @@ const resolvers = {
             pros: "$postDetails.pros",
             cons: "$postDetails.cons",
             createdAt: "$postDetails.createdAt",
+            user: {
+              id: "$userDetails._id",
+              firstname: "$userDetails.firstname",
+              lastname: "$userDetails.lastname",
+            }
           }
         }
       ]);
   
-      console.log("Top:", topPosts); // Log the final result
+ 
       return topPosts;
     } catch (error) {
       console.error("Error in getTopPosts:", error);
@@ -279,9 +313,16 @@ const resolvers = {
           pros: string, 
           cons: string, 
          })=>{
-      const newPost = new Post({userID,content, pros, cons});
-      await newPost.save();
-      return newPost;
+          try {
+          
+              const newPost = new Post({userID,content, pros, cons});
+            await newPost.save();
+            return newPost;
+          }
+          catch(error){
+            throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR',{error});
+          }
+    
     },
     addComment: async(_:any, 
       {
@@ -299,6 +340,22 @@ const resolvers = {
       const newComment = new Post({userID,postID, comment, type});
       await newComment.save();
       return newComment;
+    },
+    addChoice: async(_:any, 
+      {
+        userID,
+        postID, 
+        choice, 
+     
+      }:
+        {
+          userID: string, 
+          postID: string, 
+          choice: string, 
+         })=>{
+      const newChoice = new Post({userID,postID, choice});
+      await newChoice.save();
+      return newChoice;
     },
   
   },

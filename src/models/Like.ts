@@ -1,16 +1,16 @@
-import { Schema, models, model} from "mongoose";
+import { Schema, models, model, Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
 export interface ILike{
-    userID:string;
-    commentID:string;
+    userID:Types.ObjectId;
+    commentID:Types.ObjectId;
 
     
 }
 
 const LikeSchema = new Schema<ILike>({
-    userID:{type:String, required:true},
-    commentID:{type:String, required:true},
+    userID:{type:Schema.Types.ObjectId, required:true},
+    commentID:{type:Schema.Types.ObjectId, required:true},
 
 
     }

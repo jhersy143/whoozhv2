@@ -1,17 +1,16 @@
-import { Schema, models, model} from "mongoose";
+import { Schema, models, model, Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
 export interface IJoined{
-    userID:string;
+    userID:Types.ObjectId;
     postID:string;
-
-    
+    status:string;
 }
 
 const JoinedSchema = new Schema<IJoined>({
-    userID:{type:String, required:true},
+    userID:{type:Schema.Types.ObjectId, required:true},
     postID:{type:String, required:true},
-
+    status:{type:String, required:true},
 
     }
 ,{timestamps:true});
