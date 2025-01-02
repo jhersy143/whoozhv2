@@ -68,6 +68,8 @@ const typeDefs = gql`
     id: ID!
     userID: String!
     postID: String!
+    choice:String!
+    status:String!
     createdAt: String
     updatedAt: String
   }
@@ -105,6 +107,7 @@ type Choice{
     countChoice(choice:String,postID:String):Int
     countComment(postID:String):Int
     getTopPosts: [TopChoice!]!
+    countJoined(postID:String,userID:String): Int
   }
 
   type Mutation {

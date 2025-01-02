@@ -15,6 +15,10 @@ interface ChoiceFilter {
   postID?: string;
   choice?: string;
 }
+interface JoinedFilter {
+  postID?: string;
+  userID?: string;
+}
 const resolvers = {
   Query: {
     getUsers: async () => {
@@ -160,6 +164,13 @@ const resolvers = {
     const filter:ChoiceFilter = {};
     if (postID) filter.postID = postID;
 
+    const count = await Comment.countDocuments(filter);
+    return count;
+  },
+  countJoined: async (_:any, { postID, userID }:{postID: string, userID: string}) => {
+    const filter:JoinedFilter = {};
+    if (postID) filter.postID = postID;
+    if (userID) filter.userID = userID;
     const count = await Comment.countDocuments(filter);
     return count;
   },
@@ -353,9 +364,32 @@ const resolvers = {
           postID: string, 
           choice: string, 
          })=>{
-      const newChoice = new Post({userID,postID, choice});
-      await newChoice.save();
-      return newChoice;
+          try {
+            // Validate userID format
+              if (!postID || typeof postID !== 'string' || postID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(postID)) {
+                throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_POST_ID');
+            }
+            if (!userID || typeof userID !== 'string' || userID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userID)) {
+              throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
+          }
+             const objectpostID= new ObjectId(postID);
+             const objectuserID= new ObjectId(userID);
+              const newChoice = new Choice(
+                {
+                  postID: objectpostID,
+                  userID:objectuserID,
+                  choice, 
+                  
+                }
+              );
+              await newChoice.save();
+      
+              return newChoice;
+            } catch (error) {
+              throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+            
+            }
+     
     },
   
   },

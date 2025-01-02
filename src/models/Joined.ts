@@ -3,13 +3,16 @@ import {unique } from "next/dist/build/utils";
 
 export interface IJoined{
     userID:Types.ObjectId;
-    postID:string;
+    postID:{type:Schema.Types.ObjectId, required:true},
+    choice:string;
     status:string;
+
 }
 
 const JoinedSchema = new Schema<IJoined>({
     userID:{type:Schema.Types.ObjectId, required:true},
-    postID:{type:String, required:true},
+    postID:{type:Schema.Types.ObjectId, required:true},
+    choice:{type:String, required:true},
     status:{type:String, required:true},
 
     }

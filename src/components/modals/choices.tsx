@@ -57,7 +57,7 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
           `,
       }),
   });
- 
+ console.log(addAccount)
   }
   const handleCloseCreate = (e: React.FormEvent) =>{
     e.preventDefault()
@@ -90,7 +90,7 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
         </div>
         <form  className="space-y-4">
           <div>
-          <h3 className="text-xl font-bold text-white">{question}</h3>
+          <h3 className=" font-bold text-white">{question}</h3>
           </div>
        
         
@@ -99,7 +99,7 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
               {pros}
             </Button>
             <Button type="button" className="flex-1 bg-red-600 hover:bg-red-700
-             text-white" onClick={(e)=>handleSubmit(e,"pros")}>
+             text-white" onClick={(e)=>handleSubmit(e,"cons")}>
               {cons}
             </Button>
           </div>
