@@ -116,6 +116,7 @@ type Choice{
     addPost(userID:String!, content:String!, pros:String!, cons:String!): Post 
     addComment(userID:String!,postID:String!, comment:String!, type:String!): Comment
     addChoice(userID:String!,postID:String!, choice:String!): Choice
+    addJoined(userID:String!,postID:String!, choice:String!, status:String!): Joined
   }
 `;
 

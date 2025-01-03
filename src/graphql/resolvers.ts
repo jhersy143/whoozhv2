@@ -107,7 +107,7 @@ const resolvers = {
   },
   getTopPosts: async () => {
     try {
-      const topPosts = await Choice.aggregate([
+      const topPosts = await Joined.aggregate([
         { $group: { _id: "$postID", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 3 },
@@ -168,12 +168,18 @@ const resolvers = {
     return count;
   },
   countJoined: async (_:any, { postID, userID }:{postID: string, userID: string}) => {
-    const filter:JoinedFilter = {};
-    if (postID) filter.postID = postID;
-    if (userID) filter.userID = userID;
-    const count = await Comment.countDocuments(filter);
-    return count;
-  },
+    try{
+      const filter:JoinedFilter = {};
+      if (postID) filter.postID = postID;
+      if (userID) filter.userID = userID;
+      const count = await Joined.countDocuments(filter);
+      return count;
+    }
+    catch (error) {
+      throw new ApolloError('error joined','FETCH_ERROR',{
+        error
+      });
+  }},
   getCommentByPostID: async (_: any, { id }: { id: string }) => {
     try {
       const user = await Comment.findById(id); // Assuming you're using Mongoose
@@ -391,8 +397,50 @@ const resolvers = {
             }
      
     },
+    addJoined: async(_:any, 
+      {
+        userID,
+        postID, 
+        choice,
+        status,
+     
+      }:
+        {
+          userID: string, 
+          postID: string, 
+          choice: string, 
+          status: string
+         })=>{
+          try {
+            // Validate userID format
+              if (!postID || typeof postID !== 'string' || postID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(postID)) {
+                throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_POST_ID');
+            }
+            if (!userID || typeof userID !== 'string' || userID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userID)) {
+              throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
+          }
+             const objectpostID= new ObjectId(postID);
+             const objectuserID= new ObjectId(userID);
+              const newJoined = new Joined(
+                {
+                  postID: objectpostID,
+                  userID:objectuserID,
+                  choice, 
+                  status,
+                  
+                }
+              );
+              await newJoined.save();
+              return newJoined;
+            } catch (error) {
+              throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+            
+            }
+     
+    },
   
   },
+  
 };
 
 export default resolvers;

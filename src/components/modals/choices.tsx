@@ -7,10 +7,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeModal } from '@/GlobalRedux/Features/showModalSlice';
 import type { RootState } from '@/GlobalRedux/store'
 import { getPostByID } from '@/hooks/useFetchData'
+import { useRouter } from 'next/navigation'
 export default function choices({postID, question, pros, cons }:{postID:string, question: string, pros: string, cons: string}) {
   const [content, setContent] = useState('')
 
   const dispatch = useDispatch()
+  const router = useRouter();
   const [post, setPost] = useState<any[] | null>(null);
   const [userID, setUserID] = useState<string | null>(null);
   const modalname = useSelector((state: RootState)=>state.modalSlice.modalname)
@@ -32,7 +34,7 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
   const handleSubmit = async (e: React.FormEvent, choice:string) => {
     e.preventDefault()
     // Handle form submission logic here
-    const addAccount = await fetch('http://localhost:3000/api/graphql', {
+    const joinDebate = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -40,15 +42,17 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
       body: JSON.stringify({
           query: `
               mutation {
-                      addChoice(
+                      addJoined(
                       userID: "${userID}", 
                       postID: "${postID}", 
+                      status:"active",
                       choice:"${choice}"
                    
                   ) {
                       id
                       userID
                       postID
+                      status
                       choice
                       
                   }
@@ -57,7 +61,10 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
           `,
       }),
   });
- console.log(addAccount)
+  if(joinDebate){
+    router.push('/pages/debateroom')
+  }
+ console.log(joinDebate)
   }
   const handleCloseCreate = (e: React.FormEvent) =>{
     e.preventDefault()

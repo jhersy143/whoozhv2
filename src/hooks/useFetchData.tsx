@@ -131,7 +131,7 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result)
+
     if (result.data) {
         return result.data.getTopPosts
     }
@@ -147,16 +147,16 @@ const fetchUser  = async () => {
       body: JSON.stringify({
         query: `
        query {
-               getPostByID(postID: "${postID}",userID: "${userID}") {
+               countJoined(postID: "${postID}", userID: "${userID}") 
             }
         `,
       }),
     });
    
     const result = await response.json();
-   
+    console.log(result)
     if (result.data) {
-        return result.data.countComment
+        return result.data.countJoined
     }
  
   };

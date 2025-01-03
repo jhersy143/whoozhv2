@@ -4,15 +4,23 @@ import React, { useState, useEffect } from "react"
 import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import {countComment,countChoice} from "@/hooks/useFetchData"
+import {countComment, countChoice, getcountJoined} from "@/hooks/useFetchData"
 import { useDispatch } from "react-redux"
 import { showModal } from "@/GlobalRedux/Features/showModalSlice";
 import  Choices  from "@/components/modals/choices";
+
 export default function DebateCard({ user, time, question, postID, pros, cons }: { user: string; time: string; question: string, postID: string, pros: string, cons: string}) {
+  
   const [commentCount, setCommentCount] = useState(0);
   const [countPros, setcountPros] = useState(0);
   const [countCons, setcountCons] = useState(0);
+  const [countJoined, setcountJoined] = useState(0);
+  const [userID, setUserID] = useState<string|any>("");
+  const router = useRouter()
   const dispatch = useDispatch();
+    useEffect(() => {
+      setUserID(localStorage.getItem('userID'));
+    },[])
   useEffect(() => {
     const fetchData = async () => {
       const commentCount = await countComment(postID);
@@ -23,12 +31,18 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
 
       const consCount = await countChoice(postID,"cons");
       setcountCons(consCount);
+
+      const joinedCount = await getcountJoined(postID, userID);
+      setcountJoined(joinedCount);
     }
     fetchData()
     }, []);
       const handleShowCreate = (modalname:string)=>{
         dispatch(showModal({modalname:modalname}));
         
+      }
+      const routeToDebateroom = ()=>{
+        router.push('/pages/debateroom'); 
       }
     
     function timeAgo(dateString: string): string {
@@ -59,7 +73,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
     
    // Output will depend on the current date and time
 
-        const router = useRouter()
+     
         const handleJoin = (e: React.FormEvent) => {
           e.preventDefault()
           console.log("hi");
@@ -92,14 +106,17 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
                 </span>
                 <span className="flex items-center">
                   <CirclePlus className="w-5 h-5 mr-1" />
-                  {countPros}
+                 {countPros}
                 </span>
                 <span className="flex items-center">
                   <CircleMinus className="w-5 h-5 mr-1" />
                   {countCons}
                 </span>
               </div>
-              <Button variant="secondary" onClick={()=>handleShowCreate("joindebate")}>Join</Button>
+              <div className="flex space-x-4 mb-2 sm:mb-0">
+              <Button variant="secondary"  className={`${countJoined>0?'':'hidden'}`}>Joined</Button>
+              <Button variant="secondary" className="bg-blue-600 text-white"  onClick={()=>countJoined>0?routeToDebateroom():handleShowCreate("joindebate")} >{countJoined>0?"View":"Join"}</Button>
+              </div>
             </div>
             <Choices 
             postID={postID}

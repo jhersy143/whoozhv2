@@ -98,9 +98,9 @@ export default function Component() {
           </div>
 
           {/* Comments Section */}
-          <div className="grid grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
+          <div className="grid lg:grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
             {/* Green Comments */}
-            <div className = {`${isGreenActive?"":"hidden"} space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
+            <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
               <Card className="bg-[#416F5F] ">
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2">
@@ -163,7 +163,7 @@ export default function Component() {
             </div>
 
             {/* Red Comments */}
-            <div className = {`${isGreenActive?"hidden":""} space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
+            <div className = {`${isGreenActive?"md:hidden":""} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
               <Card className="bg-[#6F4141]">
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2">

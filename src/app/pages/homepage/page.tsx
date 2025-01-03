@@ -33,7 +33,7 @@ export default function Homepage() {
     const getTopPosts = async () => {
       const top = await TopPosts();
       setTopPosts(top);
-      console.log(top);
+ 
     }
     
     fetchData()
