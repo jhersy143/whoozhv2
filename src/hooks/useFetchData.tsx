@@ -79,7 +79,7 @@ const fetchUser  = async () => {
     }
  
   };
-  const getPostByID  = async (postID:string) => {
+  const PostByID  = async (postID:string) => {
 
     const response = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
@@ -88,17 +88,30 @@ const fetchUser  = async () => {
       },
       body: JSON.stringify({
         query: `
-       query {
-               getPostByID(postID: "${postID}")
+     query {
+          getPostByID(id: "${postID}") {
+            id
+            content
+            pros
+            cons
+            createdAt
+            user {
+              id
+              firstname
+              lastname
+              email
+              avatar
             }
+          }
+      }
         `,
       }),
     });
    
     const result = await response.json();
-   
+    //console.log(result)
     if (result.data) {
-        return result.data.countComment
+        return result.data.getPostByID
     }
  
   };
@@ -160,4 +173,4 @@ const fetchUser  = async () => {
     }
  
   };
-  export {countChoice, fetchUser, countComment, TopPosts, getPostByID, getcountJoined}
+  export {countChoice, fetchUser, countComment, TopPosts, PostByID, getcountJoined}

@@ -68,19 +68,37 @@ const resolvers = {
         throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
       }
     },
-    getPostByID: async (_:any,  {postID}:{ postID: string }) => {
-      try {
-        const post = await Post.findOne({postID}); // Assuming you're using Mongoose
-        if (!Post) {
-          throw new UserInputError('User  not found', {
-            invalidArgs: { Post },
-          });
+    getPostByID: async (_:any, {id}:{id:string}) => {
+      try{
+        const post = await Post.findById(id).populate('userID'); // Populate user 
+        if(!post){
+          throw new UserInputError('Post not found', {
+            invalidArgs:{id},
+          })
         }
-        console.log(post)
-        return post;
-      } catch (error) {
-        throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+        return {
+          id: post._id,
+          userID: post.userID,
+          content: post.content,
+          pros: post.pros,
+          cons: post.cons,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+          user: {
+            id: post.userID._id,
+            firstname: post.userID.firstname,
+            lastname: post.userID.lastname,
+            email: post.userID.email,
+            avatar: post.userID.avatar,
+          },
+        };
+      
       }
+      catch(error){
+          throw new ApolloError('Error fetching post', 'POST_FETCH_ERROR', { error });
+      }
+
+
     },
 
   getPost: async () => {

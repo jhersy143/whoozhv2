@@ -2,13 +2,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 import React, { useState, useEffect } from "react"
 import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter,useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {countComment, countChoice, getcountJoined} from "@/hooks/useFetchData"
 import { useDispatch } from "react-redux"
 import { showModal } from "@/GlobalRedux/Features/showModalSlice";
 import  Choices  from "@/components/modals/choices";
-
+import Link from 'next/link';
 export default function DebateCard({ user, time, question, postID, pros, cons }: { user: string; time: string; question: string, postID: string, pros: string, cons: string}) {
   
   const [commentCount, setCommentCount] = useState(0);
@@ -42,7 +42,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
         
       }
       const routeToDebateroom = ()=>{
-        router.push('/pages/debateroom'); 
+        router.push(`/pages/debateroom?postID=${postID}`)
       }
     
     function timeAgo(dateString: string): string {
@@ -116,6 +116,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
               <div className="flex space-x-4 mb-2 sm:mb-0">
               <Button variant="secondary"  className={`${countJoined>0?'':'hidden'}`}>Joined</Button>
               <Button variant="secondary" className="bg-blue-600 text-white"  onClick={()=>countJoined>0?routeToDebateroom():handleShowCreate("joindebate")} >{countJoined>0?"View":"Join"}</Button>
+           
               </div>
             </div>
             <Choices 

@@ -7,20 +7,16 @@ import { MessageCircle, CirclePlus, CircleMinus, ThumbsUp, ThumbsDown,Play} from
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
 import { PostByID } from "@/hooks/useFetchData"
-import { useParams, useRouter, useSearchParams  } from "next/navigation"
+import { useParams } from "next/navigation"
 export default function Debateroom() {
   const [isGreenActive,setisGreenActive] = useState(true);
   const params = useParams();
-  const router = useRouter();
-  
   const changeActiveComments = ()=>{
     setisGreenActive(!isGreenActive);
   }
   const [userID, setUserID] = useState<string|null>(null);
-  const[posts, setPosts] = useState<any>(null);
-  //const postID = params?.postID as string
-  const SearchParams = useSearchParams();
-  const postID = SearchParams?.get('postID');
+  const[posts, setPost] = useState<any[]>([]);
+  const { postID } = useParams() as { postID: string };
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   },[])
@@ -29,19 +25,16 @@ export default function Debateroom() {
     const getPosts = async () => {
       if(postID){
 
-        const post = await PostByID(postID);
-        if(post){
-          setPosts(post);
-        }
-       
-        console.log(post.user.firstname);
+        const posts = await PostByID(postID);
+        setPost(posts);
       }
+    
  
     }
     
     getPosts();
-
-  }, [postID]);
+    console.log(posts);
+  }, [userID]);
   return (
     <div className="bg-gray-900 min-h-screen text-white">
       <div className="grid md:grid-cols-[250px_1fr]">
@@ -89,7 +82,7 @@ export default function Debateroom() {
               <AvatarFallback>JF</AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="font-semibold text-white">{posts?.user.firstname posts?.user.lastname}</h2>
+              <h2 className="font-semibold text-white">Jhersy Fernandez</h2>
               <p className="text-sm text-gray-400">1 min</p>
             </div>
           </div>
@@ -140,7 +133,7 @@ export default function Debateroom() {
                       <AvatarFallback>JF</AvatarFallback>
                     </Avatar>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">{}</span>
+                      <span className="text-sm font-medium text-white">Jhersy Fernandez</span>
                       <span className="text-xs text-gray-400">1 min</span>
                     </div>
                   </div>

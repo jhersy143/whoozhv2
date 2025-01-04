@@ -38,6 +38,7 @@ export default function Homepage() {
     
     fetchData()
     getTopPosts()
+  
   }, [userID]);
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));

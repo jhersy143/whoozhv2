@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useSelector, useDispatch } from 'react-redux';
 import { closeModal } from '@/GlobalRedux/Features/showModalSlice';
 import type { RootState } from '@/GlobalRedux/store'
-import { getPostByID } from '@/hooks/useFetchData'
+import { PostByID } from '@/hooks/useFetchData'
 import { useRouter } from 'next/navigation'
 export default function choices({postID, question, pros, cons }:{postID:string, question: string, pros: string, cons: string}) {
   const [content, setContent] = useState('')
@@ -25,7 +25,7 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
   useEffect(()=>{
 
     const fetchPost = async (postID:string) => {
-      const postbyID = await getPostByID(postID);
+      const postbyID = await PostByID(postID);
       setPost(postbyID) 
       console.log(postbyID)
     }
@@ -62,7 +62,7 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
       }),
   });
   if(joinDebate){
-    router.push('/pages/debateroom')
+    router.push(`/pages/debateroom/[${postID}]`)
   }
  console.log(joinDebate)
   }
