@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input"
 import { MessageCircle, CirclePlus, CircleMinus, ThumbsUp, ThumbsDown,Play} from "lucide-react"
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
-import { PostByID } from "@/hooks/useFetchData"
+import { PostByID, countComment, countChoice } from "@/hooks/useFetchData"
 import { useParams, useRouter, useSearchParams  } from "next/navigation"
 export default function Debateroom() {
   const [isGreenActive,setisGreenActive] = useState(true);
   const params = useParams();
   const router = useRouter();
-  
+  const [commentCount, setCommentCount] = useState(0);
+  const [countPros, setcountPros] = useState(0);
+  const [countCons, setcountCons] = useState(0);
   const changeActiveComments = ()=>{
     setisGreenActive(!isGreenActive);
   }
@@ -35,8 +37,16 @@ export default function Debateroom() {
         }
        
         console.log(post.user.firstname);
+        const commentCount = await countComment(postID);
+        setCommentCount(commentCount);
+
+        const prosCount = await countChoice(postID,"pros");
+        setcountPros(prosCount);
+
+        const consCount = await countChoice(postID,"cons");
+        setcountCons(consCount);
       }
- 
+      
     }
     
     getPosts();
@@ -89,7 +99,7 @@ export default function Debateroom() {
               <AvatarFallback>JF</AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="font-semibold text-white">{posts?.user.firstname posts?.user.lastname}</h2>
+              <h2 className="font-semibold text-white">{`${posts?.user.firstname} ${posts?.user.lastname}`}</h2>
               <p className="text-sm text-gray-400">1 min</p>
             </div>
           </div>
@@ -97,21 +107,21 @@ export default function Debateroom() {
           {/* Question */}
           <div className="space-y-4">
             <h1 className="text-2xl font-semibold">
-              Should genetically modified organisms (GMOs) be banned from agriculture?
+              {`${posts?.content}`}
             </h1>
             
             <div className="flex gap-6">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
-                <span>100</span>
+                <span>{commentCount}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CirclePlus className="h-4 w-4" />
-                <span>100</span>
+                <span>{countPros}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CirclePlus className="h-4 w-4" />
-                <span>100</span>
+                <span>{countCons}</span>
               </div>
             </div>
           </div>

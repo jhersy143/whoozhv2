@@ -198,12 +198,12 @@ const resolvers = {
         error
       });
   }},
-  getCommentByPostID: async (_: any, { id }: { id: string }) => {
+  getCommentByPostID: async (_: any, { postID }: { postID: string }) => {
     try {
-      const user = await Comment.findById(id); // Assuming you're using Mongoose
+      const user = await Comment.find({postID:postID}); // Assuming you're using Mongoose
       if (!user) {
         throw new UserInputError('User  not found', {
-          invalidArgs: { id },
+          invalidArgs: { postID },
         });
       }
       return user;
