@@ -10,7 +10,7 @@ export interface IComment{
 }
 
 const CommentSchema = new Schema<IComment>({
-    userID:{ type:Schema.Types.ObjectId, required:true},
+    userID:{ type:Schema.Types.ObjectId, required:true, ref: 'User'},
     postID:{ type:Schema.Types.ObjectId, required:true},
     comment:{type:String, required:true},
     type:{type:String, required:true},

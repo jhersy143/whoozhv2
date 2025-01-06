@@ -39,9 +39,10 @@ const typeDefs = gql`
     
  type Comment{
     id: ID!
-    userID: String!
+    userID: ID!
     comment: String!
-    postID: String!
+    postID: ID!
+    user: User!
     type: String!
     createdAt: String
     updatedAt: String
@@ -97,7 +98,7 @@ type Choice{
     getAccountByID(id:ID!): Account
     getPost: [Post!]!
     getPostByID(id:ID!): Post
-    getCommentByPostID: [Comment!]!
+    getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]
     getPostByUserID(id:ID!): [Post!]!
     getLikeByCommentID(id:ID!):Like

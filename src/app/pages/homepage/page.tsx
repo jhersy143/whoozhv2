@@ -14,6 +14,7 @@ import { fetchUser, TopPosts } from "@/hooks/useFetchData"
 type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {
+ 
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch();

@@ -198,15 +198,31 @@ const resolvers = {
         error
       });
   }},
-  getCommentByPostID: async (_: any, { postID }: { postID: string }) => {
+  getCommentByPostID: async (_: any, { postID, type }: { postID: string, type: string }) => {
     try {
-      const user = await Comment.find({postID:postID}); // Assuming you're using Mongoose
-      if (!user) {
+      const comment = await Comment.find({postID:postID, type:type}).populate('userID'); // Assuming you're using Mongoose
+      if (!comment) {
         throw new UserInputError('User  not found', {
           invalidArgs: { postID },
         });
       }
-      return user;
+    
+      return comment.map((comment) => ({
+        id:comment._id,
+        postID: comment.postID,
+        comment: comment.comment,
+        type:comment.type,
+        userID: comment.userID,
+        createdAt: comment.createdAt,
+        updatedAt: comment.updatedAt,
+        user: {
+          id: comment.userID._id.toString(),
+          firstname: comment.userID.firstname,
+          lastname: comment.userID.lastname,
+          email: comment.userID.email,
+          avatar: comment.userID.avatar,
+        },
+      }));
     } catch (error) {
       throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
     }

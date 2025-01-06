@@ -6,9 +6,17 @@ import { Input } from "@/components/ui/input"
 import { MessageCircle, CirclePlus, CircleMinus, ThumbsUp, ThumbsDown,Play} from "lucide-react"
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
-import { PostByID, countComment, countChoice } from "@/hooks/useFetchData"
+import { PostByID, countComment, countChoice, CommentByPostID } from "@/hooks/useFetchData"
 import { useParams, useRouter, useSearchParams  } from "next/navigation"
 export default function Debateroom() {
+  interface Comment {
+    comment: string;
+    user: {
+      firstname: string;
+      lastname: string;
+    };
+    
+  }
   const [isGreenActive,setisGreenActive] = useState(true);
   const params = useParams();
   const router = useRouter();
@@ -20,6 +28,8 @@ export default function Debateroom() {
   }
   const [userID, setUserID] = useState<string|null>(null);
   const[posts, setPosts] = useState<any>(null);
+  const[prosComments, setprosComments] = useState<any>([]);
+  const[consComments, setconsComments] = useState<any>(null);
   //const postID = params?.postID as string
   const SearchParams = useSearchParams();
   const postID = SearchParams?.get('postID');
@@ -35,8 +45,8 @@ export default function Debateroom() {
         if(post){
           setPosts(post);
         }
-       
-        console.log(post.user.firstname);
+    
+     
         const commentCount = await countComment(postID);
         setCommentCount(commentCount);
 
@@ -45,6 +55,14 @@ export default function Debateroom() {
 
         const consCount = await countChoice(postID,"cons");
         setcountCons(consCount);
+
+        const pros = await CommentByPostID(postID,"pros")
+        setprosComments(pros)
+
+        const cons = await CommentByPostID(postID,"cons")
+        setconsComments(cons)
+
+        console.log(prosComments);
       }
       
     }
@@ -141,7 +159,9 @@ export default function Debateroom() {
           {/* Comments Section */}
           <div className="grid lg:grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
             {/* Green Comments */}
-            <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
+            {
+              prosComments && prosComments.length > 0 && prosComments.map.map((comment:Comment) =>(
+                <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
               <Card className="bg-[#416F5F] ">
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2">
@@ -155,7 +175,7 @@ export default function Debateroom() {
                     </div>
                   </div>
                   <p className="text-sm text-white">
-                    Should genetically modified organisms (GMOs) be banned from agriculture?
+                    {comment.comment}
                   </p>
                   <div className="flex items-center space-x-2 mt-2 text-white">
                     <div className="rounded-[100%] bg-black white h-8 w-8 text-justify ">
@@ -202,6 +222,10 @@ export default function Debateroom() {
                 </div>
               </Card>
             </div>
+              )
+            )
+            }
+           
 
             {/* Red Comments */}
             <div className = {`${isGreenActive?"md:hidden":""} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
