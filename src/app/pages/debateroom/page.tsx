@@ -3,17 +3,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { MessageCircle, CirclePlus, CircleMinus, ThumbsUp, ThumbsDown,Play} from "lucide-react"
+import { MessageCircle, CirclePlus, CircleMinus} from "lucide-react"
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
 import { PostByID, countComment, countChoice, CommentByPostID } from "@/hooks/useFetchData"
 import { useParams, useRouter, useSearchParams  } from "next/navigation"
+import  CommentCard  from "@/components/ui/comment"
 export default function Debateroom() {
   interface Comment {
     comment: string;
+    createdAt:string;
+    type:string;
+    postID:string;
     user: {
       firstname: string;
       lastname: string;
+      email:string;
+      avatar:string;
     };
     
   }
@@ -62,7 +68,7 @@ export default function Debateroom() {
         const cons = await CommentByPostID(postID,"cons")
         setconsComments(cons)
 
-        console.log(prosComments);
+        console.log(pros);
       }
       
     }
@@ -160,67 +166,16 @@ export default function Debateroom() {
           <div className="grid lg:grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
             {/* Green Comments */}
             {
-              prosComments && prosComments.length > 0 && prosComments.map.map((comment:Comment) =>(
+              prosComments && prosComments.length > 0 && prosComments.map((comment:Comment) =>(
                 <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
-              <Card className="bg-[#416F5F] ">
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
-                      <AvatarFallback>JF</AvatarFallback>
-                    </Avatar>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">{}</span>
-                      <span className="text-xs text-gray-400">1 min</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-white">
-                    {comment.comment}
-                  </p>
-                  <div className="flex items-center space-x-2 mt-2 text-white">
-                    <div className="rounded-[100%] bg-black white h-8 w-8 text-justify ">
-                      <Play className="h-4 w-4 mt-2 ml-2" />
-                    </div>
-                    
-                      <ThumbsUp className="mr-1 h-4 w-4" />
-                      <span>100</span>
-                   
-                 
-                      <ThumbsDown className="mr-1 h-4 w-4" />
-                      <span>100</span>
-                  
-                </div>
-                </div>
-              </Card>
-
-              <Card className="bg-[#416F5F]">
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
-                      <AvatarFallback>JF</AvatarFallback>
-                    </Avatar>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">Jhersy Fernandez</span>
-                      <span className="text-xs text-gray-400">1 min</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-white">Bullshit</p>
-                  <div className="flex items-center space-x-2 mt-2 text-white">
-                    <div className="rounded-[100%] bg-black white h-8 w-8 text-justify ">
-                      <Play className="h-4 w-4 mt-2 ml-2" />
-                    </div>
-                    
-                      <ThumbsUp className="mr-1 h-4 w-4" />
-                      <span>100</span>
-                   
-                 
-                      <ThumbsDown className="mr-1 h-4 w-4" />
-                      <span>100</span>
-                  
-                </div>
-                </div>
-              </Card>
+                  <CommentCard 
+                    firstname = {comment.user.firstname}
+                    lastname = {comment.user.lastname}
+                    comment = {comment.comment}
+                    time = {comment.createdAt}
+                    postID = {comment.postID}
+                    />
+             
             </div>
               )
             )
@@ -229,36 +184,18 @@ export default function Debateroom() {
 
             {/* Red Comments */}
             <div className = {`${isGreenActive?"md:hidden":""} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
-              <Card className="bg-[#6F4141]">
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
-                      <AvatarFallback>JF</AvatarFallback>
-                    </Avatar>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">Jhersy Fernandez</span>
-                      <span className="text-xs text-gray-400">1 min</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-white">
-                    Should genetically modified organisms (GMOs) be banned from agriculture?
-                  </p>
-                  <div className="flex items-center space-x-2 mt-2 text-white">
-                    <div className="rounded-[100%] bg-black white h-8 w-8 text-justify ">
-                      <Play className="h-4 w-4 mt-2 ml-2" />
-                    </div>
-                    
-                      <ThumbsUp className="mr-1 h-4 w-4" />
-                      <span>100</span>
-                   
-                 
-                      <ThumbsDown className="mr-1 h-4 w-4" />
-                      <span>100</span>
-                  
-                </div>
-                </div>
-              </Card>
+            {
+              consComments && consComments.length > 0 && consComments.map((comment:Comment) =>(
+            <CommentCard 
+                    firstname = {comment.user.firstname}
+                    lastname = {comment.user.lastname}
+                    comment = {comment.comment}
+                    time = {comment.createdAt}
+                    postID = {comment.postID}
+                    />
+                 )    
+              )      
+            }
             </div>
           </div>
 

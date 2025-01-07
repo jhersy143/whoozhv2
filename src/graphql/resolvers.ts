@@ -19,6 +19,9 @@ interface JoinedFilter {
   postID?: string;
   userID?: string;
 }
+interface LikeFilter {
+  commentID?: string;
+}
 const resolvers = {
   Query: {
     getUsers: async () => {
@@ -198,6 +201,19 @@ const resolvers = {
         error
       });
   }},
+  countLike: async (_:any, { commentID }:{commentID: string}) => {
+    try{
+      const filter:LikeFilter = {};
+      if (commentID) filter.commentID = commentID;
+
+      const count = await Like.countDocuments(filter);
+      return count;
+    }
+    catch (error) {
+      throw new ApolloError('error joined','FETCH_ERROR',{
+        error
+      });
+  }},
   getCommentByPostID: async (_: any, { postID, type }: { postID: string, type: string }) => {
     try {
       const comment = await Comment.find({postID:postID, type:type}).populate('userID'); // Assuming you're using Mongoose
@@ -240,19 +256,7 @@ const resolvers = {
       throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
     }
   },
-  getLikeByCommentID: async (_: any, { id }: { id: string }) => {
-    try {
-      const user = await Like.findById(id); // Assuming you're using Mongoose
-      if (!user) {
-        throw new UserInputError('User  not found', {
-          invalidArgs: { id },
-        });
-      }
-      return user;
-    } catch (error) {
-      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
-    }
-  },
+
   getJoinedByUserID: async (_: any, { id }: { id: string }) => {
     try {
       const user = await Joined.findById(id); // Assuming you're using Mongoose

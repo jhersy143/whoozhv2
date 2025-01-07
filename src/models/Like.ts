@@ -4,13 +4,14 @@ import {unique } from "next/dist/build/utils";
 export interface ILike{
     userID:Types.ObjectId;
     commentID:Types.ObjectId;
-
+    reactionType:string;
     
 }
 
 const LikeSchema = new Schema<ILike>({
     userID:{type:Schema.Types.ObjectId, required:true},
     commentID:{type:Schema.Types.ObjectId, required:true},
+    reactionType:{type:String, required:true}
 
 
     }

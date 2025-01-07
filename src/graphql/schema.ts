@@ -109,6 +109,7 @@ type Choice{
     countComment(postID:String):Int
     getTopPosts: [TopChoice!]!
     countJoined(postID:String,userID:String): Int
+    countLike(commentID:String,userID:String): Int
   }
 
   type Mutation {
