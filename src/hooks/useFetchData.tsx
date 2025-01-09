@@ -79,7 +79,7 @@ const fetchUser  = async () => {
     }
  
   };
-  const countLike = async (postID:string) => {
+  const getCountReaction = async (commentID:string,type:string) => {
 
     const response = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
@@ -89,16 +89,16 @@ const fetchUser  = async () => {
       body: JSON.stringify({
         query: `
        query {
-               countComment(postID: "${postID}")
+               countReaction(commentID: "${commentID}", reactionType:"${type}")
             }
         `,
       }),
     });
    
     const result = await response.json();
-   
+    console.log(result.data)
     if (result.data) {
-        return result.data.countComment
+        return result.data.countReaction
     }
  
   };
@@ -132,7 +132,7 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    //console.log(result)
+ 
     if (result.data) {
         return result.data.getPostByID
     }
@@ -190,7 +190,7 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result)
+
     if (result.data) {
         return result.data.countJoined
     }
@@ -228,9 +228,34 @@ const fetchUser  = async () => {
     const result = await response.json();
    
     if (result.data) {
-      console.log(result.data)
+
         return result.data.getCommentByPostID
     }
  
   };
-  export {countChoice, fetchUser, countComment, TopPosts, PostByID, getcountJoined, CommentByPostID}
+  const getReactionByUserID  = async (commentID:string,userID:string) => {
+
+    const response = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+     query {
+          getReactionByUserID(commentID: "${commentID}",userID: "${userID}") 
+          
+      }
+        `,
+      }),
+    });
+   
+    const result = await response.json();
+   
+    if (result.data) {
+  
+        return result.data.getReactionByUserID
+    }
+ 
+  };
+  export {countChoice, fetchUser, countComment, TopPosts, PostByID, getcountJoined, CommentByPostID, getCountReaction, getReactionByUserID}

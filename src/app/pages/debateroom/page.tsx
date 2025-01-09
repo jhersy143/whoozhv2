@@ -14,7 +14,7 @@ export default function Debateroom() {
     comment: string;
     createdAt:string;
     type:string;
-    postID:string;
+    id:string;
     user: {
       firstname: string;
       lastname: string;
@@ -173,7 +173,7 @@ export default function Debateroom() {
                     lastname = {comment.user.lastname}
                     comment = {comment.comment}
                     time = {comment.createdAt}
-                    postID = {comment.postID}
+                    commentID = {comment.id}
                     />
              
             </div>
@@ -191,7 +191,7 @@ export default function Debateroom() {
                     lastname = {comment.user.lastname}
                     comment = {comment.comment}
                     time = {comment.createdAt}
-                    postID = {comment.postID}
+                    commentID = {comment.id}
                     />
                  )    
               )      

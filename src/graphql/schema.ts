@@ -57,10 +57,11 @@ const typeDefs = gql`
     updatedAt: String
   }
 
- type Like{
+ type Reaction{
     id: ID!
     userID: String!
     commentID: String!
+    reactionType:String!
     createdAt: String
     updatedAt: String
   }
@@ -83,6 +84,7 @@ type Choice{
     createdAt: String
     updatedAt: String
   }
+
  type TopChoice {
     postID: String!
     count: Int!
@@ -101,7 +103,7 @@ type Choice{
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]
     getPostByUserID(id:ID!): [Post!]!
-    getLikeByCommentID(id:ID!):Like
+    getLikeByCommentID(id:ID!):Reaction
     getJoinedByUserID(id:ID!):Joined
     getUserChoice(id:ID!,postID:ID!):Choice
     login(email: String!,password: String!) :User
@@ -109,7 +111,8 @@ type Choice{
     countComment(postID:String):Int
     getTopPosts: [TopChoice!]!
     countJoined(postID:String,userID:String): Int
-    countLike(commentID:String,userID:String): Int
+    countReaction(commentID:String,reactionType:String): Int
+    getReactionByUserID(commentID:String,userID:String): Int
   }
 
   type Mutation {
@@ -119,6 +122,8 @@ type Choice{
     addComment(userID:String!,postID:String!, comment:String!, type:String!): Comment
     addChoice(userID:String!,postID:String!, choice:String!): Choice
     addJoined(userID:String!,postID:String!, choice:String!, status:String!): Joined
+    addReaction(userID:String!,commentID:String!,reactionType:String): Reaction
+    updateReaction(userID:String!,commentID:String!,reactionType:String): Reaction
   }
 `;
 

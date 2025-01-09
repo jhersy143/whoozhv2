@@ -4,7 +4,7 @@ import Account from '@/models/Account';
 import Post from '@/models/Post';
 import Comment from '@/models/Comment';
 import Joined from '@/models/Joined';
-import Like from '@/models/Like';
+import Reaction from '@/models/Reaction';
 import Reply from '@/models/Reply';
 import Choice from '@/models/Choice';
 import bcrypt from 'bcryptjs';
@@ -21,7 +21,10 @@ interface JoinedFilter {
 }
 interface LikeFilter {
   commentID?: string;
+  type?:string;
+  userID?:string;
 }
+
 const resolvers = {
   Query: {
     getUsers: async () => {
@@ -201,12 +204,27 @@ const resolvers = {
         error
       });
   }},
-  countLike: async (_:any, { commentID }:{commentID: string}) => {
+  countReaction: async (_:any, { commentID,type }:{commentID: string, type: string}) => {
     try{
       const filter:LikeFilter = {};
       if (commentID) filter.commentID = commentID;
+      if (type) filter.type = type;
 
-      const count = await Like.countDocuments(filter);
+      const count = await Reaction.countDocuments(filter);
+      return count;
+    }
+    catch (error) {
+      throw new ApolloError('error joined','FETCH_ERROR',{
+        error
+      });
+  }},
+  getReactionByUserID: async (_:any, { commentID,userID }:{commentID: string, userID: string}) => {
+    try{
+      const filter:LikeFilter = {};
+      if (commentID) filter.commentID = commentID;
+      if (userID) filter.type = userID;
+
+      const count = await Reaction.countDocuments(filter);
       return count;
     }
     catch (error) {
@@ -270,12 +288,12 @@ const resolvers = {
       throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
     }
   },
-  getUserChoice: async (_: any, { id, PostID }: { id: string, PostID: string }) => {
+  getUserChoice: async (_: any, { userID, postID }: { userID: string, postID: string }) => {
     try {
-      const user = await Joined.findById(id); // Assuming you're using Mongoose
+      const user = await Joined.find({userID:userID,postID:postID}); // Assuming you're using Mongoose
       if (!user) {
         throw new UserInputError('User  not found', {
-          invalidArgs: { id },
+          invalidArgs: { postID },
         });
       }
       return user;
@@ -475,6 +493,70 @@ const resolvers = {
             
             }
      
+    },
+    addReaction: async(_:any, 
+      {
+        userID,
+        commentID, 
+        reactionType, 
+     
+      }:
+        {
+          userID: string, 
+          commentID: string, 
+          reactionType: string, 
+         })=>{
+          try {
+            // Validate userID format
+              if (!commentID || typeof commentID !== 'string' || commentID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(commentID)) {
+                throw new ApolloError('Invalid postID format. It must be a 24-character hexadecimal string.', 'INVALID_POST_ID');
+            }
+            if (!userID || typeof userID !== 'string' || userID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userID)) {
+              throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
+          }
+             const objectcommentID = new ObjectId(commentID);
+             const objectuserID = new ObjectId(userID);
+              const newReaction = new Reaction(
+                {
+                  commentID: objectcommentID,
+                  userID:objectuserID,
+                  reactionType, 
+                  
+                }
+              );
+              await newReaction.save();
+              console.log(newReaction)
+              return newReaction;
+            } catch (error) {
+              throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+            
+            }
+     
+    },
+    updateReaction: async (_:any, 
+      { 
+        userID, 
+        commentID, 
+        reactionType 
+
+      }:
+      {
+        
+        userID:string, 
+        commentID:string, 
+        reactionType:string
+
+      }) => {
+      try {
+        const reaction = await Reaction.findOneAndUpdate(
+          { userID, commentID },
+          { reactionType },
+          { new: true }
+        );
+        return reaction;
+      } catch (error) {
+        throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
+      }
     },
   
   },

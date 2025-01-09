@@ -1,14 +1,14 @@
 import { Schema, models, model, Types} from "mongoose";
 import {unique } from "next/dist/build/utils";
 
-export interface ILike{
+export interface IReaction{
     userID:Types.ObjectId;
     commentID:Types.ObjectId;
     reactionType:string;
     
 }
 
-const LikeSchema = new Schema<ILike>({
+const ReactionSchema = new Schema<IReaction>({
     userID:{type:Schema.Types.ObjectId, required:true},
     commentID:{type:Schema.Types.ObjectId, required:true},
     reactionType:{type:String, required:true}
@@ -17,6 +17,6 @@ const LikeSchema = new Schema<ILike>({
     }
 ,{timestamps:true});
 
-const Like = models?.Joined || model<ILike>("Like", LikeSchema);
+const Reaction = models?.Reaction || model<IReaction>("Reaction", ReactionSchema);
 
-export default  Like;
+export default  Reaction;
