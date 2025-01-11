@@ -224,8 +224,9 @@ const resolvers = {
       if (commentID) filter.commentID = commentID;
       if (userID) filter.type = userID;
 
-      const count = await Reaction.countDocuments(filter);
-      return count;
+      const reaction = await Reaction.findOne(filter);
+      console.log("reaction" + reaction)
+      return reaction;
     }
     catch (error) {
       throw new ApolloError('error joined','FETCH_ERROR',{

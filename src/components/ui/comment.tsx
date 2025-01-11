@@ -22,7 +22,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
   const[countLike, setCountLike] = useState(0);
   const[countDislike, setCountDislike] = useState(0);
   const[consComments, setconsComments] = useState(0);
-  const[countReaction, setCountReaction] = useState(0);
+  const[countReaction, setCountReaction] = useState<any[]>([]);;
   const[reaction, setReaction] = useState<string|any>("");
     useEffect(() => {
       setUserID(localStorage.getItem('userID'));
@@ -38,7 +38,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
 
         const react = await getReactionByUserID(commentID,userID);
         setCountReaction(react);
-
+      
     }
     fetchData()
     }, []);
@@ -54,7 +54,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
         const handleReaction = async (type:string) => {
           setReaction(type);
           let result = [];
-          if(countReaction==0){
+          if(countReaction==null){
             const addReaction = await fetch('http://localhost:3000/api/graphql', {
               method: 'POST',
               headers: {

@@ -96,7 +96,6 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-    console.log(result.data)
     if (result.data) {
         return result.data.countReaction
     }
@@ -244,6 +243,10 @@ const fetchUser  = async () => {
         query: `
      query {
           getReactionByUserID(commentID: "${commentID}",userID: "${userID}") 
+          {
+            id
+            reactionType
+          }
           
       }
         `,
@@ -251,7 +254,7 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-   
+    console.log(result.data)
     if (result.data) {
   
         return result.data.getReactionByUserID

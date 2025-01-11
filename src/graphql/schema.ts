@@ -103,7 +103,6 @@ type Choice{
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]
     getPostByUserID(id:ID!): [Post!]!
-    getLikeByCommentID(id:ID!):Reaction
     getJoinedByUserID(id:ID!):Joined
     getUserChoice(id:ID!,postID:ID!):Choice
     login(email: String!,password: String!) :User
@@ -112,7 +111,7 @@ type Choice{
     getTopPosts: [TopChoice!]!
     countJoined(postID:String,userID:String): Int
     countReaction(commentID:String,reactionType:String): Int
-    getReactionByUserID(commentID:String,userID:String): Int
+    getReactionByUserID(commentID:String,userID:String): Reaction
   }
 
   type Mutation {
