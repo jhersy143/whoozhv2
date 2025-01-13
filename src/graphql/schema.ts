@@ -103,8 +103,7 @@ type Choice{
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]
     getPostByUserID(id:ID!): [Post!]!
-    getJoinedByUserID(id:ID!):Joined
-    getUserChoice(id:ID!,postID:ID!):Choice
+    getJoinedByUserID(userID:String!,postID:String!):Joined
     login(email: String!,password: String!) :User
     countChoice(choice:String,postID:String):Int
     countComment(postID:String):Int

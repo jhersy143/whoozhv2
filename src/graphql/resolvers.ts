@@ -225,7 +225,7 @@ const resolvers = {
       if (userID) filter.type = userID;
 
       const reaction = await Reaction.findOne(filter);
-      console.log("reaction" + reaction)
+    
       return reaction;
     }
     catch (error) {
@@ -276,30 +276,18 @@ const resolvers = {
     }
   },
 
-  getJoinedByUserID: async (_: any, { id }: { id: string }) => {
+
+  getJoinedByUserID: async (_: any, { userID, postID }: { userID: string, postID: string }) => {
     try {
-      const user = await Joined.findById(id); // Assuming you're using Mongoose
-      if (!user) {
-        throw new UserInputError('User  not found', {
-          invalidArgs: { id },
-        });
-      }
-      return user;
-    } catch (error) {
-      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
-    }
-  },
-  getUserChoice: async (_: any, { userID, postID }: { userID: string, postID: string }) => {
-    try {
-      const user = await Joined.find({userID:userID,postID:postID}); // Assuming you're using Mongoose
-      if (!user) {
-        throw new UserInputError('User  not found', {
+      const joined = await Joined.findOne({userID:userID,postID:postID}); // Assuming you're using Mongoose
+      if (!joined) {
+        throw new UserInputError('Joined  not found', {
           invalidArgs: { postID },
         });
       }
-      return user;
+      return joined;
     } catch (error) {
-      throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+      throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
     }
   },
 },
@@ -526,7 +514,7 @@ const resolvers = {
                 }
               );
               await newReaction.save();
-              console.log(newReaction)
+          
               return newReaction;
             } catch (error) {
               throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });

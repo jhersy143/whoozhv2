@@ -49,6 +49,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
    
     
    // Output will depend on the current date and time
+   
 
      
         const handleReaction = async (type:string) => {

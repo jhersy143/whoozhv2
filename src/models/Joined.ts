@@ -3,7 +3,7 @@ import {unique } from "next/dist/build/utils";
 
 export interface IJoined{
     userID:Types.ObjectId;
-    postID:{type:Schema.Types.ObjectId, required:true},
+    postID:Types.ObjectId;
     choice:string;
     status:string;
 

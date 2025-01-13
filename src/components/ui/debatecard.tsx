@@ -37,7 +37,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
       setcountJoined(joinedCount);
     }
     fetchData()
-    }, []);
+    }, [userID]);
       const handleShowCreate = (modalname:string)=>{
         dispatch(showModal({modalname:modalname}));
         

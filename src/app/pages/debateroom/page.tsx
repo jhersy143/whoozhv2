@@ -9,6 +9,8 @@ import { styles } from '@/app/pages/style'
 import { PostByID, countComment, countChoice, CommentByPostID } from "@/hooks/useFetchData"
 import { useParams, useRouter, useSearchParams  } from "next/navigation"
 import  CommentCard  from "@/components/ui/comment"
+import AddComment from  "@/components/ui/addComment"
+
 export default function Debateroom() {
   interface Comment {
     comment: string;
@@ -68,7 +70,7 @@ export default function Debateroom() {
         const cons = await CommentByPostID(postID,"cons")
         setconsComments(cons)
 
-        console.log(pros);
+     
       }
       
     }
@@ -166,8 +168,8 @@ export default function Debateroom() {
           <div className="grid lg:grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
             {/* Green Comments */}
             {
-              prosComments && prosComments.length > 0 && prosComments.map((comment:Comment) =>(
-                <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
+              prosComments && prosComments.length > 0 && prosComments.map((comment:Comment,index:number) =>(
+                <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`} key = {index}>
                   <CommentCard 
                     firstname = {comment.user.firstname}
                     lastname = {comment.user.lastname}
@@ -183,54 +185,28 @@ export default function Debateroom() {
            
 
             {/* Red Comments */}
-            <div className = {`${isGreenActive?"md:hidden":""} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`}>
+      
             {
+                  
               consComments && consComments.length > 0 && consComments.map((comment:Comment) =>(
-            <CommentCard 
-                    firstname = {comment.user.firstname}
-                    lastname = {comment.user.lastname}
-                    comment = {comment.comment}
-                    time = {comment.createdAt}
-                    commentID = {comment.id}
-                    />
+                <div className = {`${isGreenActive?"md:hidden":""} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`} key ={comment.id}>
+                  <CommentCard 
+                      firstname = {comment.user.firstname}
+                      lastname = {comment.user.lastname}
+                      comment = {comment.comment}
+                      time = {comment.createdAt}
+                      commentID = {comment.id}
+                      />
+                  </div>
                  )    
               )      
+    
             }
             </div>
-          </div>
+        
 
           {/* Comment Input */}
-          <div className=" grid grid-cols-6">
-            <div className="col-span-6  relative">
-              <Input 
-                placeholder="Comment Here" 
-                className="bg-gray-200 text-gray-900 border-0 pr-12"
-              />
-               <Button 
-              size="sm" 
-              className="absolute right-1 top-1 p-1"
-              variant="ghost"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                className="w-4 h-4 text-blue-500"
-              >
-                <path
-                  d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-            </div>
-           
-           
-          </div>
+          {postID && <AddComment postID={postID} />}
         </div>
       </div>
     </div>
