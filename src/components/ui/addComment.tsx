@@ -12,23 +12,25 @@ import  CommentCard  from "@/components/ui/comment"
 import { getJoinedByUserID } from "@/hooks/useFetchData"
 export default function AddComment({postID}:{postID:string}){
     const [commentText,setCommentText] = useState('')
-    const [countJoined,setCountJoined] = useState<any[]>([]);
+    const [userJoined,setUserJoined] = useState<any[]>([]);
+    const [choice, setChoice] = useState('')
     const [userID, setUserID] = useState<string|any>("");
+  
      useEffect(() => {
           setUserID(localStorage.getItem('userID'));
         },[])
     useEffect( ()=>{
           const fetchData = async () => {
             const joined = await getJoinedByUserID(userID, postID);
-            setCountJoined(joined);
-           
+            setChoice(joined?.choice ?? null);
+            console.log(joined)
           }
 
           fetchData()
 
-    },[userID])
+    },[commentText])
     const handleComment = async() =>{
-        const addReaction = await fetch('http://localhost:3000/api/graphql', {
+        const addComment = await fetch('http://localhost:3000/api/graphql', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -40,7 +42,7 @@ export default function AddComment({postID}:{postID:string}){
                           userID: "${userID}", 
                           postID: "${postID}", 
                           comment: "${commentText}", 
-                          type: "${countJoined}",
+                          type: "${choice}",
                       
                       
                       ) {
@@ -55,20 +57,23 @@ export default function AddComment({postID}:{postID:string}){
               `,
           }),
       });
-       const result = await addReaction.json();
+       const result = await addComment.json();
        console.log(result)
       }
     return (
         <div className=" grid grid-cols-6">
-            <div className="col-span-6  relative">
+            <div className="col-span-4  relative">
+          
               <Input 
                 placeholder="Comment Here" 
                 className="bg-gray-200 text-gray-900 border-0 pr-12"
+                onChange={(e)=>{setCommentText(e.target.value)}}
               />
                <Button 
               size="sm" 
               className="absolute right-1 top-1 p-1"
               variant="ghost"
+              onClick={handleComment}
             >
               <svg
                 width="24"

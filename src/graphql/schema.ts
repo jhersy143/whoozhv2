@@ -68,8 +68,8 @@ const typeDefs = gql`
 
  type Joined{
     id: ID!
-    userID: String!
-    postID: String!
+    userID: ID!
+    postID: ID!
     choice:String!
     status:String!
     createdAt: String
@@ -103,7 +103,7 @@ type Choice{
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]
     getPostByUserID(id:ID!): [Post!]!
-    getJoinedByUserID(userID:String!,postID:String!):Joined
+    getJoinedByUserID(userID:ID!,postID:ID!):Joined
     login(email: String!,password: String!) :User
     countChoice(choice:String,postID:String):Int
     countComment(postID:String):Int

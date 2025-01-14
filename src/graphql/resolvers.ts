@@ -279,7 +279,9 @@ const resolvers = {
 
   getJoinedByUserID: async (_: any, { userID, postID }: { userID: string, postID: string }) => {
     try {
-      const joined = await Joined.findOne({userID:userID,postID:postID}); // Assuming you're using Mongoose
+      const objectUserID = new ObjectId(userID);
+      const objectPostID = new ObjectId(postID);
+      const joined = await Joined.findOne({userID:objectUserID,postID:objectPostID}); // Assuming you're using Mongoose
       if (!joined) {
         throw new UserInputError('Joined  not found', {
           invalidArgs: { postID },
@@ -399,9 +401,22 @@ const resolvers = {
           comment: string, 
           type: string, 
          })=>{
-      const newComment = new Post({userID,postID, comment, type});
-      await newComment.save();
-      return newComment;
+          try{
+            if (!postID || typeof postID !== 'string' || postID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(postID)) {
+              throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_POST_ID');
+             }
+           if (!userID || typeof userID !== 'string' || userID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userID)) {
+              throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
+
+            }
+            const newComment = new Comment({userID,postID, comment, type});
+            await newComment.save();
+            return newComment;
+          }
+          catch(error){
+            throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR',{error});
+          }
+             
     },
     addChoice: async(_:any, 
       {

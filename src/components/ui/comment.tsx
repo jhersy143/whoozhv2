@@ -14,7 +14,7 @@ import { getCountReaction, getReactionByUserID } from "@/hooks/useFetchData";
 import { AiFillLike } from "react-icons/ai";
 import { BiSolidDislike } from "react-icons/bi";
 import e from "cors"
-export default function CommentCard({ firstname, lastname, comment, time, commentID }: { firstname: string; lastname: string; comment: string, time: string,  commentID: string }) {
+export default function CommentCard({ firstname, lastname, comment, time, commentID, type }: { firstname: string; lastname: string; comment: string, time: string,  commentID: string, type:string }) {
   
 
   const [userID, setUserID] = useState<string|any>("");
@@ -117,7 +117,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
           // Handle form submission logic here
         }
         return (
-            <Card className="bg-[#416F5F] ">
+            <Card className={`${type=="pros"?"bg-[#416F5F]":"bg-[#6F4141]"}`}>
             <div className="p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
