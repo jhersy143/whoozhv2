@@ -74,6 +74,7 @@ const typeDefs = gql`
     status:String!
     createdAt: String
     updatedAt: String
+    post:Post!
   }
 
 type Choice{
@@ -102,8 +103,9 @@ type Choice{
     getPostByID(id:ID!): Post
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]
-    getPostByUserID(id:ID!): [Post!]!
+    getPostByUserID(userID:ID!): [Post!]!
     getJoinedByUserID(userID:ID!,postID:ID!):Joined
+    getAllJoinedByUserID(userID:ID!):[Joined!]!
     login(email: String!,password: String!) :User
     countChoice(choice:String,postID:String):Int
     countComment(postID:String):Int

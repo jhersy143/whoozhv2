@@ -23,7 +23,7 @@ export default function AddComment({postID}:{postID:string}){
           const fetchData = async () => {
             const joined = await getJoinedByUserID(userID, postID);
             setChoice(joined?.choice ?? null);
-            console.log(joined)
+      
           }
 
           fetchData()

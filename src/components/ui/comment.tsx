@@ -38,10 +38,12 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
 
         const react = await getReactionByUserID(commentID,userID);
         setCountReaction(react);
-      
+        if(react!==null){
+          setReaction(react.reactionType)
+        }
     }
     fetchData()
-    }, []);
+    }, [reaction]);
 
     
     
@@ -140,12 +142,15 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
                   reaction==="LIKE"?<AiFillLike className={`mr-1 h-4 w-4 `}/>:<ThumbsUp className={`mr-1 h-4 w-4 `} onClick = {()=>handleReaction("LIKE")}/>
                     
                   }
-               
                   <span>{countLike}</span>
                
              
                  
-                  {reaction==="DISLIKE"?<BiSolidDislike className={`mr-1 h-4 w-4 `}/>:<ThumbsDown className={`mr-1 h-4 w-4`}  onClick = {()=>handleReaction("DISLIKE")}/>}
+                  {
+
+                  reaction==="DISLIKE"?<BiSolidDislike className={`mr-1 h-4 w-4 `}/>:<ThumbsDown className={`mr-1 h-4 w-4`}  onClick = {()=>handleReaction("DISLIKE")}/>
+                  
+                  }
                   <span>{countDislike}</span>
               
             </div>

@@ -21,7 +21,7 @@ interface JoinedFilter {
 }
 interface LikeFilter {
   commentID?: string;
-  type?:string;
+  reactionType?:string;
   userID?:string;
 }
 
@@ -204,11 +204,11 @@ const resolvers = {
         error
       });
   }},
-  countReaction: async (_:any, { commentID,type }:{commentID: string, type: string}) => {
+  countReaction: async (_:any, { commentID,reactionType }:{commentID: string, reactionType: string}) => {
     try{
       const filter:LikeFilter = {};
       if (commentID) filter.commentID = commentID;
-      if (type) filter.type = type;
+      if (reactionType) filter.reactionType = reactionType;
 
       const count = await Reaction.countDocuments(filter);
       return count;
@@ -222,7 +222,7 @@ const resolvers = {
     try{
       const filter:LikeFilter = {};
       if (commentID) filter.commentID = commentID;
-      if (userID) filter.type = userID;
+      if (userID) filter.userID = userID;
 
       const reaction = await Reaction.findOne(filter);
     
@@ -292,7 +292,48 @@ const resolvers = {
       throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
     }
   },
+  getAllJoinedByUserID: async (_: any, { userID }: { userID: string}) => {
+    try {
+      const objectUserID = new ObjectId(userID);
+      const joined = await Joined.find({userID:objectUserID}).populate('postID');// Assuming you're using Mongoose
+      if (!joined) {
+        throw new UserInputError('Joined  not found', {
+          invalidArgs: { userID },
+        });
+      }
+      return joined.map((joined)=>({
+        id:joined.id,
+        post:{
+          id:joined.postID.id.toString(),
+          content:joined.postID.content
+        }
+
+
+      }));
+
+
+    } catch (error) {
+      throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
+    }
+  },
+  getPostByUserID: async (_: any, { userID }: { userID: string }) => {
+    try {
+      const objectUserID = new ObjectId(userID);
+      const joined = await Post.find({userID:objectUserID}); // Assuming you're using Mongoose
+      if (!joined) {
+        throw new UserInputError('Joined  not found', {
+          invalidArgs: { userID },
+        });
+      }
+      return joined;
+
+
+    } catch (error) {
+      throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
+    }
+  },
 },
+
   Mutation: {
     addUser: async (_: any, 
       { 

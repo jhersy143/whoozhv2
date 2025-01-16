@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input"
 import { MessageCircle, CirclePlus, CircleMinus} from "lucide-react"
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
-import { PostByID, countComment, countChoice, CommentByPostID } from "@/hooks/useFetchData"
+import { PostByID, countComment, countChoice, CommentByPostID, getPostByUserID, getAllJoinedByUserID } from "@/hooks/useFetchData"
 import { useParams, useRouter, useSearchParams  } from "next/navigation"
 import  CommentCard  from "@/components/ui/comment"
 import AddComment from  "@/components/ui/addComment"
+import DebateList from "@/components/ui/debateList"
+import { Join } from "mongodb"
 
 export default function Debateroom() {
   interface Comment {
@@ -25,6 +27,16 @@ export default function Debateroom() {
     };
     
   }
+  type Joined = {
+     id: string;
+    post:{
+        content:string;
+    }
+  }
+  type Post = {
+    id: string;
+    content:string;
+ }
   const [isGreenActive,setisGreenActive] = useState(true);
   const params = useParams();
   const router = useRouter();
@@ -36,13 +48,18 @@ export default function Debateroom() {
   }
   const [userID, setUserID] = useState<string|null>(null);
   const[posts, setPosts] = useState<any>(null);
+  const[joined,setJoined] = useState<any>(null);
+  const[yourPost, setYourpost] = useState<any>(null); 
   const[prosComments, setprosComments] = useState<any>([]);
   const[consComments, setconsComments] = useState<any>(null);
+
+
   //const postID = params?.postID as string
   const SearchParams = useSearchParams();
   const postID = SearchParams?.get('postID');
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
+  
   },[])
   useEffect(() => {
   
@@ -69,7 +86,16 @@ export default function Debateroom() {
 
         const cons = await CommentByPostID(postID,"cons")
         setconsComments(cons)
-
+        console.log(userID)
+        if(userID){
+          const joinedList = await getAllJoinedByUserID(userID);
+          setJoined(joinedList);
+          console.log(joined)
+          const yourPostlist = await getPostByUserID(userID)
+          setYourpost(yourPostlist);
+          console.log(yourPostlist)
+        }
+     
      
       }
       
@@ -77,7 +103,7 @@ export default function Debateroom() {
     
     getPosts();
 
-  }, [postID]);
+  }, [userID]);
   return (
     <div className="bg-gray-900 min-h-screen text-white">
       <div className="grid md:grid-cols-[250px_1fr]">
@@ -89,28 +115,30 @@ export default function Debateroom() {
             <div className="space-y-4">
               <h2 className="text-sm font-semibold text-gray-400">Joined</h2>
               <div className="space-y-1">
-                <Button variant="ghost" className="w-full justify-start text-sm">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Should cell phones be...
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-sm">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Should genetically mo...
-                </Button>
+                {
+                
+               joined && joined.length > 0 && joined.map((joined:Joined)=>(
+                  <DebateList
+                  content = {joined.post.content}
+                  />
+                ))
+                
+              }
               </div>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-sm font-semibold text-gray-400">Your Debates</h2>
               <div className="space-y-1">
-                <Button variant="ghost" className="w-full justify-start text-sm">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Should cell phones be...
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-sm">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Should genetically mo...
-                </Button>
+                {
+                 yourPost && yourPost.length > 0 && yourPost.map((post:Post)=>(
+                    <DebateList
+                        content= {post.content}
+                    />
+
+                  ))
+                }
+               
               </div>
             </div>
           </div>
