@@ -99,7 +99,7 @@ type Choice{
     getUsers: [User!]!
     getUserByID(id:ID!) :User
     getAccountByID(id:ID!): Account
-    getPost: [Post!]!
+    getAllPost(userID:String!): [Post!]!
     getPostByID(id:ID!): Post
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
     getReplyByCommentID: [Reply!]

@@ -107,20 +107,28 @@ const resolvers = {
 
     },
 
-  getPost: async () => {
-    const posts = await Post.find().populate('userID'); // Populate user information
-    //console.log("post"+posts)
-  return posts.map(post => ({
-    id: post._id, // Ensure you are returning the correct id
-    userID: post.userID,
-    content: post.content,
-    pros: post.pros,
-    cons: post.cons,
-    createdAt: post.createdAt,
-    updatedAt: post.updatedAt,
-    user: post.userID // Add the user field to the post
-    
-  }));
+    getAllPost: async (_:any,{userID}:{userID:string}) => {
+      const userObjectId = new ObjectId(userID);
+    const posts = await Post.find({ userID: { $ne: userID } }).populate('userID'); // Populate user information
+    console.log("post"+posts)
+  try{
+
+    return posts.map(post => ({
+      id: post._id, // Ensure you are returning the correct id
+      userID: post.userID,
+      content: post.content,
+      pros: post.pros,
+      cons: post.cons,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      user: post.userID // Add the user field to the post
+      
+    }));
+  }
+  catch(error){
+    throw new ApolloError('Error fetching posts', 'POST_FETCH_ERROR', { error });
+  }
+
   },
   countChoice: async (_:any, { choice,postID }:{choice: string, postID: string}) => {
     const filter:ChoiceFilter = {};

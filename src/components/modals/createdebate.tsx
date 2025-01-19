@@ -48,6 +48,10 @@ export default function createdebate() {
   });
   const result = await response.json();
   console.log(result)
+  dispatch(closeModal());
+  }
+  const handleCancel = () => {
+    dispatch(closeModal());
   }
   const handleCloseCreate = (e: React.FormEvent) =>{
     e.preventDefault()
@@ -110,7 +114,7 @@ export default function createdebate() {
             <Button type="submit" className="flex-1 bg-green-600 hover:bg-green-700 text-white">
               Post
             </Button>
-            <Button type="button" className="flex-1 bg-red-600 hover:bg-red-700 text-white">
+            <Button type="button" className="flex-1 bg-red-600 hover:bg-red-700 text-white" onClick={handleCancel}>
               Cancel
             </Button>
           </div>

@@ -1,4 +1,4 @@
-const fetchUser  = async () => {
+const getAllPost  = async (userID:string) => {
 
     const response = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
@@ -8,7 +8,7 @@ const fetchUser  = async () => {
       body: JSON.stringify({
         query: `
        query {
-              getPost{
+              getAllPost(userID: "${userID}"){
                 id
                 content
                 pros
@@ -28,9 +28,9 @@ const fetchUser  = async () => {
     });
    
     const result = await response.json();
-  
+    console.log(result)
     if (result.data) {
-     return result.data.getPost;
+     return result.data.getAllPost;
     }
   };
   const countChoice  = async (postID:string,choice:string) => {
@@ -347,4 +347,4 @@ const fetchUser  = async () => {
     }
  
   };
-  export {countChoice, fetchUser, countComment, TopPosts, PostByID, getcountJoined, CommentByPostID, getCountReaction, getReactionByUserID, getJoinedByUserID, getPostByUserID, getAllJoinedByUserID}
+  export {countChoice, getAllPost, countComment, TopPosts, PostByID, getcountJoined, CommentByPostID, getCountReaction, getReactionByUserID, getJoinedByUserID, getPostByUserID, getAllJoinedByUserID}

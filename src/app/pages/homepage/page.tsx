@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
 import { Callback } from "next-redux-wrapper"
 import TrendingDebate from "@/components/ui/trendingdebate"
-import { fetchUser, TopPosts } from "@/hooks/useFetchData"
+import { getAllPost, TopPosts } from "@/hooks/useFetchData"
 type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {
@@ -27,8 +27,13 @@ export default function Homepage() {
   },[])
   useEffect(() => {
     const fetchData = async () => {
-      const userPosts = await fetchUser();
-      setPost(userPosts);
+      if(userID){
+        console.log(userID)
+        const userPosts = await getAllPost(userID);
+        setPost(userPosts);
+ 
+      }
+    
     
     }
     const getTopPosts = async () => {
@@ -71,7 +76,8 @@ export default function Homepage() {
               <Button className="flex-grow bg-blue-600 hover:bg-blue-700" onClick={()=>handleShowCreate("createdebate")}>Create New</Button>
             </div>
 
-            {posts.map(post => (
+            { 
+           posts && posts.map(post => (
         
               <DebateCard
                 key={post.id}
@@ -82,7 +88,8 @@ export default function Homepage() {
                 pros={post.pros}
                 cons={post.cons}
               />
-            ))}
+            ))
+            }
           </div>
 
           <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">

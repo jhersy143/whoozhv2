@@ -1,13 +1,19 @@
 'use client'
 import { Button } from "@/components/ui/button"
 import { MessageCircle} from "lucide-react"
-
-export default function DebateList({content}:{content:string}){
+import { useRouter } from "next/navigation"
+export default function DebateList({content,postID}:{content:string,postID:string}){
+  const router = useRouter();
+  const routeToDebateroom = ()=>{
+    console.log("hi")
+    router.push(`/pages/debateroom?postID=${postID}`)
+  }
 
     return(
-        <Button variant="ghost" className="w-full justify-start text-sm">
+        <Button variant="ghost" className="w-full justify-start text-sm" onClick = {()=>routeToDebateroom()}>
         <MessageCircle className="h-4 w-4 mr-2" />
-        {content} asdasd
+        {content} 
+        
       </Button>
 
     )

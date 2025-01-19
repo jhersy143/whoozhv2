@@ -30,6 +30,7 @@ export default function Debateroom() {
   type Joined = {
      id: string;
     post:{
+        id:string
         content:string;
     }
   }
@@ -103,7 +104,7 @@ export default function Debateroom() {
     
     getPosts();
 
-  }, [userID]);
+  }, [userID,postID]);
   return (
     <div className="bg-gray-900 min-h-screen text-white">
       <div className="grid md:grid-cols-[250px_1fr]">
@@ -120,6 +121,7 @@ export default function Debateroom() {
                joined && joined.length > 0 && joined.map((joined:Joined)=>(
                   <DebateList
                   content = {joined.post.content}
+                  postID = {joined.post.id}
                   />
                 ))
                 
@@ -133,6 +135,7 @@ export default function Debateroom() {
                 {
                  yourPost && yourPost.length > 0 && yourPost.map((post:Post)=>(
                     <DebateList
+                        postID = {post.id}
                         content= {post.content}
                     />
 
