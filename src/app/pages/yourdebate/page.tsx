@@ -6,10 +6,16 @@ import { Button } from "@/components/ui/button"
 import { showModal,changemodalname } from "@/GlobalRedux/Features/showModalSlice";
 import Createdebate from "@/components/modals/createdebate"
 import { useDispatch } from "react-redux"
+import { useEffect } from "react"
+import DebateCard  from "@/components/ui/debatecard"
+import {  getPostByUserID, getAllJoinedByUserID } from "@/hooks/useFetchData"
 export default function Homepage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch();
   const [active,Setactive] = useState("yourdebate")
+  const[joined,setJoined] = useState<any[]>([]);
+  const[yourPost, setYourpost] = useState<any[]>([]); 
+  const [userID, setUserID] = useState<string|null>(null);
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
     
@@ -17,6 +23,29 @@ export default function Homepage() {
   const handleClick = (button:string)=>{
     Setactive(button);
   }
+
+  useEffect(() => {
+    setUserID(localStorage.getItem('userID'));
+  
+  },[])
+  useEffect(() => {
+    const fetchData = async () => {
+      if(userID){
+        const joinedList = await getAllJoinedByUserID(userID);
+        setJoined(joinedList);
+        console.log(joined)
+        const yourPostlist = await getPostByUserID(userID)
+        setYourpost(yourPostlist);
+        console.log(yourPostlist)
+      }
+    
+    
+    }
+  
+    
+    fetchData()
+  
+  }, [userID]);
   return (
     <div className="flex bg-gray-900 text-white ">
    
@@ -34,18 +63,42 @@ export default function Homepage() {
               </Avatar>
               <Button className="flex-grow bg-blue-600 hover:bg-blue-700" onClick={()=>handleShowCreate("createdebate")}>Create New</Button>
             </div>
+                {
+                  active==="joined"?
+                    <>
+                      {
+                       joined && joined.length > 0 && joined.map(joined => (
 
-            <DebateCard
-              user="Jhersy Fernandez"
-              time="1 min"
-              question="Should cell phones be allowed in schools?"
-            />
+                          <DebateCard
+                            key={joined.id}
+                            user={`${joined.post.user.firstname} ${joined.post.user.lastname}`}
+                            time={joined.post.createdAt} // Format the date
+                            question={joined.post.content}
+                            postID={joined.post.id}
+                            pros={joined.post.pros}
+                            cons={joined.post.cons}
+                          />
+                          ))
+                        }
+                    </>:
+                    <>
+                       {
+                        yourPost && yourPost.length > 0 && yourPost.map(yourPost => (
 
-            <DebateCard
-              user="Jhersy Fernandez"
-              time="1 min"
-              question="Should genetically modified organisms (GMOs) be banned from agriculture?"
-            />
+                          <DebateCard
+                            key={yourPost.id}
+                            user={`${yourPost.user.firstname} ${yourPost.user.lastname}`}
+                            time={yourPost.createdAt} // Format the date
+                            question={yourPost.content}
+                            postID={yourPost.id}
+                            pros={yourPost.pros}
+                            cons={yourPost.cons}
+                          />
+                        ))
+                        }
+                    </>
+                }
+                
           </div>
 
           <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
@@ -74,38 +127,7 @@ export default function Homepage() {
   )
 }
 
-function DebateCard({ user, time, question }: { user: string; time: string; question: string }) {
-  return (
-    <div className="bg-gray-800 p-4 rounded-lg z-0">
-      <div className="flex items-center space-x-2 mb-2">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src="/placeholder.svg" alt={user} />
-          <AvatarFallback>{user[0]}</AvatarFallback>
-        </Avatar>
-        <span className="font-semibold">{user}</span>
-        <span className="text-gray-400 text-sm">{time}</span>
-      </div>
-      <p className="mb-4">{question}</p>
-      <div className="flex flex-wrap justify-between items-center">
-        <div className="flex space-x-4 mb-2 sm:mb-0">
-          <span className="flex items-center">
-            <MessageSquare className="w-5 h-5 mr-1" />
-            100
-          </span>
-          <span className="flex items-center">
-            <CirclePlus className="w-5 h-5 mr-1" />
-            100
-          </span>
-          <span className="flex items-center">
-            <CircleMinus className="w-5 h-5 mr-1" />
-            100
-          </span>
-        </div>
-        <Button variant="secondary">Join</Button>
-      </div>
-    </div>
-  )
-}
+
 
 function TrendingDebate({ user, time, question }: { user: string; time: string; question: string }) {
   return (

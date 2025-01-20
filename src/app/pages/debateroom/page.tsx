@@ -87,7 +87,7 @@ export default function Debateroom() {
 
         const cons = await CommentByPostID(postID,"cons")
         setconsComments(cons)
-        console.log(userID)
+   
         if(userID){
           const joinedList = await getAllJoinedByUserID(userID);
           setJoined(joinedList);

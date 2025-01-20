@@ -75,6 +75,7 @@ const typeDefs = gql`
     createdAt: String
     updatedAt: String
     post:Post!
+    user:User!
   }
 
 type Choice{

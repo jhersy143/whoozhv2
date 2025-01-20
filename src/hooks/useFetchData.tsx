@@ -240,7 +240,18 @@ const getAllPost  = async (userID:string) => {
                   post{
                     id
                     content
+                    createdAt
+                    updatedAt
+                    user {
+                        id
+                        firstname
+                        lastname
+                        email
+                        avatar
+                        
+                      }
                   }
+              
                }
             }
         `,
@@ -268,6 +279,15 @@ const getAllPost  = async (userID:string) => {
                {
                   id
                   content
+                  createdAt
+                  updatedAt
+                     user {
+                        id
+                        firstname
+                        lastname
+                        email
+                        avatar
+                      }
                }
             }
         `,

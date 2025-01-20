@@ -10,6 +10,7 @@ import Choice from '@/models/Choice';
 import bcrypt from 'bcryptjs';
 import { ObjectId } from 'mongodb';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
+import { join } from 'path';
 // Define the ChoiceFilter interface
 interface ChoiceFilter {
   postID?: string;
@@ -303,21 +304,44 @@ const resolvers = {
   getAllJoinedByUserID: async (_: any, { userID }: { userID: string}) => {
     try {
       const objectUserID = new ObjectId(userID);
-      const joined = await Joined.find({userID:objectUserID}).populate('postID');// Assuming you're using Mongoose
+      const joined = await Joined.find({userID:objectUserID}).populate({
+        path: 'postID',
+        populate: {
+            path: 'userID', // Populate the userID in the Post model
+
+        },
+      });// Assuming you're using Mongoose
       if (!joined) {
         throw new UserInputError('Joined  not found', {
           invalidArgs: { userID },
         });
       }
-      return joined.map((joined)=>({
-        id:joined.id,
-        post:{
-          id:joined.postID.id.toString(),
-          content:joined.postID.content
+      console.log(joined)
+      return joined.map((joined)=>{
+        const post = joined.postID;
+        return{
+          id:joined.id,
+          post:{
+            id:joined.postID.id.toString(),
+            content:joined.postID.content,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt,
+            user: {
+              id: post.userID._id.toString(),
+              firstname: post.userID.firstname,
+              lastname: post.userID.lastname,
+              email: post.userID.email,
+              avatar: post.userID.avatar,
+              createdAt: post.userID.createdAt,
+              updatedAt: post.userID.updatedAt
+            },
+          },
         }
+       
+    
+      
 
-
-      }));
+      });
 
 
     } catch (error) {
@@ -327,14 +351,31 @@ const resolvers = {
   getPostByUserID: async (_: any, { userID }: { userID: string }) => {
     try {
       const objectUserID = new ObjectId(userID);
-      const joined = await Post.find({userID:objectUserID}); // Assuming you're using Mongoose
-      if (!joined) {
+      const post = await Post.find({userID:objectUserID}).populate('userID'); // Assuming you're using Mongoose
+      if (!post) {
         throw new UserInputError('Joined  not found', {
           invalidArgs: { userID },
         });
       }
-      return joined;
-
+      return post.map((post)=>({
+        
+          id:post.id.toString(),
+          content:post.content,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+          user: {
+            id: post.userID._id.toString(),
+            firstname: post.userID.firstname,
+            lastname: post.userID.lastname,
+            email: post.userID.email,
+            avatar: post.userID.avatar,
+            createdAt: post.userID.createdAt,
+            updatedAt: post.userID.updatedAt
+          }
+        
+      })
+      );
+      
 
     } catch (error) {
       throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });

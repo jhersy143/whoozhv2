@@ -10,7 +10,7 @@ export interface IJoined{
 }
 
 const JoinedSchema = new Schema<IJoined>({
-    userID:{type:Schema.Types.ObjectId, required:true},
+    userID:{type:Schema.Types.ObjectId, required:true, ref :'User'},
     postID:{type:Schema.Types.ObjectId, required:true, ref :'Post'},
     choice:{type:String, required:true},
     status:{type:String, required:true},
