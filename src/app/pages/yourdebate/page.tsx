@@ -8,7 +8,7 @@ import Createdebate from "@/components/modals/createdebate"
 import { useDispatch } from "react-redux"
 import { useEffect } from "react"
 import DebateCard  from "@/components/ui/debatecard"
-import {  getPostByUserID, getAllJoinedByUserID } from "@/hooks/useFetchData"
+import {  getPostByUserID, getAllJoinedByUserID, TopPosts } from "@/hooks/useFetchData"
 export default function Homepage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ export default function Homepage() {
   const[joined,setJoined] = useState<any[]>([]);
   const[yourPost, setYourpost] = useState<any[]>([]); 
   const [userID, setUserID] = useState<string|null>(null);
+  const[topPosts,setTopPosts] = useState<any[]>([]);
   const handleShowCreate = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
     
@@ -41,10 +42,16 @@ export default function Homepage() {
     
     
     }
-  
+    const getTopPosts = async () => {
+      const top = await TopPosts();
+      setTopPosts(top);
+ 
+    }
+    
     
     fetchData()
-  
+    getTopPosts()
+
   }, [userID]);
   return (
     <div className="flex bg-gray-900 text-white ">
@@ -101,26 +108,26 @@ export default function Homepage() {
                 
           </div>
 
-          <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
-            <h2 className="text-xl font-bold mb-4">Trends</h2>
-            <div className="space-y-4">
-              <TrendingDebate
-                user="Jhersy Fernandez"
-                time="1 hour"
-                question="Should cell phones be allowed in schools?"
-              />
-              <TrendingDebate
-                user="Jhersy Fernandez"
-                time="1 hour"
-                question="Should genetically modified organisms (GMOs) be banned from agriculture?"
-              />
-              <TrendingDebate
-                user="Jhersy Fernandez"
-                time="1 day"
-                question="Kelangan Ba Financialy stable ka bago makipagrelasyon?"
-              />
-            </div>
-          </div>
+              <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
+                      <h2 className="text-xl font-bold mb-4">Trends</h2>
+                      <div className="space-y-4">
+                        {
+                          topPosts.map(post => (
+                            <TrendingDebate
+                            key={post.id}
+                            postID={post.postID}
+                            user={`${post.user.firstname} ${post.user.lastname}`}
+                            time={post.createdAt} 
+                            question={post.content}
+                          
+                          />
+                          ))
+                        }
+                       
+                       
+                       
+                      </div>
+                    </div>
         </div>
       </div>
     </div>
