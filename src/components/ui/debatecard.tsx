@@ -10,7 +10,7 @@ import { showModal } from "@/GlobalRedux/Features/showModalSlice";
 import  Choices  from "@/components/modals/choices";
 import Link from 'next/link';
 import { timeAgo } from "@/utils/dateCalculation"
-export default function DebateCard({ user, time, question, postID, pros, cons }: { user: string; time: string; question: string, postID: string, pros: string, cons: string}) {
+export default function DebateCard({ user, time, question, postID, pros, cons, yourpost }: { user: string; time: string; question: string, postID: string, pros: string, cons: string, yourpost?:boolean}) {
   
   const [commentCount, setCommentCount] = useState(0);
   const [countPros, setcountPros] = useState(0);
@@ -94,7 +94,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons }:
               </div>
               <div className="flex space-x-4 mb-2 sm:mb-0">
               <Button variant="secondary"  className={`${countJoined>0?'':'hidden'}`}>Joined</Button>
-              <Button variant="secondary" className="bg-blue-600 text-white"  onClick={()=>countJoined>0?routeToDebateroom():handleShowCreate("joindebate")} >{countJoined>0?"View":"Join"}</Button>
+              <Button variant="secondary" className="bg-blue-600 text-white"  onClick={()=>countJoined>0||yourpost?routeToDebateroom():handleShowCreate("joindebate")} >{countJoined>0||yourpost?"View":"Join"}</Button>
            
               </div>
             </div>
