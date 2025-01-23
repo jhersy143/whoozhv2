@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image  from "next/image";
 import Link from 'next/link';
 
@@ -11,7 +11,19 @@ const nav = () => {
     setIsMenuOpen(!isMenuOpen);
   }
   const [isNotifOpen, setIsNotifOpen] = useState(false)
-
+ const handleOutsideClick = (e: MouseEvent) => {
+    const target = e.target as Element;
+    if (!target.closest('#modal')) {
+      setIsNotifOpen(false)
+    }
+  };
+   useEffect(() => {
+     
+      document.addEventListener('click', handleOutsideClick);
+      return () => {
+        document.removeEventListener('click', handleOutsideClick);
+      };
+    }, [isNotifOpen]);
   const notifications = [
     { id: 1, action: "Commented on Your Debate" },
     { id: 2, action: "Joined Your Debate" },

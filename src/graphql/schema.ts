@@ -86,6 +86,9 @@ type Choice{
     createdAt: String
     updatedAt: String
   }
+type Notification{
+  id:ID!
+}
 
  type TopChoice {
     postID: String!
