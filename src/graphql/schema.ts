@@ -88,6 +88,13 @@ type Choice{
   }
 type Notification{
   id:ID!
+  postID:String!
+  recipientID:String!
+  initiatorID:String!
+  action:String!
+  description:String!
+  user:User!
+  post:Post!
 }
 
  type TopChoice {
@@ -117,6 +124,7 @@ type Notification{
     countJoined(postID:String,userID:String): Int
     countReaction(commentID:String,reactionType:String): Int
     getReactionByUserID(commentID:String,userID:String): Reaction
+    getAllNotification:[Notification!]!
   }
 
   type Mutation {
@@ -128,6 +136,7 @@ type Notification{
     addJoined(userID:String!,postID:String!, choice:String!, status:String!): Joined
     addReaction(userID:String!,commentID:String!,reactionType:String): Reaction
     updateReaction(userID:String!,commentID:String!,reactionType:String): Reaction
+    addNotification(postID:String!,initiatorID:String!,recipientID:String!,is_seen:String!,description:String!): Notification
   }
 `;
 

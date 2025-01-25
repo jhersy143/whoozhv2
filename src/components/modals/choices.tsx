@@ -8,7 +8,7 @@ import { closeModal } from '@/GlobalRedux/Features/showModalSlice';
 import type { RootState } from '@/GlobalRedux/store'
 import { PostByID } from '@/hooks/useFetchData'
 import { useRouter } from 'next/navigation'
-export default function choices({postID, question, pros, cons }:{postID:string, question: string, pros: string, cons: string}) {
+export default function choices({postID, question, pros, cons,userid }:{postID:string, question: string, pros: string, cons: string, userid:string}) {
   const [content, setContent] = useState('')
 
   const dispatch = useDispatch()
@@ -61,7 +61,36 @@ export default function choices({postID, question, pros, cons }:{postID:string, 
           `,
       }),
   });
-  if(joinDebate){
+  const addNotif = await fetch('http://localhost:3000/api/graphql', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        query: `
+            mutation {
+                    addNotification(
+                    recipientID: "${userID}",
+                    initiatorID:"${userid}", 
+                    postID: "${postID}", 
+                    description:"Joined your Debate",
+                    is_seen:false
+                 
+                ) {
+                    id
+                    recipientID
+                    initiatorID
+                    postID
+                    description
+                    is_seen
+                    
+                }
+              }
+            
+        `,
+    }),
+});
+  if(joinDebate && addNotif){
     router.push(`/pages/debateroom/[${postID}]`)
   }
  console.log(joinDebate)

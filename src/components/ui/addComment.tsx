@@ -10,7 +10,7 @@ import { PostByID, countComment, countChoice, CommentByPostID } from "@/hooks/us
 import { useParams, useRouter, useSearchParams  } from "next/navigation"
 import  CommentCard  from "@/components/ui/comment"
 import { getJoinedByUserID } from "@/hooks/useFetchData"
-export default function AddComment({postID}:{postID:string}){
+export default function AddComment({postID,userid}:{postID:string,userid:string}){
     const [commentText,setCommentText] = useState('')
     const [userJoined,setUserJoined] = useState<any[]>([]);
     const [choice, setChoice] = useState('')
@@ -59,6 +59,35 @@ export default function AddComment({postID}:{postID:string}){
       });
        const result = await addComment.json();
        console.log(result)
+       const addNotif = await fetch('http://localhost:3000/api/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: `
+                mutation {
+                        addNotification(
+                        recipientID: "${userID}",
+                        initiatorID:"${userid}", 
+                        postID: "${postID}", 
+                        description:"Joined your Debate",
+                        is_seen:false
+                     
+                    ) {
+                        id
+                        recipientID
+                        initiatorID
+                        postID
+                        description
+                        is_seen
+                        
+                    }
+                  }
+                
+            `,
+        }),
+    });
       }
     return (
         <div className=" grid grid-cols-6">

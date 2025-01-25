@@ -652,7 +652,52 @@ const resolvers = {
         throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
       }
     },
-  
+    addNotification: async(_:any, 
+      {
+        recipientID,
+        initiatorID, 
+        postID, 
+        description,
+        is_seen
+     
+      }:
+        {
+          recipientID: string, 
+          initiatorID: string, 
+          postID: string, 
+          description:string,
+          is_seen:boolean
+         })=>{
+          try {
+            // Validate userID format
+              if (!recipientID || typeof recipientID !== 'string' || recipientID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(recipientID)) {
+                throw new ApolloError('Invalid postID format. It must be a 24-character hexadecimal string.', 'INVALID_POST_ID');
+            }
+            if (!initiatorID || typeof initiatorID !== 'string' || initiatorID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(initiatorID)) {
+              throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
+          }
+             const objectrecipientID = new ObjectId(recipientID);
+             const objectinitiatorID = new ObjectId(initiatorID);
+             const objectpostID = new ObjectId(postID);
+          
+              const newNotif = new Reaction(
+                {
+                  recipientID: objectrecipientID, 
+                  initiatorID: objectinitiatorID, 
+                  postID:objectpostID,
+                  description,
+                  is_seen,
+                }
+              );
+              await newNotif.save();
+          
+              return newNotif;
+            } catch (error) {
+              throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+            
+            }
+     
+    },
   },
   
 };

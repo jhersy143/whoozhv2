@@ -241,7 +241,13 @@ export default function Debateroom() {
         
 
           {/* Comment Input */}
-          {postID && <AddComment postID={postID} />}
+          {
+          postID && 
+          <AddComment 
+             postID={postID} 
+             userid ={posts?.user.id}
+          />
+          }
         </div>
       </div>
     </div>

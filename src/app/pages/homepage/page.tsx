@@ -87,7 +87,7 @@ export default function Homepage() {
                 postID={post.id}
                 pros={post.pros}
                 cons={post.cons}
-                
+                userid={post.user.id}
               />
             ))
             }

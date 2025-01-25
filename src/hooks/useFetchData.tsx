@@ -155,6 +155,7 @@ const getAllPost  = async (userID:string) => {
                     cons
                     createdAt
                     user{
+                      id
                       firstname
                       lastname
                     }

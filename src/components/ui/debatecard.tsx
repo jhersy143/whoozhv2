@@ -10,7 +10,7 @@ import { showModal } from "@/GlobalRedux/Features/showModalSlice";
 import  Choices  from "@/components/modals/choices";
 import Link from 'next/link';
 import { timeAgo } from "@/utils/dateCalculation"
-export default function DebateCard({ user, time, question, postID, pros, cons, yourpost }: { user: string; time: string; question: string, postID: string, pros: string, cons: string, yourpost?:boolean}) {
+export default function DebateCard({ user, time, question, postID, pros, cons, yourpost,userid }: { user: string; time: string; question: string, postID: string, pros: string, cons: string, yourpost?:boolean,userid:string}) {
   
   const [commentCount, setCommentCount] = useState(0);
   const [countPros, setcountPros] = useState(0);
@@ -99,6 +99,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons, y
               </div>
             </div>
             <Choices 
+            userid = {userid}
             postID={postID}
             question={question}
             pros={pros}

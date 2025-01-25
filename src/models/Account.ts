@@ -12,7 +12,7 @@ export interface IAccount{
 
 const AccountSchema = new Schema<IAccount>({
     userID:{ type: Schema.Types.ObjectId, required: true, ref: 'User ' },
-    provider:{type:String},
+    provider:{type:String}, 
     providerAccountID:{type:String},
     password:{type:String, required:true},
     image:{type:String}
