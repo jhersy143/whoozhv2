@@ -71,7 +71,7 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
                         recipientID: "${userID}",
                         initiatorID:"${userid}", 
                         postID: "${postID}", 
-                        description:"Joined your Debate",
+                        description:"Commented to your Debate",
                         is_seen:false
                      
                     ) {

@@ -14,7 +14,7 @@ import { getCountReaction, getReactionByUserID } from "@/hooks/useFetchData";
 import { AiFillLike } from "react-icons/ai";
 import { BiSolidDislike } from "react-icons/bi";
 import e from "cors"
-export default function CommentCard({ firstname, lastname, comment, time, commentID, type }: { firstname: string; lastname: string; comment: string, time: string,  commentID: string, type:string }) {
+export default function CommentCard({ firstname, lastname, comment, time, commentID, type, userid, postID }: { firstname: string; lastname: string; comment: string, time: string,  commentID: string, type:string, userid:string, postID:string }) {
   
 
   const [userID, setUserID] = useState<string|any>("");
@@ -84,6 +84,35 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
               }),
           });
            result = await addReaction.json();
+           const addNotif = await fetch('http://localhost:3000/api/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: `
+                    mutation {
+                            addNotification(
+                            recipientID: "${userID}",
+                            initiatorID:"${userid}", 
+                            postID: "${postID}", 
+                            description:"Reacted to your Comment",
+                            is_seen:false
+                         
+                        ) {
+                            id
+                            recipientID
+                            initiatorID
+                            postID
+                            description
+                            is_seen
+                            
+                        }
+                      }
+                    
+                `,
+            }),
+        });
           }
           else{
             const updateReaction = await fetch('http://localhost:3000/api/graphql', {

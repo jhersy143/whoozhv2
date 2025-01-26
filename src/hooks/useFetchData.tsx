@@ -368,4 +368,42 @@ const getAllPost  = async (userID:string) => {
     }
  
   };
-  export {countChoice, getAllPost, countComment, TopPosts, PostByID, getcountJoined, CommentByPostID, getCountReaction, getReactionByUserID, getJoinedByUserID, getPostByUserID, getAllJoinedByUserID}
+  const getNotificationByUser  = async (userID:string) => {
+
+    const response = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+     query {
+          getCommentByPostID(userID: "${userID}") {
+             id
+             description
+             is_seen
+             postID
+             createdAt
+             user: {
+                id
+                firstname
+                lastname
+                email
+                avatar
+            
+          }
+          }
+      }
+        `,
+      }),
+    });
+   
+    const result = await response.json();
+   
+    if (result.data) {
+
+        return result.data.getNotificationByUser
+    }
+ 
+  };
+  export {countChoice, getAllPost, countComment, TopPosts, PostByID, getcountJoined, CommentByPostID, getCountReaction, getReactionByUserID, getJoinedByUserID, getPostByUserID, getAllJoinedByUserID, getNotificationByUser}

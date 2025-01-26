@@ -34,6 +34,7 @@ export default function DebateCard({ user, time, question, postID, pros, cons, y
       setcountCons(consCount);
 
       const joinedCount = await getcountJoined(postID, userID);
+      console.log(joinedCount);
       setcountJoined(joinedCount);
     }
     fetchData()

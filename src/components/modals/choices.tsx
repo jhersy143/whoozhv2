@@ -61,6 +61,7 @@ export default function choices({postID, question, pros, cons,userid }:{postID:s
           `,
       }),
   });
+  const is_seen = false
   const addNotif = await fetch('http://localhost:3000/api/graphql', {
     method: 'POST',
     headers: {
@@ -74,7 +75,7 @@ export default function choices({postID, question, pros, cons,userid }:{postID:s
                     initiatorID:"${userid}", 
                     postID: "${postID}", 
                     description:"Joined your Debate",
-                    is_seen:false
+                    is_seen:${is_seen}
                  
                 ) {
                     id
@@ -91,9 +92,11 @@ export default function choices({postID, question, pros, cons,userid }:{postID:s
     }),
 });
   if(joinDebate && addNotif){
-    router.push(`/pages/debateroom/[${postID}]`)
+    router.push(`/pages/debateroom?postID=${postID}`)
   }
- console.log(joinDebate)
+ //const notif =  await addNotif.json();
+ //console.log(notif)
+ dispatch(closeModal());
   }
   const handleCloseCreate = (e: React.FormEvent) =>{
     e.preventDefault()

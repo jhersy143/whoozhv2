@@ -4,8 +4,8 @@ export interface Inotification{
     recipientID:Types.ObjectId,
     initiatorID:Types.ObjectId,
     postID:Types.ObjectId,
-    is_seen:string,
-    description: string,
+    is_seen:Boolean,
+    description: String,
    
 
 }
@@ -15,7 +15,7 @@ const NotificationSchema = new Schema<Inotification>({
     initiatorID:{type:Schema.Types.ObjectId, required:true,ref:'User'},
     postID:{type:Schema.Types.ObjectId,required:true,ref:'Post'},
     description:{type:String},
-    is_seen:{type:String}
+    is_seen:{type:Boolean}
 },{timestamps:true})
 
 const Notification = models.Notification || model<Inotification>("Notification",NotificationSchema);

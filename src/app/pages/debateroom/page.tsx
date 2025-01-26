@@ -209,6 +209,8 @@ export default function Debateroom() {
                     time = {comment.createdAt}
                     commentID = {comment.id}
                     type = "pros"
+                    userid ={posts?.user.id}
+                    postID= {posts?.id}
                     />
              
           
@@ -230,6 +232,8 @@ export default function Debateroom() {
                       time = {comment.createdAt}
                       commentID = {comment.id}
                       type = "cons"
+                      userid ={posts?.user.id}
+                      postID= {posts?.id}
                       />
                  
                  )    

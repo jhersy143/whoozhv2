@@ -7,6 +7,8 @@ import { Home, User, Bookmark, Bell, X , Menu, LogOut, ChevronRight } from 'luci
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const nav = () => {
   const [isMenuOpen,setIsMenuOpen] = useState(false);
+  const [notif, setNotif] = useState<any>([]);
+  const [userID, setUserID] = useState<string|null>(null);
   const toggleMenu = ()=>{
     setIsMenuOpen(!isMenuOpen);
   }
@@ -17,6 +19,10 @@ const nav = () => {
       setIsNotifOpen(false)
     }
   };
+  useEffect(() => {
+    setUserID(localStorage.getItem('userID'));
+  
+  },[]);
    useEffect(() => {
      
       document.addEventListener('click', handleOutsideClick);

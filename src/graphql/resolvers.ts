@@ -7,6 +7,7 @@ import Joined from '@/models/Joined';
 import Reaction from '@/models/Reaction';
 import Reply from '@/models/Reply';
 import Choice from '@/models/Choice';
+import Notification from '@/models/Notification';
 import bcrypt from 'bcryptjs';
 import { ObjectId } from 'mongodb';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
@@ -381,6 +382,39 @@ const resolvers = {
       throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
     }
   },
+  getNotificationByUser: async (_: any, { userID }: { userID: string }) => {
+    try {
+      const objectUserID = new ObjectId(userID);
+      const notification = await Notification.find({recipientID:objectUserID}).populate('initiatorID'); // Assuming you're using Mongoose
+      if (!notification) {
+        throw new UserInputError('Joined  not found', {
+          invalidArgs: { userID },
+        });
+      }
+      return notification.map((notification)=>({
+        
+          id:notification.id.toString(),
+          description:notification.description,
+          is_seen: notification.is_seen,
+          postID:notification.postID,
+          createdAt: notification.updatedAt,
+          user: {
+            id: notification.initiatorID._id.toString(),
+            firstname: notification.initiatorID.firstname,
+            lastname: notification.initiatorID.lastname,
+            email: notification.initiatorID.email,
+            avatar: notification.initiatorID.avatar,
+            
+          }
+        
+      })
+      );
+      
+
+    } catch (error) {
+      throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
+    }
+  },
 },
 
   Mutation: {
@@ -680,13 +714,13 @@ const resolvers = {
              const objectinitiatorID = new ObjectId(initiatorID);
              const objectpostID = new ObjectId(postID);
           
-              const newNotif = new Reaction(
+              const newNotif = new Notification(
                 {
                   recipientID: objectrecipientID, 
                   initiatorID: objectinitiatorID, 
                   postID:objectpostID,
                   description,
-                  is_seen,
+                  is_seen
                 }
               );
               await newNotif.save();
