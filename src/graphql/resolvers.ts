@@ -112,7 +112,7 @@ const resolvers = {
     getAllPost: async (_:any,{userID}:{userID:string}) => {
       const userObjectId = new ObjectId(userID);
     const posts = await Post.find({ userID: { $ne: userID } }).populate('userID'); // Populate user information
-    console.log("post"+posts)
+
   try{
 
     return posts.map(post => ({
@@ -317,7 +317,7 @@ const resolvers = {
           invalidArgs: { userID },
         });
       }
-      console.log(joined)
+   
       return joined.map((joined)=>{
         const post = joined.postID;
         return{
@@ -385,15 +385,16 @@ const resolvers = {
   getNotificationByUser: async (_: any, { userID }: { userID: string }) => {
     try {
       const objectUserID = new ObjectId(userID);
-      const notification = await Notification.find({recipientID:objectUserID}).populate('initiatorID'); // Assuming you're using Mongoose
-      if (!notification) {
-        throw new UserInputError('Joined  not found', {
+      const notifications = await Notification.find({recipientID:objectUserID}).populate('initiatorID'); // Assuming you're using Mongoose
+      if (!notifications) {
+        throw new UserInputError('Notif  not found', {
           invalidArgs: { userID },
         });
       }
-      return notification.map((notification)=>({
+      console.log(notifications)
+      return notifications.map((notification)=>({
         
-          id:notification.id.toString(),
+          id:notification._id,
           description:notification.description,
           is_seen: notification.is_seen,
           postID:notification.postID,
@@ -407,12 +408,13 @@ const resolvers = {
             
           }
         
-      })
+      }
+      )
       );
       
 
     } catch (error) {
-      throw new ApolloError('Error fetching Joined', 'USER_FETCH_ERROR', { error });
+      throw new ApolloError('Error fetching Notif', 'USER_FETCH_ERROR', { error });
     }
   },
 },

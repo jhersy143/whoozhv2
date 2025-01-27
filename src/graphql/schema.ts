@@ -94,7 +94,8 @@ type Notification{
   is_seen:Boolean!
   description:String!
   user:User!
-  post:Post!
+  createdAt: String
+  updatedAt: String
 }
 
  type TopChoice {
@@ -124,7 +125,7 @@ type Notification{
     countJoined(postID:String,userID:String): Int
     countReaction(commentID:String,reactionType:String): Int
     getReactionByUserID(commentID:String,userID:String): Reaction
-    getNotificationByUser(userID:String): Notification
+    getNotificationByUser(userID:String): [Notification]!
   }
 
   type Mutation {

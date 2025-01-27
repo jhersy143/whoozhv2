@@ -378,28 +378,28 @@ const getAllPost  = async (userID:string) => {
       body: JSON.stringify({
         query: `
      query {
-          getCommentByPostID(userID: "${userID}") {
+          getNotificationByUser(userID: "${userID}") {
              id
              description
              is_seen
              postID
              createdAt
-             user: {
+             user {
                 id
                 firstname
                 lastname
                 email
                 avatar
             
+              }
           }
-          }
-      }
+        }
         `,
       }),
     });
    
     const result = await response.json();
-   
+    console.log(result.data.getNotificationByUser);
     if (result.data) {
 
         return result.data.getNotificationByUser

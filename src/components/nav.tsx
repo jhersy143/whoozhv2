@@ -2,13 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import Image  from "next/image";
 import Link from 'next/link';
-
+import { getNotificationByUser } from "@/hooks/useFetchData"
 import { Home, User, Bookmark, Bell, X , Menu, LogOut, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { timeAgo } from '@/utils/dateCalculation';
+import { time } from 'console';
+import { useRouter } from "next/navigation"
 const nav = () => {
   const [isMenuOpen,setIsMenuOpen] = useState(false);
-  const [notif, setNotif] = useState<any>([]);
+  const [notif, setNotif] = useState<any[]>([]);
   const [userID, setUserID] = useState<string|null>(null);
+  const router = useRouter();
+  const routeToDebateroom = (postID:String)=>{
+    console.log("hi")
+    router.push(`/pages/debateroom?postID=${postID}`)
+  }
+
   const toggleMenu = ()=>{
     setIsMenuOpen(!isMenuOpen);
   }
@@ -24,11 +33,21 @@ const nav = () => {
   
   },[]);
    useEffect(() => {
+    const getNotif = async () => {
+      if(userID){
+        const notif = await getNotificationByUser(userID);
+        setNotif(notif)
+        
+      }
+    
+    }
+    getNotif()
      
       document.addEventListener('click', handleOutsideClick);
       return () => {
         document.removeEventListener('click', handleOutsideClick);
       };
+    
     }, [isNotifOpen]);
   const notifications = [
     { id: 1, action: "Commented on Your Debate" },
@@ -77,19 +96,19 @@ const nav = () => {
             </div>
                 {isNotifOpen && (
                       <div className="absolute right-0  w-80 top-12 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10">
-                      {notifications.map((notification) => (
-                        <div key={notification.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0">
+                      {notif && notif.map((notif) => (
+                        <div key={notif.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0" onClick={()=>routeToDebateroom(notif.postID)}>
                           <Avatar className="w-10 h-10 mr-3">
                             <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
                             <AvatarFallback>JF</AvatarFallback>
                           </Avatar>
                           <div className="flex-grow">
-                            <p className="font-semibold">Jhersy Fernandez</p>
+                            <p className="font-semibold">{`${notif.user.firstname} ${notif.user.lastname}`}</p>
                             <p className="text-sm text-gray-400">
-                              {notification.action}
+                              {notif.description}
                             </p>
                           </div>
-                          <span className="text-sm text-gray-400">1 min</span>
+                          <span className="text-sm text-gray-400">{timeAgo(notif.createdAt)}</span>
                         </div>
                       ))}
                         <div className="p-4 text-center">
@@ -133,8 +152,8 @@ const nav = () => {
           </div>
           {isNotifOpen && (
                         <div className="absolute top-44 left-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 w-4/5">
-                        {notifications.map((notification) => (
-                          <div key={notification.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0">
+                        {notif && notif.map((notif) => (
+                          <div key={notif.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0">
                             <Avatar className="w-10 h-10 mr-3">
                               <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
                               <AvatarFallback>JF</AvatarFallback>
@@ -142,7 +161,7 @@ const nav = () => {
                             <div className="flex-grow">
                               <p className="font-semibold">Jhersy Fernandez</p>
                               <p className="text-sm text-gray-400">
-                                {notification.action}
+                                {notif.action}
                               </p>
                             </div>
                             <span className="text-sm text-gray-400">1 min</span>
