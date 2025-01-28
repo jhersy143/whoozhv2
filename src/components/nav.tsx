@@ -13,8 +13,33 @@ const nav = () => {
   const [notif, setNotif] = useState<any[]>([]);
   const [userID, setUserID] = useState<string|null>(null);
   const router = useRouter();
-  const routeToDebateroom = (postID:String)=>{
-    console.log("hi")
+  const routeToDebateroom = async (postID:String,id:String)=>{
+    const updateNotif = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          query: `
+              mutation {
+                  updateNotif(
+                      id: "${id}", 
+                      is_seen:true, 
+                   
+                  
+                  
+                  ) {
+                      id
+                      is_seen
+                   
+                    
+                  }
+              }
+          `,
+      }),
+  });
+    const result = await updateNotif.json();
+    console.log(result)
     router.push(`/pages/debateroom?postID=${postID}`)
   }
 
@@ -55,7 +80,10 @@ const nav = () => {
     { id: 3, action: "Commented on Your Debate" },
     { id: 4, action: "Commented on Your Debate" },
   ]
+  const handleSeen = async (id:String)=>{
+   
 
+  }
   return (
     <nav className="bg-gray-900 text-white p-6 border-b border-gray-300 sticky top-0 left-0 right-0 z-10 w-screen">
       <div className="container mx-auto flex justify-between items-center">
@@ -97,12 +125,12 @@ const nav = () => {
                 {isNotifOpen && (
                       <div className="absolute right-0  w-80 top-12 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10">
                       {notif && notif.map((notif) => (
-                        <div key={notif.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0" onClick={()=>routeToDebateroom(notif.postID)}>
+                        <div key={notif.id} className={`flex items-center p-4 border-b last:border-b-0  ${notif.is_seen?"border-gray-700":"bg-[#383838]"}`} >
                           <Avatar className="w-10 h-10 mr-3">
                             <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
                             <AvatarFallback>JF</AvatarFallback>
                           </Avatar>
-                          <div className="flex-grow">
+                          <div className="flex-grow" onClick={()=>routeToDebateroom(notif.postID,notif.id)}>
                             <p className="font-semibold">{`${notif.user.firstname} ${notif.user.lastname}`}</p>
                             <p className="text-sm text-gray-400">
                               {notif.description}
@@ -152,21 +180,21 @@ const nav = () => {
           </div>
           {isNotifOpen && (
                         <div className="absolute top-44 left-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 w-4/5">
-                        {notif && notif.map((notif) => (
-                          <div key={notif.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0">
-                            <Avatar className="w-10 h-10 mr-3">
-                              <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
-                              <AvatarFallback>JF</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-grow">
-                              <p className="font-semibold">Jhersy Fernandez</p>
-                              <p className="text-sm text-gray-400">
-                                {notif.action}
-                              </p>
-                            </div>
-                            <span className="text-sm text-gray-400">1 min</span>
+                          {notif && notif.map((notif) => (
+                        <div key={notif.id} className="flex items-center p-4 border-b border-gray-700 last:border-b-0" onClick={()=>routeToDebateroom(notif.postID,notif.id)}>
+                          <Avatar className="w-10 h-10 mr-3">
+                            <AvatarImage src="/placeholder.svg" alt="Jhersy Fernandez" />
+                            <AvatarFallback>JF</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-grow">
+                            <p className="font-semibold">{`${notif.user.firstname} ${notif.user.lastname}`}</p>
+                            <p className="text-sm text-gray-400">
+                              {notif.description}
+                            </p>
                           </div>
-                        ))}
+                          <span className="text-sm text-gray-400">{timeAgo(notif.createdAt)}</span>
+                        </div>
+                      ))}
                           <div className="p-4 text-center">
                             <a href="#" className="text-blue-400 hover:text-blue-300 flex items-center justify-center">
                               See all

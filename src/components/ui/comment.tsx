@@ -57,34 +57,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
         const handleReaction = async (type:string) => {
           setReaction(type);
           let result = [];
-          if(countReaction==null){
-            const addReaction = await fetch('http://localhost:3000/api/graphql', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                  query: `
-                      mutation {
-                          addReaction(
-                              userID: "${userID}", 
-                              commentID: "${commentID}", 
-                              reactionType: "${type}",
-                          
-                          
-                          ) {
-                              id
-                              userID
-                              commentID
-                              reactionType
-                            
-                          }
-                      }
-                  `,
-              }),
-          });
-           result = await addReaction.json();
-           const addNotif = await fetch('http://localhost:3000/api/graphql', {
+          const addNotif = await fetch('http://localhost:3000/api/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,6 +86,34 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
                 `,
             }),
         });
+          if(countReaction==null){
+            const addReaction = await fetch('http://localhost:3000/api/graphql', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  query: `
+                      mutation {
+                          addReaction(
+                              userID: "${userID}", 
+                              commentID: "${commentID}", 
+                              reactionType: "${type}",
+                          
+                          
+                          ) {
+                              id
+                              userID
+                              commentID
+                              reactionType
+                            
+                          }
+                      }
+                  `,
+              }),
+          });
+           result = await addReaction.json();
+           
           }
           else{
             const updateReaction = await fetch('http://localhost:3000/api/graphql', {

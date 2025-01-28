@@ -734,6 +734,31 @@ const resolvers = {
             }
      
     },
+    updateNotif: async (_:any, 
+      { 
+        id, 
+        is_seen 
+
+      }:
+      {
+        
+        id:string, 
+        is_seen:boolean, 
+   
+
+      }) => {
+      try {
+        const objectId = new ObjectId(id);
+        const notif = await Notification.findOneAndUpdate(
+          { _id:objectId },
+          { is_seen },
+          { new: true }
+        );
+        return notif;
+      } catch (error) {
+        throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
+      }
+    },
   },
   
 };

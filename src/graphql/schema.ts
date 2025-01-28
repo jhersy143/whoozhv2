@@ -138,6 +138,7 @@ type Notification{
     addReaction(userID:String!,commentID:String!,reactionType:String): Reaction
     updateReaction(userID:String!,commentID:String!,reactionType:String): Reaction
     addNotification(postID:String!,initiatorID:String!,recipientID:String!,is_seen:Boolean!,description:String!): Notification
+    updateNotif(id:String!, is_seen:Boolean!): Notification
   }
 `;
 
