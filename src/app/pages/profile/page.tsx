@@ -78,7 +78,7 @@ export default function Component() {
       const reader = new FileReader()
       reader.onload = (e) => {
         setProfile(prev => ({ ...prev, avatar: e.target?.result as string }))
-        setIsUploading(false)
+    
       }
       reader.readAsDataURL(file)
     }
@@ -91,12 +91,14 @@ export default function Component() {
       const reader = new FileReader()
       reader.onload = (e) => {
         setProfile(prev => ({ ...prev, avatar: e.target?.result as string }))
-        setIsUploading(false)
+      
       }
       reader.readAsDataURL(file)
     }
   }
+  const handleUpdatePic = () => {
 
+  }
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
   }
@@ -181,8 +183,8 @@ export default function Component() {
             <div className="grid gap-2">
               <Label htmlFor="address">Address</Label>
               <Textarea
-                id="address"
-                name="address"
+                id="lcoation"
+                name="location"
                 value={profile.location}
                 onChange={handleChange}
               />

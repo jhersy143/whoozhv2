@@ -385,13 +385,14 @@ const resolvers = {
   getNotificationByUser: async (_: any, { userID }: { userID: string }) => {
     try {
       const objectUserID = new ObjectId(userID);
-      const notifications = await Notification.find({recipientID:objectUserID}).populate('initiatorID'); // Assuming you're using Mongoose
+      const notifications = await Notification.find({recipientID:objectUserID}).populate('initiatorID').sort({createdAt:-1}).limit(5); // Assuming you're using Mongoose
       if (!notifications) {
         throw new UserInputError('Notif  not found', {
           invalidArgs: { userID },
         });
       }
       console.log(notifications)
+      const totalCount = await Notification.countDocuments({recipientID:objectUserID});
       return notifications.map((notification)=>({
         
           id:notification._id,
@@ -681,6 +682,46 @@ const resolvers = {
         const reaction = await Reaction.findOneAndUpdate(
           { userID, commentID },
           { reactionType },
+          { new: true }
+        );
+        return reaction;
+      } catch (error) {
+        throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
+      }
+    },
+    updateProfile: async (_:any, 
+      { 
+        id, 
+        firstname,
+        lastname, 
+        email,
+        location,
+        work,
+        contact,
+        avatar 
+
+      }:
+      {
+        id:string
+        firstname:string,
+        lastname:string, 
+        email:string,
+        location:string,
+        work:string,
+        contact:string,
+        avatar:string, 
+
+      }) => {
+      try {
+        const reaction = await Reaction.findOneAndUpdate(
+          { id },
+          { firstname,
+            lastname, 
+            email,
+            location,
+            work,
+            contact,
+            avatar  },
           { new: true }
         );
         return reaction;
