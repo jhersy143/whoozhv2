@@ -21,6 +21,7 @@ export default function Component() {
     avatar: '/images/userprofile.png'
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [file, setFile] = useState<File | null>(null);
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   },[])
@@ -73,14 +74,14 @@ export default function Component() {
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      setFile(file);
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setProfile(prev => ({ ...prev, avatar: e.target?.result as string }))
-    
-      }
-      reader.readAsDataURL(file)
+        setProfile((prev) => ({ ...prev, avatar: e.target?.result as string }));
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -96,9 +97,34 @@ export default function Component() {
       reader.readAsDataURL(file)
     }
   }
-  const handleUpdatePic = () => {
+  const handleUpdatePic = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (!file) {
+      alert('Please select a file');
+      return;
+    }
 
-  }
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      // Upload the file to the server
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const { fileUrl } = await uploadResponse.json();
+
+      // Update the profile with the new avatar URL
+      setProfile((prev) => ({ ...prev, avatar: fileUrl }));
+
+      // Close the upload dialog
+      setIsUploading(false);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload file');
+    }
+  };
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
   }
@@ -268,7 +294,7 @@ export default function Component() {
             <Button variant="outline" onClick={() => setIsUploading(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setIsUploading(false)}>
+            <Button onClick={(event) => handleUpdatePic(event)}>
               Save
             </Button>
           </div>
