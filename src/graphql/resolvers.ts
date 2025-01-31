@@ -729,6 +729,29 @@ const resolvers = {
         throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
       }
     },
+    updatePhoto: async (_:any, 
+      { 
+        id, 
+        avatar 
+
+      }:
+      {
+        id:string
+        avatar:string, 
+
+      }) => {
+      try {
+        const user = await User.findOneAndUpdate(
+          { id },
+          { 
+            avatar  },
+          { new: true }
+        );
+        return user;
+      } catch (error) {
+        throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
+      }
+    },
     addNotification: async(_:any, 
       {
         recipientID,

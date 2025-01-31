@@ -108,6 +108,7 @@ export default function Component() {
     formData.append('avatar', file);
 
     try {
+
       // Upload the file to the server
       const uploadResponse = await fetch('/api/upload', {
         method: 'POST',
@@ -120,6 +121,30 @@ export default function Component() {
 
       // Close the upload dialog
       setIsUploading(false);
+      const response = await fetch('http://localhost:3000/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation {
+              updatePhoto 
+                (
+                id:"${userID}"
+                avatar:"${fileUrl}"
+                )
+              {
+                id
+                avatar
+              }
+            }
+          `,
+        }),
+      });
+     
+      const result = await response.json();
+      console.log(result.data.updatePhoto)
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Failed to upload file');
@@ -260,7 +285,7 @@ export default function Component() {
                   size="icon"
                   variant="secondary"
                   className="absolute top-2 right-2"
-                  onClick={() => setProfile(prev => ({ ...prev, avatar: '/placeholder.svg?height=128&width=128' }))}
+                  onClick={() => setProfile(prev => ({ ...prev, avatar: '' }))}
                 >
                   <XIcon className="w-4 h-4" />
                 </Button>

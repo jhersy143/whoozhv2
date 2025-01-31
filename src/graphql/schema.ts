@@ -139,7 +139,8 @@ type Notification{
     updateReaction(userID:String!,commentID:String!,reactionType:String): Reaction
     addNotification(postID:String!,initiatorID:String!,recipientID:String!,is_seen:Boolean!,description:String!): Notification
     updateNotif(id:String!, is_seen:Boolean!): Notification
-    updateProfile(firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
+    updateProfile(id:String!, firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
+    updatePhoto(id:String!, avatar:String): User!
   }
 `;
 
