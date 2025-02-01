@@ -698,7 +698,7 @@ const resolvers = {
         location,
         work,
         contact,
-        avatar 
+     
 
       }:
       {
@@ -709,11 +709,11 @@ const resolvers = {
         location:string,
         work:string,
         contact:string,
-        avatar:string, 
+
 
       }) => {
       try {
-        const reaction = await Reaction.findOneAndUpdate(
+        const profile = await User.findOneAndUpdate(
           { id },
           { firstname,
             lastname, 
@@ -721,10 +721,10 @@ const resolvers = {
             location,
             work,
             contact,
-            avatar  },
+           },
           { new: true }
         );
-        return reaction;
+        return profile;
       } catch (error) {
         throw new ApolloError('Error updating reaction', 'REACTION_UPDATE_ERROR', { error });
       }

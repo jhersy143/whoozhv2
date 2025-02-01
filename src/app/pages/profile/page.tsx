@@ -12,16 +12,19 @@ export default function Component() {
   const [isEditing, setIsEditing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [userID, setUserID] = useState<string | null>(null);
+  const [error,setError] = useState("");
   const [profile, setProfile] = useState({
     firstname: '',
     email: '',
     location: '',
-    contact: 0,
+    contact: "0",
     work: '',
     avatar: '/images/userprofile.png'
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null);
+
+
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   },[])
@@ -64,12 +67,67 @@ export default function Component() {
   
   }, [userID]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setProfile(prev => ({ ...prev, [name]: value }))
+    const { name, value } = e.target;
+    
+    if(name=="contact"){
+     
+      const numericValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+      const truncatedValue = numericValue.slice(0, 11); 
+      setProfile((prev) => ({
+        ...prev,
+        [name]: truncatedValue,
+      }));
+
+      if (truncatedValue.length !== 11) {
+        setError("Contact must be exactly 11 digits.");
+      } else {
+        setError("");
+      }
+    }
+    else{
+      setProfile(prev => ({ ...prev, [name]: value }))
+    }
+  
+   
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!userID) return; // Exit if userID is not set
+      const response = await fetch('http://localhost:3000/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation {
+              updateProfile(
+                id: "${userID}"
+                firstname:"${profile.firstname}"
+                email:"${profile.email}"
+                location:"${profile.location}"
+                contact:"${profile.contact}"
+                work:"${profile.work}"
+              ) {
+                id
+                firstname
+                email
+                location
+                contact
+                work
+              
+              }
+            }
+          `,
+        }),
+      });
+     
+      const result = await response.json();
+      console.log(result)
+      if (result.data) {
+        setProfile(result.data.updateProfile);
+      }
     setIsEditing(false)
   }
 
@@ -248,6 +306,7 @@ export default function Component() {
                 value={profile.contact}
                 onChange={handleChange}
               />
+               {error && <p className="text-red-500 text-sm">{error}</p>}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="work">Work</Label>
