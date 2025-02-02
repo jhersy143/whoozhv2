@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -5,9 +6,9 @@ import { Input } from "@/components/ui/input"
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { showModal,closeModal } from '@/GlobalRedux/Features/showModalSlice';
+
 import bcrypt from 'bcryptjs';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/client';
+
 
 export default function Component() {
   const [email, setEmail] = useState('')
@@ -32,7 +33,13 @@ export default function Component() {
     return regex.test(email);
   };
   
+  const handleShowModal = (modalname:string)=>{
+    dispatch(showModal({modalname:modalname}));
 
+  
+   // dispatch(changemodalname({modalname:modalname}))
+   
+  }
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   if (validateEmail(email)) {
@@ -126,7 +133,7 @@ if (!userId) {
 };
   //redux states
   const modalname = useSelector((state: RootState) => state.modalSlice.modalname);
-  const showModal =useSelector((state: RootState)=>state.modalSlice.showmodal)
+  const show =useSelector((state: RootState)=>state.modalSlice.showmodal)
 
  
     // handle closing the modal when clicking around it 
@@ -142,10 +149,10 @@ if (!userId) {
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, [showModal]);
+  }, [show]);
 
   return (
-    <div className={`${showModal&&modalname==="register"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4`}>
+    <div className={`${show&&modalname==="register"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4`}>
       <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative" id = "modal">
         <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"  onClick={handleCloseregister}>
           <X size={24} />
@@ -194,7 +201,7 @@ if (!userId) {
         </form>
         <p className="mt-4 text-center text-sm text-gray-400">
           Already have an account?{' '}
-          <a href="#" className="text-blue-400 hover:underline">
+          <a href="#" className="text-blue-400 hover:underline" onClick={()=>handleShowModal("login")}>
             Sign in
           </a>
         </p>

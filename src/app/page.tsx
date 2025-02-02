@@ -4,14 +4,15 @@ import  Login  from "@/components/modals/login"
 import  Register  from "@/components/modals/register"
 import type { RootState } from '../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { showModal, closeModal, changemodalname } from '../GlobalRedux/Features/showModalSlice';
-import { showRegister,closeRegister } from '../GlobalRedux/Features/registerModalSlice';
+import { showModal} from '../GlobalRedux/Features/showModalSlice';
+
 
 export default function Landingpage() {
  
   const dispatch = useDispatch();
   const handleShowModal = (modalname:string)=>{
     dispatch(showModal({modalname:modalname}));
+    
    // dispatch(changemodalname({modalname:modalname}))
    
   }
@@ -36,7 +37,7 @@ export default function Landingpage() {
             Discover a platform where you can engage in meaningful debates and connect with like-minded individuals.
           </p>
           <form className="space-y-6" action="#" method="POST">
-            <Button className="w-full bg-white text-gray-900 hover:bg-gray-100">
+            {/*<Button className="w-full bg-white text-gray-900 hover:bg-gray-100">
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -57,7 +58,7 @@ export default function Landingpage() {
                 <path d="M1 1h22v22H1z" fill="none" />
               </svg>
               Sign In With Google
-            </Button>
+            </Button>*/}
 
             <Button type="button" className="w-full bg-emerald-600 text-white hover:bg-emerald-700" onClick={()=>handleShowModal("register")}>
               Create Account
