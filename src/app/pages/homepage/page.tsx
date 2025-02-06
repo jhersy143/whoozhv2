@@ -93,7 +93,7 @@ export default function Homepage() {
             }
           </div>
 
-          <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
+          <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5 h-fit">
             <h2 className="text-xl font-bold mb-4">Trends</h2>
             <div className="space-y-4">
               {

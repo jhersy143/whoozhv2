@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { closeModal } from '../../GlobalRedux/Features/showModalSlice';
+import { showModal,closeModal } from '../../GlobalRedux/Features/showModalSlice';
 import { useRouter } from 'next/navigation'
 
 export default function login() {
@@ -71,11 +71,18 @@ export default function login() {
       dispatch(closeModal());
     }
   };
+   const handleShowModal = (modalname:string)=>{
+      dispatch(showModal({modalname:modalname}));
+  
+    
+     // dispatch(changemodalname({modalname:modalname}))
+     
+    }
   const handleCloselogin = (e: React.FormEvent) =>{
     e.preventDefault()
     dispatch(closeModal());
   }
-  const showmodal = useSelector((state: RootState) => state.modalSlice.showmodal);
+  const show = useSelector((state: RootState) => state.modalSlice.showmodal);
   const modalname = useSelector((state:RootState) =>state.modalSlice.modalname)
 
    // handle closing the modal when clicking around it 
@@ -92,11 +99,11 @@ export default function login() {
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, [showmodal]);
+  }, [show]);
 
   return (
   
-    <div className={`${showmodal&&modalname==="login"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50  items-center justify-center p-4 `} >
+    <div className={`${show&&modalname==="login"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50  items-center justify-center p-4 `} >
       <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative " id ="modal">
         <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200" aria-label="Close" onClick={handleCloselogin}>
           <X size={24} />
@@ -135,7 +142,7 @@ export default function login() {
           </Button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-400">
-          <a href="#" className="text-blue-400 hover:underline">Create new account</a>
+          <a href="#" className="text-blue-400 hover:underline" onClick={()=>handleShowModal("register")}>Create new account</a>
         </p>
       </div>
     </div>

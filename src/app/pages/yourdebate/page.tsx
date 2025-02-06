@@ -85,6 +85,7 @@ export default function Homepage() {
                             postID={joined.post.id}
                             pros={joined.post.pros}
                             cons={joined.post.cons}
+                            userid={joined.post.user.id}
                           />
                           ))
                         }
@@ -102,6 +103,7 @@ export default function Homepage() {
                             pros={yourPost.pros}
                             cons={yourPost.cons}
                             yourpost={true}
+                            userid={yourPost.user.id}
                           />
                         ))
                         }
@@ -110,7 +112,7 @@ export default function Homepage() {
                 
           </div>
 
-              <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5">
+              <div className="bg-gray-800 p-4 rounded-lg lg:col-span-2 lg:col-start-5 h-fit">
                       <h2 className="text-xl font-bold mb-4">Trends</h2>
                       <div className="space-y-4">
                         {
