@@ -1,8 +1,6 @@
 'use client'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+
 import { MessageCircle, CirclePlus, CircleMinus} from "lucide-react"
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
@@ -11,7 +9,7 @@ import { useParams, useRouter, useSearchParams  } from "next/navigation"
 import  CommentCard  from "@/components/ui/comment"
 import AddComment from  "@/components/ui/addComment"
 import DebateList from "@/components/ui/debateList"
-import { Join } from "mongodb"
+
 
 export default function Debateroom() {
   interface Comment {

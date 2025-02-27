@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react"
 import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import Createdebate from "@/components/modals/createdebate"
+
 import {countComment,countChoice} from "@/hooks/useFetchData"
 export default function TrendingDebate({ user, time, question, postID }: { user: string; time: string; question: string; postID: string }) {
   const [commentCount, setCommentCount] = useState(0);
