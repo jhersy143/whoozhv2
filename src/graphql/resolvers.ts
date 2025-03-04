@@ -11,7 +11,6 @@ import Notification from '@/models/Notification';
 import bcrypt from 'bcryptjs';
 import { ObjectId } from 'mongodb';
 import { UserInputError,ApolloError  } from 'apollo-server-core';
-import { join } from 'path';
 // Define the ChoiceFilter interface
 interface ChoiceFilter {
   postID?: string;
@@ -258,6 +257,7 @@ const resolvers = {
         comment: comment.comment,
         type:comment.type,
         userID: comment.userID,
+        audioUrl:comment.audioUrl,
         createdAt: comment.createdAt,
         updatedAt: comment.updatedAt,
         user: {
@@ -392,7 +392,7 @@ const resolvers = {
         });
       }
       console.log(notifications)
-      const totalCount = await Notification.countDocuments({recipientID:objectUserID});
+      //const totalCount = await Notification.countDocuments({recipientID:objectUserID});
       return notifications.map((notification)=>({
         
           id:notification._id,
@@ -521,12 +521,14 @@ const resolvers = {
         postID, 
         comment, 
         type, 
+        audioUrl,
       }:
         {
           userID: string, 
           postID: string, 
           comment: string, 
           type: string, 
+          audioUrl:string,
          })=>{
           try{
             if (!postID || typeof postID !== 'string' || postID.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(postID)) {
@@ -536,7 +538,7 @@ const resolvers = {
               throw new ApolloError('Invalid userID format. It must be a 24-character hexadecimal string.', 'INVALID_USER_ID');
 
             }
-            const newComment = new Comment({userID,postID, comment, type});
+            const newComment = new Comment({userID,postID, comment, type, audioUrl});
             await newComment.save();
             return newComment;
           }

@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             fs.writeFileSync(filePath, Buffer.from(audioResponse.data, 'binary'));
 
-            const audioUrl = `/audios/${filename}`;
+            const audioUrl = `${filename}`;
             res.status(200).json({ audioUrl });
         } catch (error) {
             console.error('PlayHT Error:', error);

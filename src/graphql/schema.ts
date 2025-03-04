@@ -44,6 +44,7 @@ const typeDefs = gql`
     postID: ID!
     user: User!
     type: String!
+    audioUrl: String!
     createdAt: String
     updatedAt: String
   }
@@ -132,7 +133,7 @@ type Notification{
     addUser (firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String, avatar:String): User!
     addAccount (userID: ID!, provider: String, providerAccountID: String, password: String, image: String): Account
     addPost(userID:String!, content:String!, pros:String!, cons:String!): Post 
-    addComment(userID:String!,postID:String!, comment:String!, type:String!): Comment
+    addComment(userID:String!,postID:String!, comment:String!, type:String!, audioUrl:String!): Comment
     addChoice(userID:String!,postID:String!, choice:String!): Choice
     addJoined(userID:String!,postID:String!, choice:String!, status:String!): Joined
     addReaction(userID:String!,commentID:String!,reactionType:String): Reaction

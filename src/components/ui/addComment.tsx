@@ -1,21 +1,15 @@
 'use client'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { MessageCircle, CirclePlus, CircleMinus} from "lucide-react"
 import { useState, useEffect } from "react"
-import { styles } from '@/app/pages/style'
-import { PostByID, countComment, countChoice, CommentByPostID } from "@/hooks/useFetchData"
-import { useParams, useRouter, useSearchParams  } from "next/navigation"
-import  CommentCard  from "@/components/ui/comment"
 import { getJoinedByUserID } from "@/hooks/useFetchData"
 export default function AddComment({postID,userid}:{postID:string,userid:string}){
-    const [commentText,setCommentText] = useState('')
-    const [userJoined,setUserJoined] = useState<any[]>([]);
+    //const [commentText,setCommentText] = useState('')
+    const [text, setText] = useState<string>('');
     const [choice, setChoice] = useState('')
     const [userID, setUserID] = useState<string|any>("");
-  
+    const [audioUrl, setAudioUrl] = useState<string>('');
      useEffect(() => {
           setUserID(localStorage.getItem('userID'));
         },[])
@@ -28,8 +22,27 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
 
           fetchData()
 
-    },[commentText])
+    },[text])
+
+    const handleGenerate = async () => {
+    
+     
+  };
     const handleComment = async() =>{
+        
+        const response = await fetch('/api/playht', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }), // Corrected line
+      });
+
+      const data = await response.json();
+      console.log(data);
+      if (data.audioUrl) {
+          //setAudioUrl(data.audioUrl);
+      
         const addComment = await fetch('http://localhost:3000/api/graphql', {
           method: 'POST',
           headers: {
@@ -41,9 +54,9 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
                       addComment(
                           userID: "${userID}", 
                           postID: "${postID}", 
-                          comment: "${commentText}", 
+                          comment: "${text}", 
                           type: "${choice}",
-                      
+                          audioUrl: "${data.audioUrl}"
                       
                       ) {
                           id
@@ -51,7 +64,7 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
                           postID
                           comment
                           type
-                        
+                          audioUrl
                       }
                   }
               `,
@@ -89,6 +102,8 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
         }),
     });
       }
+      
+      }
     return (
         <div className=" grid grid-cols-6">
             <div className="col-span-4  relative">
@@ -96,7 +111,7 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
               <Input 
                 placeholder="Comment Here" 
                 className="bg-gray-200 text-gray-900 border-0 pr-12"
-                onChange={(e)=>{setCommentText(e.target.value)}}
+                onChange={(e)=>{setText(e.target.value)}}
               />
                <Button 
               size="sm" 

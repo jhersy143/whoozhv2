@@ -5,7 +5,7 @@ import { MessageCircle, CirclePlus, CircleMinus} from "lucide-react"
 import { useState, useEffect } from "react"
 import { styles } from '@/app/pages/style'
 import { PostByID, countComment, countChoice, CommentByPostID, getPostByUserID, getAllJoinedByUserID } from "@/hooks/useFetchData"
-import { useParams, useRouter, useSearchParams  } from "next/navigation"
+import { useSearchParams  } from "next/navigation"
 import  CommentCard  from "@/components/ui/comment"
 import AddComment from  "@/components/ui/addComment"
 import DebateList from "@/components/ui/debateList"
@@ -17,6 +17,7 @@ export default function Debateroom() {
     createdAt:string;
     type:string;
     id:string;
+    audioUrl:string;
     user: {
       firstname: string;
       lastname: string;
@@ -37,8 +38,6 @@ export default function Debateroom() {
     content:string;
  }
   const [isGreenActive,setisGreenActive] = useState(true);
-  const params = useParams();
-  const router = useRouter();
   const [commentCount, setCommentCount] = useState(0);
   const [countPros, setcountPros] = useState(0);
   const [countCons, setcountCons] = useState(0);
@@ -82,17 +81,17 @@ export default function Debateroom() {
 
         const pros = await CommentByPostID(postID,"pros")
         setprosComments(pros)
-
+        console.log(pros)
         const cons = await CommentByPostID(postID,"cons")
         setconsComments(cons)
    
         if(userID){
           const joinedList = await getAllJoinedByUserID(userID);
           setJoined(joinedList);
-          console.log(joined)
+       
           const yourPostlist = await getPostByUserID(userID)
           setYourpost(yourPostlist);
-          console.log(yourPostlist)
+
         }
      
      
@@ -118,6 +117,7 @@ export default function Debateroom() {
                 
                joined && joined.length > 0 && joined.map((joined:Joined)=>(
                   <DebateList
+                  key = {joined.id}
                   content = {joined.post.content}
                   postID = {joined.post.id}
                   />
@@ -133,6 +133,7 @@ export default function Debateroom() {
                 {
                  yourPost && yourPost.length > 0 && yourPost.map((post:Post)=>(
                     <DebateList
+                        key = {joined.id}
                         postID = {post.id}
                         content= {post.content}
                     />
@@ -209,6 +210,7 @@ export default function Debateroom() {
                     type = "pros"
                     userid ={posts?.user.id}
                     postID= {posts?.id}
+                    audioUrl = {comment.audioUrl}
                     />
              
           
@@ -232,6 +234,7 @@ export default function Debateroom() {
                       type = "cons"
                       userid ={posts?.user.id}
                       postID= {posts?.id}
+                      audioUrl = {comment.audioUrl}
                       />
                  
                  )    

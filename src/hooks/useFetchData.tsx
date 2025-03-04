@@ -317,6 +317,7 @@ const getAllPost  = async (userID:string) => {
             postID
             comment
             type
+            audioUrl
             createdAt
             user {
               id
@@ -332,7 +333,7 @@ const getAllPost  = async (userID:string) => {
     });
    
     const result = await response.json();
-   
+    console.log(result)
     if (result.data) {
 
         return result.data.getCommentByPostID

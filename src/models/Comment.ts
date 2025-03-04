@@ -5,8 +5,8 @@ export interface IComment{
     userID:Types.ObjectId;
     postID:Types.ObjectId;
     comment:string;
-    type:String;
-    
+    type:string;
+    audioUrl:string;
 }
 
 const CommentSchema = new Schema<IComment>({
@@ -14,6 +14,7 @@ const CommentSchema = new Schema<IComment>({
     postID:{ type:Schema.Types.ObjectId, required:true},
     comment:{type:String, required:true},
     type:{type:String, required:true},
+    audioUrl:{type:String},
 
     }
 ,{timestamps:true});
