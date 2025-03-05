@@ -12,8 +12,13 @@ PlayHT.init({
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         try {
-            const { text } = req.body;
-            const generated = await PlayHT.generate(text);
+            const { text  } = req.body;
+            const voiceEngine = 'PlayHT2.0';
+            const generated = await PlayHT.generate(text, {
+                voiceId: 's3://voice-cloning-zero-shot/pvdYidDCyDaGrIf457yKB/sample/manifest.json',
+                voiceEngine,
+                speed: 1,
+            });
 
             if (!generated || !generated.audioUrl) { // Check for audioUrl
                 return res.status(500).json({ error: 'Failed to generate audio URL' });
