@@ -64,7 +64,7 @@ export default function Homepage() {
     // Handle form submission logic here
   }
   return (
-    <div className="flex bg-gray-900 text-white ">
+    <div className="flex bg-gray-900 text-white overflow-y-scroll">
       <div className="container mx-auto mt-20 px-4 md:px-0 md:h-full  lg:h-screen">
         <div className="grid lg:grid-cols-7 md:grid-cols-3 gap-6 md:p-3">
           <div className="md:col-span-2 space-y-6 lg:col-span-3 lg:col-start-2 lg:col-end-5">

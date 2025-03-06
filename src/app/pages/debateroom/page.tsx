@@ -195,7 +195,7 @@ export default function Debateroom() {
           </div>
 
           {/* Comments Section */}
-          <div className="grid lg:grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4">
+          <div className="grid lg:grid-cols-6 gap-4 h-[450px] min-[320px]:grid-cols-4 md:grid-cols-4 overflow-y-scroll">
             <div className = {`${isGreenActive?"":"md:hidden"} lg:block space-y-4 md:col-span-4 lg:col-span-2 min-[320px]:col-span-4`} >
               {/* Green Comments */}
               {

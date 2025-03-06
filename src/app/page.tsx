@@ -2,8 +2,7 @@
 import { Button } from "@/components/ui/button"
 import  Login  from "@/components/modals/login"
 import  Register  from "@/components/modals/register"
-import type { RootState } from '../GlobalRedux/store';
-import { useSelector, useDispatch } from 'react-redux';
+import {  useDispatch } from 'react-redux';
 import { showModal} from '../GlobalRedux/Features/showModalSlice';
 
 
