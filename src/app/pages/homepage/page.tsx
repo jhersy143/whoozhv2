@@ -1,27 +1,23 @@
 'use client'
 import React, { useState, useEffect } from "react"
-import { MessageSquare, CirclePlus, CircleMinus } from "lucide-react"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import DebateCard  from "@/components/ui/debatecard"
-import { showModal,changemodalname } from "@/GlobalRedux/Features/showModalSlice";
+import { showModal } from "@/GlobalRedux/Features/showModalSlice";
 import Createdebate from "@/components/modals/createdebate"
 import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
-import { Callback } from "next-redux-wrapper"
 import TrendingDebate from "@/components/ui/trendingdebate"
 import { getAllPost, TopPosts } from "@/hooks/useFetchData"
-type CallBack<T= void, R = void> = (arg:T)=>R;
+//type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {
- 
   const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch();
   const [userID, setUserID] = useState<string|null>(null);
   const[posts, setPost] = useState<any[]>([]);
   const[topPosts,setTopPosts] = useState<any[]>([]);
-  const[count,setCount] = useState<number|null>(null);
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   },[])
