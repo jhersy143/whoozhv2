@@ -162,8 +162,9 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
                 {comment}
               </p>
               <AudioPlayer audio={audioUrl}/>
+              
               <div className="flex items-center space-x-2 mt-2 text-white">
-            
+              
                   {
                   reaction==="LIKE"?<AiFillLike className={`mr-1 h-4 w-4 `}/>:<ThumbsUp className={`mr-1 h-4 w-4 `} onClick = {()=>handleReaction("LIKE")}/>
                     

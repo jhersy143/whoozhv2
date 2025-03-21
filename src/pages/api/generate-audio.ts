@@ -35,13 +35,13 @@ export default async function handler(
         const audioContent = response.audioContent;
 
         const filename = `audio-${Date.now()}.mp3`;
-        const audioFilePath = path.join(process.cwd(), 'public', 'audio', filename);
+        const audioFilePath = path.join(process.cwd(), 'public', 'audios', filename);
 
-        await fs.ensureDir(path.join(process.cwd(), 'public', 'audio'));
+        await fs.ensureDir(path.join(process.cwd(), 'public', 'audios'));
 
         await fs.writeFile(audioFilePath, audioContent, 'binary');
 
-        const audioUrl = `/audio/${filename}`;
+        const audioUrl = `/${filename}`;
         res.status(200).json({ audioUrl: audioUrl });
 
     } catch (error) {

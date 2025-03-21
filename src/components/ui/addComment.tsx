@@ -10,6 +10,8 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
     const [choice, setChoice] = useState('')
     const [userID, setUserID] = useState<string|any>("");
     const [audioUrl, setAudioUrl] = useState<string>('');
+
+    const [error, setError] = useState<string | null>(null);
      useEffect(() => {
           setUserID(localStorage.getItem('userID'));
         },[])
@@ -24,23 +26,54 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
 
     },[text])
 
-    const handleGenerate = async () => {
-    
-     
-  };
-    const handleComment = async() =>{
-        
-        const response = await fetch('/api/playht', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text }), // Corrected line
-      });
+    /*const handleGenerate = async () => {
+      const response = await fetch('/api/playht', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }), // Corrected line
+    });
 
-      const data = await response.json();
-      console.log(data);
-      if (data.audioUrl) {
+    const data = await response.json();
+    if (data.audioUrl) {}
+    console.log(data);
+  };*/
+ const genrateAudio = async () => {
+      
+   
+        setError(null);
+
+        try {
+            const response = await fetch('/api/generate-audio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: text }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate audio');
+            }
+
+            const data = await response.json();
+            setAudioUrl(data.audioUrl);
+            return data
+           
+        } catch (err: unknown) {
+            // Using 'any' for error, you can define a more specific type if needed
+            console.error('Error:', err);
+            setError('Error generating audio. Please try again.');
+            return error
+        } 
+      
+    };
+    const handleComment = async() =>{
+      const data = await genrateAudio();
+       console.log(data);
+    
+      if (data) {
           //setAudioUrl(data.audioUrl);
       
         const addComment = await fetch('http://localhost:3000/api/graphql', {
