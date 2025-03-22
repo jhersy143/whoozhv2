@@ -15,7 +15,7 @@ export default async function handler(
     //console.log("key "+ process.env.GOOGLE_PRIVATE_KEY)
     try {
         const client = new TextToSpeechClient({
-            keyFilename: path.join(process.cwd(), ''),
+            keyFilename: path.join(process.cwd(), 'whoozh-0c85c67b61d1.json'),
         });
      
         const { text } = req.body;
