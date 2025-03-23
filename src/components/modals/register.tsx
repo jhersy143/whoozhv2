@@ -1,148 +1,130 @@
-
-import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+'use client';
+import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { showModal,closeModal } from '@/GlobalRedux/Features/showModalSlice';
+import { showModal, closeModal } from '@/GlobalRedux/Features/showModalSlice';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { SignUpSchema } from '@/lib/validations'; // Assuming you have a RegisterSchema
 
 import bcrypt from 'bcryptjs';
 
-
 export default function Component() {
-  const [email, setEmail] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [provider,setProvider] = useState('')
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const [providerAccountID,setproviderAccountID] = useState('')
-  const [image,setImage] = useState('')
+  const [message, setMessage] = useState('');
   const dispatch = useDispatch();
-  let userId = ""
-  const handleCloseregister= (e: React.FormEvent) =>{
-    e.preventDefault()
-    dispatch(closeModal());
-  }
-  const validateEmail = (email: string) => {
-    // Simple regex for email validation
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-  
-  const handleShowModal = (modalname:string)=>{
-    dispatch(showModal({modalname:modalname}));
+  let userId = '';
 
-  
-   // dispatch(changemodalname({modalname:modalname}))
-   
-  }
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (validateEmail(email)) {
-    setError('');
-    // Proceed with form submission (e.g., send to API)
-    console.log('Email is valid:', email);
-  } else {
-    setError('Please enter a valid email address.');
-  }
-  const addUser = await fetch('http://localhost:3000/api/graphql', {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof SignUpSchema>>({
+    resolver: zodResolver(SignUpSchema),
+  });
+
+  const handleCloseregister = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(closeModal());
+  };
+
+  const handleShowModal = (modalname: string) => {
+    dispatch(showModal({ modalname: modalname }));
+  };
+
+  const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
+    const addUser = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-          query: `
-              mutation {
-                  addUser(
-                      email: "${email}", 
-                      firstname: "${firstName}", 
-                      lastname: "${lastName}",
-                      location:"",
-                      work:"",
-                      contact:"",
-                      avatar:"" 
-                  
-                  ) {
-                      id
-                      email
-                      firstname
-                      lastname
-                      location
-                      work
-                      contact
-                      avatar
-                  }
-              }
-          `,
-      }),
-  });
-  const result = await addUser.json();
- // Hash the password
- const salt = bcrypt.genSaltSync(10);
- const hashedPassword = bcrypt.hashSync(password, salt);
-
-  if (result.errors) {
-    setMessage('Error creating user');
-
-} else {
-    setMessage('User created successfully!');
-    userId = result.data.addUser.id;
-    // Optionally reset the form
-    setEmail('');
-    setFirstName('');
-    setLastName('');
-    console.log(userId)
-}
-if (!userId) {
-  console.error("userID is required");
-  return; // Exit if userID is not provided
-}
-  const addAccount = await fetch('http://localhost:3000/api/graphql', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
         query: `
-            mutation {
-                    addAccount(
-                    userID: "${userId}", 
-                    provider: "${provider}", 
-                    providerAccountID: "${providerAccountID}", 
-                    password: "${hashedPassword}", 
-                    image: "${image}",
-                ) {
-                    id
-                    userID
-                    provider
-                    providerAccountID
-                    image
-                }
-              }
-            
+          mutation {
+            addUser(
+              email: "${data.email}", 
+              firstname: "${data.firstname}", 
+              lastname: "${data.lastname}",
+              location:"",
+              work:"",
+              contact:"",
+              avatar:"" 
+            ) {
+              id
+              email
+              firstname
+              lastname
+              location
+              work
+              contact
+              avatar
+            }
+          }
         `,
-    }),
-});
+      }),
+    });
+    const result = await addUser.json();
 
-  const resultaccount = await addAccount.json();
-  console.log(resultaccount)
-};
-  //redux states
+    // Hash the password
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(data.password, salt);
+
+    if (result.errors) {
+      setMessage('Email already exists');
+    } else {
+     // setMessage('User created successfully!');
+      userId = result.data.addUser.id;
+      console.log(userId);
+    }
+    if (!userId) {
+      console.error('userID is required');
+      console.log(result.errors);
+      return; // Exit if userID is not provided
+    }
+    const addAccount = await fetch('http://localhost:3000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          mutation {
+            addAccount(
+              userID: "${userId}", 
+              provider: "credentials", 
+              providerAccountID: "${data.email}", 
+              password: "${hashedPassword}", 
+              image: ""
+            ) {
+              id
+              userID
+              provider
+              providerAccountID
+              image
+            }
+          }
+        `,
+      }),
+    });
+
+    const resultaccount = await addAccount.json();
+    console.log(resultaccount);
+  };
+
+  // redux states
   const modalname = useSelector((state: RootState) => state.modalSlice.modalname);
-  const show =useSelector((state: RootState)=>state.modalSlice.showmodal)
+  const show = useSelector((state: RootState) => state.modalSlice.showmodal);
 
- 
-    // handle closing the modal when clicking around it 
-    const handleOutsideClick = (e: MouseEvent) => {
-      const target = e.target as Element;
-      if (!target.closest('#modal')) {
-        dispatch(closeModal());
-      }
-    };
+  // handle closing the modal when clicking around it
+  const handleOutsideClick = (e: MouseEvent) => {
+    const target = e.target as Element;
+    if (!target.closest('#modal')) {
+      dispatch(closeModal());
+    }
+  };
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -152,60 +134,64 @@ if (!userId) {
   }, [show]);
 
   return (
-    <div className={`${show&&modalname==="register"?'flex':'hidden'} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4`}>
-      <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative" id = "modal">
-        <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"  onClick={handleCloseregister}>
+    <div
+      className={`${
+        show && modalname === 'register' ? 'flex' : 'hidden'
+      } fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4`}
+    >
+      <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative" id="modal">
+        <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-200" onClick={handleCloseregister}>
           <X size={24} />
         </button>
         <h2 className="text-2xl font-bold mb-6 text-white">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input
             type="email"
             placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register('email')}
             className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
           />
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+          {message && <p className="text-red-500">{message}</p>}
           <Input
             type="text"
             placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            {...register('firstname')}
             className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
           />
+          {errors.firstname && <p className="text-red-500">{errors.firstname.message}</p>}
           <Input
             type="text"
             placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            {...register('lastname')}
             className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
           />
+          {errors.lastname && <p className="text-red-500">{errors.lastname.message}</p>}
           <Input
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register('password')}
             className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
           />
+          {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           <Input
             type="password"
             placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            {...register('confirmPassword')}
             className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
           />
+          {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
             Submit
           </Button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-400">
           Already have an account?{' '}
-          <a href="#" className="text-blue-400 hover:underline" onClick={()=>handleShowModal("login")}>
+          <a href="#" className="text-blue-400 hover:underline" onClick={() => handleShowModal('login')}>
             Sign in
           </a>
         </p>
       </div>
     </div>
-  )
+  );
 }
