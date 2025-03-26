@@ -11,13 +11,14 @@ import { AiFillLike } from "react-icons/ai";
 import { BiSolidDislike } from "react-icons/bi";
 import AudioPlayer from "./audioPlayer"
 
+
 export default function CommentCard({ firstname, lastname, comment, time, commentID, type, userid, postID, audioUrl }: { firstname: string; lastname: string; comment: string, time: string,  commentID: string, type:string, userid:string, postID:string, audioUrl:string }) {
   
 
-  const [userID, setUserID] = useState<string|any>("");
+  const [userID, setUserID] = useState<string|null>(null);
   const[countLike, setCountLike] = useState(0);
   const[countDislike, setCountDislike] = useState(0);
-  const[countReaction, setCountReaction] = useState<unknown[]>([]);;
+  const[countReaction, setCountReaction] = useState<string>("");;
   const[reaction, setReaction] = useState<string|unknown>("");
 
     useEffect(() => {
@@ -39,7 +40,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
         }
     }
     fetchData()
-    }, [reaction]);
+    }, [reaction, commentID, userID]);
 
    
 
@@ -54,7 +55,7 @@ export default function CommentCard({ firstname, lastname, comment, time, commen
         const handleReaction = async (type:string) => {
           setReaction(type);
           let result = [];
-          const addNotif = await fetch('http://localhost:3000/api/graphql', {
+          await fetch('http://localhost:3000/api/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

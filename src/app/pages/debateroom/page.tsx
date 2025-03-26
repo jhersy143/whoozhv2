@@ -9,7 +9,8 @@ import { useSearchParams  } from "next/navigation"
 import  CommentCard  from "@/components/ui/comment"
 import AddComment from  "@/components/ui/addComment"
 import DebateList from "@/components/ui/debateList"
-
+import { useSelector } from "react-redux"
+import { RootState } from "@/GlobalRedux/store"
 
 export default function Debateroom() {
   interface Comment {
@@ -50,7 +51,7 @@ export default function Debateroom() {
   const[yourPost, setYourpost] = useState<any>(null); 
   const[prosComments, setprosComments] = useState<any>([]);
   const[consComments, setconsComments] = useState<any>(null);
-
+  const reload = useSelector((state:RootState) => state.commentModalSlice.reload);
 
   //const postID = params?.postID as string
   const SearchParams = useSearchParams();
@@ -101,7 +102,7 @@ export default function Debateroom() {
     
     getPosts();
 
-  }, [userID,postID]);
+  }, [userID,postID,reload]);
   return (
     <div className="bg-gray-900 min-h-screen text-white">
       <div className="grid md:grid-cols-[250px_1fr]">

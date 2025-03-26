@@ -4,14 +4,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { getJoinedByUserID } from "@/hooks/useFetchData"
+import { useDispatch, useSelector } from "react-redux"
+import { setReload, setLoading } from "@/GlobalRedux/Features/commentModalSlice"
+import { RootState } from "@/GlobalRedux/store"
 export default function AddComment({postID,userid}:{postID:string,userid:string}){
     //const [commentText,setCommentText] = useState('')
     const [text, setText] = useState<string>('');
     const [choice, setChoice] = useState('')
     const [userID, setUserID] = useState<string|any>("");
     const [audioUrl, setAudioUrl] = useState<string>('');
-
+    const dispatch = useDispatch()
     const [error, setError] = useState<string | null>(null);
+    const loading = useSelector((state:RootState) => state.commentModalSlice.loading);
      useEffect(() => {
           setUserID(localStorage.getItem('userID'));
         },[])
@@ -24,7 +28,7 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
 
           fetchData()
 
-    },[text])
+    },[text, userID, postID])
 
     /*const handleGenerate = async () => {
       const response = await fetch('/api/playht', {
@@ -72,7 +76,7 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
     const handleComment = async() =>{
       const data = await genrateAudio();
        console.log(data);
-    
+       dispatch(setLoading(true))
       if (data) {
           //setAudioUrl(data.audioUrl);
       
@@ -105,6 +109,11 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
       });
        const result = await addComment.json();
        console.log(result)
+       if(result){
+        dispatch(setReload(true))
+        dispatch(setLoading(false))
+        setText("")
+       }
        const addNotif = await fetch('http://localhost:3000/api/graphql', {
         method: 'POST',
         headers: {
@@ -140,11 +149,12 @@ export default function AddComment({postID,userid}:{postID:string,userid:string}
     return (
         <div className=" grid grid-cols-6">
             <div className="col-span-4  relative">
-          
+
               <Input 
                 placeholder="Comment Here" 
                 className="bg-gray-200 text-gray-900 border-0 pr-12"
                 onChange={(e)=>{setText(e.target.value)}}
+                value={loading?"Sending":text}
               />
                <Button 
               size="sm" 
