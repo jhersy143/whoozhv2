@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 export const SignInSchema = z.object({
@@ -18,15 +19,14 @@ export const SignUpSchema = z.object({
     .string()
     .min(1,{message:"Firstname is Required"})
     .max(50,{message:"Firstname cannot exceed 50 characters"})
-    .regex(/^[a-zA-Z]+$/, {
+    .regex(/^[a-zA-Z\s]+$/, {
         message:"Firstname must be alphabets"
     }),
-
     lastname: z
     .string()
     .min(1,{message:"Lastname is Required"})
     .max(50,{message:"Lastname cannot exceed 50 characters"})
-    .regex(/^[a-zA-Z]+$/, {
+    .regex(/^[a-zA-Z\s]+$/, {
         message:"Lastname must be alphabets"
     }),
 
@@ -54,4 +54,26 @@ export const SignUpSchema = z.object({
 }).refine((data)=> data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
+})
+
+export const AddPost = z.object({
+  Content:z
+  .string()
+  .min(1,{message:"Content is Required"})
+  .max(100,{message:"Content cannot exceed 100 characters"}),
+  Pros:z
+  .string()
+  .min(1,{message:"Content is Required"})
+  .max(20,{message:"Pros cannot exceed 100 characters"}),
+  Cons:z
+  .string()
+  .min(1,{message:"Content is Required"})
+  .max(20,{message:"Pros cannot exceed 100 characters"})
+})
+
+export const AddComment = z.object({
+  Comment:z
+  .string()
+  .min(1,{message:"Content is Required"})
+  .max(20,{message:"Pros cannot exceed 100 characters"})
 })

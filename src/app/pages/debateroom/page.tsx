@@ -66,6 +66,7 @@ export default function Debateroom() {
       if(postID){
 
         const post = await PostByID(postID);
+        console.log(post)
         if(post){
           setPosts(post);
         }
@@ -82,7 +83,7 @@ export default function Debateroom() {
 
         const pros = await CommentByPostID(postID,"pros")
         setprosComments(pros)
-        console.log(pros)
+   
         const cons = await CommentByPostID(postID,"cons")
         setconsComments(cons)
    
@@ -187,11 +188,11 @@ export default function Debateroom() {
           <div className="grid lg:grid-cols-6  gap-px min-[320px]:grid-cols-4 md:grid-cols-4">
             <div className={`${isGreenActive?styles.greenCommentActive:""}  p-4 flex items-center gap-3 md:col-span-2 lg:col-span-2 min-[320px]:col-span-2 text-[#416F5F] lg:border-none`} onClick={isGreenActive?()=>{}:changeActiveComments}>
               <CirclePlus className="h-6 w-6  "/>
-              <span className="ttext-xl font-bold ">YES</span>
+              <span className="text-xl font-bold ">{posts?.pros}</span>
             </div>
             <div className={`${!isGreenActive?styles.redCommentActive:""}  p-4 flex items-center gap-3 md:col-span-2 lg:col-span-2 min-[320px]:col-span-2 text-[#6F4141] lg:border-none`} onClick={!isGreenActive?()=>{}:changeActiveComments}>
-              <CircleMinus className="h-6 w-6 text-red-400" />
-              <span className="text-red-400 text-xl font-bold ">NO</span>
+              <CircleMinus className="h-6 w-6" />
+              <span className= "text-xl font-bold ">{posts?.cons}</span>
             </div>
           </div>
 

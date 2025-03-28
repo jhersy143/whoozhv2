@@ -14,15 +14,18 @@ export default function createdebate() {
   const [userID, setUserID] = useState<string | null>(null);
   const modalname = useSelector((state: RootState)=>state.modalSlice.modalname)
   const showModal = useSelector((state: RootState)=>state.modalSlice.showmodal)
+  const [choice, setChoice] = useState('');
+  let postID = '';
   useEffect(()=>{
   
     setUserID(localStorage.getItem('userID'))
-  },[])
+  },[userID])
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault()
     // Handle form submission logic here
     console.log(localStorage.getItem('userID'))
-    const response = await fetch('http://localhost:3000/api/graphql', {
+    const addPost = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -37,6 +40,7 @@ export default function createdebate() {
                       cons: "${cons}",
                     
                   ) {
+                    id  
                     userID
                      content
                      pros
@@ -46,8 +50,50 @@ export default function createdebate() {
           `,
       }),
   });
-  const result = await response.json();
+  const result = await addPost.json()
   console.log(result)
+  if (result.errors) {
+    console.error('postID is required');
+    console.log(result.errors);
+  } else {
+   // setMessage('User created successfully!');
+   postID = result.data.addPost.id;
+    console.log(postID);
+  }
+  if (!postID) {
+    console.error('postID is required');
+    console.log(result.errors);
+    return; // Exit if userID is not provided
+  }
+  await fetch('http://localhost:3000/api/graphql', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        query: `
+            mutation {
+                    addJoined(
+                    userID: "${userID}", 
+                    postID: "${postID}", 
+                    status:"active",
+                    choice:"${choice}"
+                 
+                ) {
+                    id
+                    userID
+                    postID
+                    status
+                    choice
+                    
+                }
+              }
+            
+        `,
+    }),
+});
+ 
+ 
   dispatch(closeModal());
   }
   const handleCancel = () => {
@@ -57,7 +103,9 @@ export default function createdebate() {
     e.preventDefault()
     dispatch(closeModal());
   }
-
+  const handleChoice = (choice:string) => {
+    return() => {setChoice(choice)}
+  }
  // handle closing the modal when clicking around it 
   const handleOutsideClick = (e: MouseEvent) => {
     const target = e.target as Element;
@@ -110,13 +158,25 @@ export default function createdebate() {
             />
             <label className="text-sm text-gray-400">Cons</label>
           </div>
+          <div className="flex justify-between items-center mb-4">
+          <h5 className="font-bold text-white">Please Choose</h5>
+         
+        </div>
+        <div className="flex space-x-4">
+            <Button type="button" className={`flex-1  ${choice==='Pros'?'text-white bg-green-700 hover:text-white hover:bg-green-700':' bg-white  text-green-700'}`} onClick={handleChoice('pros')}>
+              Pros
+            </Button>
+            <Button type="button" className={`flex-1  ${choice==='Cons'?'text-white bg-red-600 hover:text-white hover:bg-red-600':' bg-white  text-red-600'}`} onClick={handleChoice('cons')}>
+              Cons
+            </Button>
+          </div>
           <div className="flex space-x-4">
             <Button type="submit" className="flex-1 bg-green-600 hover:bg-green-700 text-white">
               Post
             </Button>
-            <Button type="button" className="flex-1 bg-red-600 hover:bg-red-700 text-white" onClick={handleCancel}>
+            {/*<Button type="button" className="flex-1 bg-red-600 hover:bg-red-700 text-white" onClick={handleCancel}>
               Cancel
-            </Button>
+            </Button>*/}
           </div>
         </form>
       </div>
