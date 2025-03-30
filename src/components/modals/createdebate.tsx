@@ -163,10 +163,10 @@ export default function createdebate() {
          
         </div>
         <div className="flex space-x-4">
-            <Button type="button" className={`flex-1  ${choice==='Pros'?'text-white bg-green-700 hover:text-white hover:bg-green-700':' bg-white  text-green-700'}`} onClick={handleChoice('pros')}>
+            <Button type="button" className={`flex-1  ${choice==='pros'?'text-white bg-green-700 hover:text-white hover:bg-green-700':' bg-white  text-green-700'}`} onClick={handleChoice('pros')}>
               Pros
             </Button>
-            <Button type="button" className={`flex-1  ${choice==='Cons'?'text-white bg-red-600 hover:text-white hover:bg-red-600':' bg-white  text-red-600'}`} onClick={handleChoice('cons')}>
+            <Button type="button" className={`flex-1  ${choice==='cons'?'text-white bg-red-600 hover:text-white hover:bg-red-600':' bg-white  text-red-600'}`} onClick={handleChoice('cons')}>
               Cons
             </Button>
           </div>

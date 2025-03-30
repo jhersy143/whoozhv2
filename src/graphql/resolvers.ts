@@ -627,6 +627,22 @@ const resolvers = {
             }
      
     },
+    leaveDebate: async(_:any ,
+      {
+        postID
+      }:
+      {
+        postID: string
+      })=>{
+          try {
+            const deleteJoined  = await Joined.findByIdAndDelete(postID)
+            if(!deleteChoice){
+              throw new ApolloError('Post not found', 'POST_NOT_FOUND');
+            }
+          } catch (error) {
+            throw new ApolloError('Error deleting Joined', 'JOINED_DELETE_ERROR', { error });
+          }
+    },
     addReaction: async(_:any, 
       {
         userID,

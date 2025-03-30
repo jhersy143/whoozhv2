@@ -11,7 +11,7 @@ import AddComment from  "@/components/ui/addComment"
 import DebateList from "@/components/ui/debateList"
 import { useSelector } from "react-redux"
 import { RootState } from "@/GlobalRedux/store"
-
+import { Button } from "@/components/ui/button"
 export default function Debateroom() {
   interface Comment {
     comment: string;
@@ -145,6 +145,11 @@ export default function Debateroom() {
                
               </div>
             </div>
+            <div className="flex items-center p-0 m-0 "> 
+                <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-0 m-0 h-8 w-8">
+                Leave
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -163,25 +168,30 @@ export default function Debateroom() {
           </div>
 
           {/* Question */}
-          <div className="space-y-4">
-            <h1 className="text-2xl font-semibold">
-              {`${posts?.content}`}
-            </h1>
-            
-            <div className="flex gap-6">
-              <div className="flex items-center gap-2">
-                <MessageCircle className="h-4 w-4" />
-                <span>{commentCount}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CirclePlus className="h-4 w-4" />
-                <span>{countPros}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CirclePlus className="h-4 w-4" />
-                <span>{countCons}</span>
-              </div>
+          <div className="space-y-4 flex gap-2">
+            <div className="flex flex-col gap-4  ">
+                <h1 className="text-2xl font-semibold text-wrap">
+                  {`${posts?.content}`}
+                </h1>
+                
+                <div className="flex gap-6">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4" />
+                    <span>{commentCount}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CirclePlus className="h-4 w-4" />
+                    <span>{countPros}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CirclePlus className="h-4 w-4" />
+                    <span>{countCons}</span>
+                  </div>
+              
+                </div>
             </div>
+            
+        
           </div>
 
           {/* Yes/No Section */}

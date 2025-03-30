@@ -142,6 +142,7 @@ type Notification{
     updateNotif(id:String!, is_seen:Boolean!): Notification
     updateProfile(id:String!, firstname: String!,lastname:String, email: String!,location:String, work:String, contact:String): User!
     updatePhoto(id:String!, avatar:String): User!
+    leaveDebate(id:String!)
   }
 `;
 
