@@ -50,9 +50,9 @@ export default function TrendingDebate({ user, time, question, postID }: { user:
             <AvatarImage src="/placeholder.svg" alt={user} />
             <AvatarFallback>{user[0]}</AvatarFallback>
           </Avatar>
-          <div className="flex lg:flex-row md:flex-col lg:space-x-4 lg:text-sm md:text-sm">
+          <div className="flex flex-col ">
             <span className="font-semibold md:text-xs lg:text-base">{user}</span>
-            <span className="text-gray-400 lg:text-sm md:text-xs">{timeAgo(time)}</span>
+            <span className="text-gray-400 lg:text-sm md:text-xs sm:text-xs">{timeAgo(time)}</span>
           </div>
         </div>
         <p className="mb-2 lg:text-sm md:text-sm">{question}</p>

@@ -109,8 +109,8 @@ const resolvers = {
     },
 
     getAllPost: async (_:any,{userID}:{userID:string}) => {
-      const userObjectId = new ObjectId(userID);
-    const posts = await Post.find({ userID: { $ne: userID } }).populate('userID'); // Populate user information
+      //const userObjectId = new ObjectId(userID);
+    const posts = await Post.find().populate('userID');//await Post.find({ userID: { $ne: userID } }).populate('userID'); // Populate user information
 
   try{
 
@@ -130,6 +130,26 @@ const resolvers = {
     throw new ApolloError('Error fetching posts', 'POST_FETCH_ERROR', { error });
   }
 
+  },
+  searchPostsByContent: async (_: any, { content }: { content: string }) => {
+    try {
+      const posts = await Post.find({
+        content: { $regex: content, $options: 'i' }, // 'i' makes it case-insensitive
+      }).populate('userID');
+
+      return posts.map((post) => ({
+        id: post._id,
+        userID: post.userID,
+        content: post.content,
+        pros: post.pros,
+        cons: post.cons,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        user: post.userID,
+      }));
+    } catch (error) {
+      throw new ApolloError('Error searching posts', 'POST_SEARCH_ERROR', { error });
+    }
   },
   countChoice: async (_:any, { choice,postID }:{choice: string, postID: string}) => {
     const filter:ChoiceFilter = {};
@@ -635,9 +655,10 @@ const resolvers = {
         postID: string
       })=>{
           try {
-            const deleteJoined  = await Joined.findByIdAndDelete(postID)
-            if(!deleteChoice){
-              throw new ApolloError('Post not found', 'POST_NOT_FOUND');
+            const deleteJoined  = await Joined.findOneAndDelete({postID})
+          
+            if(!deleteJoined){
+              throw new ApolloError(postID, 'POST_NOT_FOUND');
             }
           } catch (error) {
             throw new ApolloError('Error deleting Joined', 'JOINED_DELETE_ERROR', { error });

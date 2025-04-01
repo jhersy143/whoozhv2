@@ -12,6 +12,7 @@ import DebateList from "@/components/ui/debateList"
 import { useSelector } from "react-redux"
 import { RootState } from "@/GlobalRedux/store"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 export default function Debateroom() {
   interface Comment {
     comment: string;
@@ -56,10 +57,42 @@ export default function Debateroom() {
   //const postID = params?.postID as string
   const SearchParams = useSearchParams();
   const postID = SearchParams?.get('postID');
+  const router = useRouter();
   useEffect(() => {
     setUserID(localStorage.getItem('userID'));
   
   },[])
+  const handleLeave = async() =>{
+    try {
+      const addUser = await fetch('http://localhost:3000/api/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation {
+              leaveDebate(
+                postID: "${postID}", 
+               
+              ) {
+                id
+              
+              }
+            }
+          `,
+        }),
+      });
+      const result = await addUser.json();
+      console.log(result)
+      router.push(`/pages/debateroom?postID=${postID}`)
+      return result;
+    } catch (error) {
+        return error;
+    }
+  
+ 
+  }
   useEffect(() => {
   
     const getPosts = async () => {
@@ -146,9 +179,11 @@ export default function Debateroom() {
               </div>
             </div>
             <div className="flex items-center p-0 m-0 "> 
-                <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-0 m-0 h-8 w-8">
-                Leave
-              </Button>
+                {
+                  userID !== posts?.user.id?<Button type="button" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-0 m-0 h-8 w-8" onClick={handleLeave}>
+                  Leave
+                </Button>:<></>
+                }
             </div>
           </div>
         </div>

@@ -132,7 +132,8 @@ export default function Login() {
               {...register('password')}
               className="w-full bg-gray-700 text-white border-gray-600 focus:border-blue-500"
             />
-            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+            {errors.password && <p className="text-red-500 space-y-4">{errors.password.message}</p>}
+            {error && <p className="text-red-500 space-y-4">Wrong Email or Password</p>}
           </div>
           <div className="text-right">
             <a href="#" className="text-sm text-blue-400 hover:underline">
