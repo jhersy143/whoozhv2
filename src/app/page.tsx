@@ -4,7 +4,7 @@ import  Login  from "@/components/modals/login"
 import  Register  from "@/components/modals/register"
 import {  useDispatch } from 'react-redux';
 import { showModal} from '../GlobalRedux/Features/showModalSlice';
-
+import { useEffect } from "react";
 
 export default function Landingpage() {
  
@@ -16,7 +16,11 @@ export default function Landingpage() {
    
   }
   
-  
+    useEffect(() => {
+      
+        localStorage.removeItem('userID');
+    
+      }, []);
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8">

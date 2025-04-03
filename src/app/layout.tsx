@@ -4,7 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Nav from '../components/nav';
 import { Providers } from "../GlobalRedux/provider"
-
+import React, { useEffect } from 'react';
+import { useRouter } from "next/navigation";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -26,6 +27,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className="overflow-y-hidden">
       <body 

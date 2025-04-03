@@ -234,12 +234,12 @@ export default function Component() {
           </div>
         </div>
         <div className="pt-20 pb-8 px-8">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col lg:flex-row  md:flex-row justify-between items-start ">
             <div>
               <h1 className="text-3xl font-bold text-white">{profile.firstname}</h1>
               <p className="text-lg text-blue-600">{profile.email}</p>
             </div>
-            <Button onClick={() => setIsEditing(true)} className="gap-2">
+            <Button onClick={() => setIsEditing(true)} className="gap-2 mt-2">
               <PencilIcon className="w-4 h-4" />
               Edit Profile
             </Button>

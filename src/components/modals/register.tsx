@@ -10,14 +10,16 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { SignUpSchema } from '@/lib/validations'; // Assuming you have a RegisterSchema
+import { useToast } from "@/hooks/use-toast"
 
 import bcrypt from 'bcryptjs';
+
 
 export default function Component() {
   const [message, setMessage] = useState('');
   const dispatch = useDispatch();
   let userId = '';
-
+  const { toast } = useToast()
   const {
     register,
     handleSubmit,
@@ -34,8 +36,15 @@ export default function Component() {
   const handleShowModal = (modalname: string) => {
     dispatch(showModal({ modalname: modalname }));
   };
-
+  const showSuccessToast = () => {
+    toast({
+      title: "Success",
+      description: "Successfully Registered!",
+      className: "bg-[#416F5F] text-white ",
+    })
+  }
   const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
+    showSuccessToast()
     const addUser = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
       headers: {
@@ -192,6 +201,7 @@ export default function Component() {
           </a>
         </p>
       </div>
+  
     </div>
   );
 }

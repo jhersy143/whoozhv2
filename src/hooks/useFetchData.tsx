@@ -416,19 +416,22 @@ const getAllPost  = async (userID:string) => {
         query: `
      query {
           getNotificationByUser(userID: "${userID}") {
-             id
-             description
-             is_seen
-             postID
-             createdAt
-             user {
-                id
-                firstname
-                lastname
-                email
-                avatar
-            
+              notification{
+                  id
+                  description
+                  is_seen
+                  postID
+                  createdAt
+                  user {
+                      id
+                      firstname
+                      lastname
+                      email
+                      avatar
+                  
+                    }
               }
+            totalCount
           }
         }
         `,
@@ -436,7 +439,7 @@ const getAllPost  = async (userID:string) => {
     });
    
     const result = await response.json();
-    console.log(result.data.getNotificationByUser);
+    console.log(result);
     if (result.data) {
 
         return result.data.getNotificationByUser

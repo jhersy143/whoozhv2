@@ -405,37 +405,41 @@ const resolvers = {
   getNotificationByUser: async (_: any, { userID }: { userID: string }) => {
     try {
       const objectUserID = new ObjectId(userID);
-      const notifications = await Notification.find({recipientID:objectUserID}).populate('initiatorID').sort({createdAt:-1}).limit(5); // Assuming you're using Mongoose
+      const notifications = await Notification.find({ recipientID: objectUserID })
+        .populate('initiatorID')
+        .sort({ createdAt: -1 })
+        .limit(5); // Assuming you're using Mongoose
+  
       if (!notifications) {
-        throw new UserInputError('Notif  not found', {
+        throw new UserInputError('Notifications not found', { // Corrected error message
           invalidArgs: { userID },
         });
       }
-      console.log(notifications)
-      //const totalCount = await Notification.countDocuments({recipientID:objectUserID});
-      return notifications.map((notification)=>({
-        
-          id:notification._id,
-          description:notification.description,
-          is_seen: notification.is_seen,
-          postID:notification.postID,
-          createdAt: notification.updatedAt,
-          user: {
-            id: notification.initiatorID._id.toString(),
-            firstname: notification.initiatorID.firstname,
-            lastname: notification.initiatorID.lastname,
-            email: notification.initiatorID.email,
-            avatar: notification.initiatorID.avatar,
-            
-          }
-        
-      }
-      )
-      );
-      
-
+  
+      const totalCount = await Notification.countDocuments({ recipientID: objectUserID });
+  
+      const mappedNotifications = notifications.map((notification) => ({
+        id: notification._id,
+        description: notification.description,
+        is_seen: notification.is_seen,
+        postID: notification.postID,
+        createdAt: notification.updatedAt,
+        user: {
+          id: notification.initiatorID._id.toString(),
+          firstname: notification.initiatorID.firstname,
+          lastname: notification.initiatorID.lastname,
+          email: notification.initiatorID.email,
+          avatar: notification.initiatorID.avatar,
+        },
+      }));
+  
+      return {
+        notification:mappedNotifications,
+        totalCount
+      };
+  
     } catch (error) {
-      throw new ApolloError('Error fetching Notif', 'USER_FETCH_ERROR', { error });
+      throw new ApolloError('Error fetching notifications', 'USER_FETCH_ERROR', { error }); // Corrected error message
     }
   },
 },

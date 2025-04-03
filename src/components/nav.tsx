@@ -6,13 +6,25 @@ import { getNotificationByUser } from "@/hooks/useFetchData"
 import { Home, User, Bookmark, Bell, X , Menu, LogOut, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { timeAgo } from '@/utils/dateCalculation';
-import { time } from 'console';
-import { useRouter } from "next/navigation"
-const nav = () => {
+
+import { useRouter,usePathname } from "next/navigation"
+
+const Nav = () => {
   const [isMenuOpen,setIsMenuOpen] = useState(false);
   const [notif, setNotif] = useState<any[]>([]);
   const [userID, setUserID] = useState<string|null>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const isLandingPage = pathname !== '/';
+
+  useEffect(() => {
+    
+      const userID = localStorage.getItem('userID');
+      console.log(userID)
+      if (!userID) {
+        router.push('/');
+      }
+    }, [router]);
   const routeToDebateroom = async (postID:String,id:String)=>{
     const updateNotif = await fetch('http://localhost:3000/api/graphql', {
       method: 'POST',
@@ -86,7 +98,7 @@ const nav = () => {
   }
   return (
     <nav className="bg-gray-900 text-white p-6 border-b border-gray-300 sticky top-0 left-0 right-0 z-10 w-screen">
-      <div className="container mx-auto flex justify-between items-center">
+      {isLandingPage&&<div className="container mx-auto flex justify-between items-center">
         <Link href="/landingpage" className="flex items-center">
           <Image
             src="/images/LOGO5.png"
@@ -205,7 +217,7 @@ const nav = () => {
                       )}  
         </div>
         
-      </div>
+      </div>}
       
     </nav>
   )
@@ -242,4 +254,4 @@ function NavLink({
   )
 }
 
-export default nav
+export default Nav

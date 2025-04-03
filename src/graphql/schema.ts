@@ -98,6 +98,10 @@ type Notification{
   createdAt: String
   updatedAt: String
 }
+type NotificationCount{
+  notification:[Notification!]!
+  totalCount:Int!
+}
 
  type TopChoice {
     postID: String!
@@ -126,7 +130,7 @@ type Notification{
     countJoined(postID:String,userID:String): Int
     countReaction(commentID:String,reactionType:String): Int
     getReactionByUserID(commentID:String,userID:String): Reaction
-    getNotificationByUser(userID:String): [Notification]!
+    getNotificationByUser(userID:String): NotificationCount!
     searchPostsByContent(content:String!) : [Post!]!
   }
 
