@@ -63,26 +63,39 @@ const resolvers = {
     },
 
     getAccountByID: async (_: any, { userID }: { userID: string }) => {
+    
       try {
-        const account = await User.findOne({userID}); // Assuming you're using Mongoose
+        const account = await Account.findOne({userID}).populate('userID'); // Assuming you're using Mongoose
         if (!account) {
+          console.log(userID)
           throw new UserInputError('User  not found', {
             invalidArgs: { userID },
           });
         }
-        return account;
+    
+        return {
+          id:account.id,
+          userID:account.userID,
+          password:account.password,
+          user: account.userID,
+        }
+         
+   
+   
       } catch (error) {
-        throw new ApolloError('Error fetching user', 'USER_FETCH_ERROR', { error });
+        throw new ApolloError('Error fetching Account', 'ACCOUNT_FETCH_ERROR', { error });
       }
     },
     getPostByID: async (_:any, {id}:{id:string}) => {
       try{
         const post = await Post.findById(id).populate('userID'); // Populate user 
+        
         if(!post){
           throw new UserInputError('Post not found', {
             invalidArgs:{id},
           })
         }
+        
         return {
           id: post._id,
           userID: post.userID,

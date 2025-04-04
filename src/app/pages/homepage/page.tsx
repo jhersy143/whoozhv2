@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import TrendingDebate from "@/components/ui/trendingdebate"
 import { getAllPost, TopPosts, searchPostsByContent } from "@/hooks/useFetchData"
 import { Input } from "@/components/ui/input"
+
 //type CallBack<T= void, R = void> = (arg:T)=>R;
 
 export default function Homepage() {

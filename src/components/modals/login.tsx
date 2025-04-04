@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { RootState } from '../../GlobalRedux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { showModal, closeModal } from '../../GlobalRedux/Features/showModalSlice';
+import { showModal, closeModal } from '@/GlobalRedux/Features/showModalSlice';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

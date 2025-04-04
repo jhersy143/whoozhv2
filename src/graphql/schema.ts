@@ -13,6 +13,7 @@ const typeDefs = gql`
     avatar:String
     createdAt: String
     updatedAt: String
+   
   }
   
   type Account{
@@ -24,6 +25,7 @@ const typeDefs = gql`
     image: String
     createdAt: String
     updatedAt: String
+    user:User
   }
 
    type Post{
@@ -114,8 +116,8 @@ type NotificationCount{
   }
   type Query {
     getUsers: [User!]!
-    getUserByID(id:ID!) :User
-    getAccountByID(id:ID!): Account
+    getUserByID(id:String!) :User
+    getAccountByID(userID:String!): Account
     getAllPost(userID:String!): [Post!]!
     getPostByID(id:ID!): Post
     getCommentByPostID(postID:ID!, type: String!): [Comment!]!
