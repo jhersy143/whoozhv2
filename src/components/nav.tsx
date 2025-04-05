@@ -8,10 +8,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { timeAgo } from '@/utils/dateCalculation';
 
 import { useRouter,usePathname } from "next/navigation"
+import { Int32 } from 'mongodb';
 
 const Nav = () => {
   const [isMenuOpen,setIsMenuOpen] = useState(false);
   const [notif, setNotif] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const [userID, setUserID] = useState<string|null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -71,12 +73,13 @@ const Nav = () => {
   },[]);
    useEffect(() => {
     const getNotif = async () => {
+     
       if(userID){
         const notif = await getNotificationByUser(userID);
-        setNotif(notif)
-        
+        setNotif(notif.notification)
+        setTotalCount(notif.totalCount)
       }
-    
+      console.log(userID);
     }
     getNotif()
      
@@ -85,17 +88,8 @@ const Nav = () => {
         document.removeEventListener('click', handleOutsideClick);
       };
     
-    }, [isNotifOpen]);
-  const notifications = [
-    { id: 1, action: "Commented on Your Debate" },
-    { id: 2, action: "Joined Your Debate" },
-    { id: 3, action: "Commented on Your Debate" },
-    { id: 4, action: "Commented on Your Debate" },
-  ]
-  const handleSeen = async (id:String)=>{
-   
-
-  }
+    }, [isNotifOpen,userID]);
+ 
   return (
     <nav className="bg-gray-900 text-white p-6 border-b border-gray-300 sticky top-0 left-0 right-0 z-10 w-screen">
       {isLandingPage&&<div className="container mx-auto flex justify-between items-center">
